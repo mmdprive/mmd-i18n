@@ -58,3 +58,71 @@ Object.assign(window.I18N_DICT, {
   }
 
 });
+
+/* =========================================
+   Additional i18n Keys – Renewal & Upgrade
+========================================= */
+
+Object.assign(window.I18N_DICT, {
+
+  th: {
+    /* /pay/renewal */
+    "pay.renewal.title": "การต่ออายุสมาชิก",
+    "pay.renewal.subtitle": "Standard · Premium",
+    "pay.renewal.note":
+      "เงื่อนไขการต่ออายุอาจแตกต่างกันตามยอดการใช้งานในรอบที่ผ่านมา",
+
+    "pay.renewal.cta": "ยืนยันการต่ออายุ",
+
+    /* /pay/upgrade */
+    "pay.upgrade.title": "การอัปเกรดสมาชิก",
+    "pay.upgrade.subtitle": "Standard → Premium · 7 Days → Premium",
+    "pay.upgrade.case1":
+      "Standard → Premium : ชำระเพิ่ม 2,000 บาท และคงวันหมดอายุเดิม",
+    "pay.upgrade.case2":
+      "7 Days → Premium : อัปเกรดได้ภายใน 15 วัน โดยชำระเพิ่ม 2,000 บาท",
+    "pay.upgrade.note":
+      "หากเกินระยะเวลาที่กำหนด จะต้องชำระ Premium เต็มจำนวน",
+    "pay.upgrade.cta": "ยืนยันการอัปเกรด"
+  },
+
+  en: {
+    "pay.renewal.title": "Membership Renewal",
+    "pay.renewal.subtitle": "Standard · Premium",
+    "pay.renewal.note":
+      "Renewal terms may vary based on your previous usage.",
+
+    "pay.renewal.cta": "Confirm renewal",
+
+    "pay.upgrade.title": "Membership Upgrade",
+    "pay.upgrade.subtitle": "Standard → Premium · 7 Days → Premium",
+    "pay.upgrade.case1":
+      "Standard → Premium: Pay an additional 2,000 THB. Expiration date remains the same.",
+    "pay.upgrade.case2":
+      "7 Days → Premium: Upgrade within 15 days with an additional 2,000 THB.",
+    "pay.upgrade.note":
+      "After the eligible period, full Premium payment is required.",
+    "pay.upgrade.cta": "Confirm upgrade"
+  },
+
+  zh: {
+    "pay.renewal.title": "会员续费",
+    "pay.renewal.subtitle": "Standard · Premium",
+    "pay.renewal.note":
+      "续费条件可能根据以往使用情况有所不同。",
+
+    "pay.renewal.cta": "确认续费",
+
+    "pay.upgrade.title": "会员升级",
+    "pay.upgrade.subtitle": "Standard → Premium · 7 天 → Premium",
+    "pay.upgrade.case1":
+      "Standard → Premium：追加支付 2,000 泰铢，到期日不变。",
+    "pay.upgrade.case2":
+      "7 天 → Premium：15 天内可升级，追加支付 2,000 泰铢。",
+    "pay.upgrade.note":
+      "超过期限需按 Premium 全额支付。",
+    "pay.upgrade.cta": "确认升级"
+  }
+
+});
+
