@@ -63,3 +63,26 @@
   // expose (optional)
   window.setLang = applyLang;
 })();
+
+/* =========================================
+   i18n Debug Mode – Missing Key Highlighter
+========================================= */
+
+const I18N_DEBUG = new URLSearchParams(window.location.search)
+  .has("i18n_debug");
+
+function debugWrap(key) {
+  return `<span style="
+    color:#ff6b6b;
+    background:rgba(255,107,107,0.12);
+    padding:2px 4px;
+    border-radius:4px;
+    font-size:12px;
+  ">${key}</span>`;
+}
+
+// แก้ใน getValue() เดิม
+// ตรง return key; ให้เปลี่ยนเป็น:
+
+if (I18N_DEBUG) return debugWrap(key);
+return "";
