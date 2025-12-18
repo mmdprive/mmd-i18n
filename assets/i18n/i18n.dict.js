@@ -124,5 +124,46 @@ Object.assign(window.I18N_DICT, {
     "pay.upgrade.cta": "确认升级"
   }
 
+   Object.assign(window.I18N_DICT, {
+
+  th: {
+    "membership.helper.vip":
+      "คุณอยู่ในกลุ่มผู้ใช้งานระดับสูง ระบบจะจัดลำดับความสำคัญให้คุณ",
+    "membership.helper.blackcard":
+      "คุณถือสถานะ Black Card สิทธิ์และการเข้าถึงเป็นกรณีพิเศษ",
+    "membership.helper.admin":
+      "โหมดผู้ดูแลระบบ สำหรับการตรวจสอบและจัดการข้อมูล"
+  },
+
+  en: {
+    "membership.helper.vip":
+      "You are recognized as a high-tier user with priority handling.",
+    "membership.helper.blackcard":
+      "You hold Black Card status with special access and consideration.",
+    "membership.helper.admin":
+      "Administrator mode for system review and management."
+  },
+
+  zh: {
+    "membership.helper.vip":
+      "您属于高等级用户，系统将优先处理。",
+    "membership.helper.blackcard":
+      "您持有 Black Card，享有特殊权限。",
+    "membership.helper.admin":
+      "管理员模式，用于系统管理。"
+  },
+
+  "zh-Hant": {
+    "membership.helper.vip":
+      "您屬於高等級用戶，系統將優先處理。",
+    "membership.helper.blackcard":
+      "您持有 Black Card，享有特殊權限。",
+    "membership.helper.admin":
+      "管理員模式，用於系統管理。"
+  }
+
+});
+
+
 });
 
