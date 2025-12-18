@@ -1,11 +1,25 @@
 /* =========================================
-   Additional i18n Keys – Payment Pages
+   i18n Dictionary – MMD Privé (FINAL)
 ========================================= */
+
+window.I18N_DICT = window.I18N_DICT || {};
 
 Object.assign(window.I18N_DICT, {
 
+  /* =======================
+     THAI
+  ======================= */
   th: {
-    /* /pay/course */
+
+    /* Membership */
+    "membership.helper.vip":
+      "คุณอยู่ในกลุ่มผู้ใช้งานระดับสูง ระบบจะจัดลำดับความสำคัญให้คุณ",
+    "membership.helper.blackcard":
+      "คุณถือสถานะ Black Card สิทธิ์และการเข้าถึงเป็นกรณีพิเศษ",
+    "membership.helper.admin":
+      "โหมดผู้ดูแลระบบ สำหรับการตรวจสอบและจัดการข้อมูล",
+
+    /* Pay – Course */
     "pay.course.title": "การชำระค่าบริการ",
     "pay.course.subtitle": "Private Session · Course (PN / VIP)",
     "pay.course.option.deposit": "มัดจำ 30%",
@@ -13,34 +27,94 @@ Object.assign(window.I18N_DICT, {
     "pay.course.option.full": "ชำระเต็ม 100%",
     "pay.course.note": "กรุณาตรวจสอบรูปแบบการชำระก่อนดำเนินการ",
 
-    /* /pay/travel */
+    /* Pay – Travel */
     "pay.travel.title": "การยืนยันการจองกิจกรรม",
     "pay.travel.subtitle": "Lifestyle Companion · Travel · Party",
     "pay.travel.people": "จำนวนผู้ร่วมกิจกรรม",
     "pay.travel.deposit": "มัดจำ 20%",
     "pay.travel.deposit.m": "มัดจำ 20%",
     "pay.travel.balance": "ชำระส่วนที่เหลือหน้างาน",
-    "pay.travel.note": "หน้านี้ไม่ใช่ค่าการเดินทางหรือค่าตั๋ว"
+    "pay.travel.note": "หน้านี้ไม่ใช่ค่าการเดินทางหรือค่าตั๋ว",
+
+    /* Pay – Renewal */
+    "pay.renewal.title": "การต่ออายุสมาชิก",
+    "pay.renewal.subtitle": "Standard · Premium",
+    "pay.renewal.note":
+      "เงื่อนไขการต่ออายุอาจแตกต่างกันตามยอดการใช้งานในรอบที่ผ่านมา",
+    "pay.renewal.cta": "ยืนยันการต่ออายุ",
+
+    /* Pay – Upgrade */
+    "pay.upgrade.title": "การอัปเกรดสมาชิก",
+    "pay.upgrade.subtitle": "Standard → Premium · 7 Days → Premium",
+    "pay.upgrade.case1":
+      "Standard → Premium : ชำระเพิ่ม 2,000 บาท และคงวันหมดอายุเดิม",
+    "pay.upgrade.case2":
+      "7 Days → Premium : อัปเกรดได้ภายใน 15 วัน โดยชำระเพิ่ม 2,000 บาท",
+    "pay.upgrade.note":
+      "หากเกินระยะเวลาที่กำหนด จะต้องชำระ Premium เต็มจำนวน",
+    "pay.upgrade.cta": "ยืนยันการอัปเกรด"
   },
 
+  /* =======================
+     ENGLISH
+  ======================= */
   en: {
+
+    "membership.helper.vip":
+      "You are recognized as a high-tier user with priority handling.",
+    "membership.helper.blackcard":
+      "You hold Black Card status with special access and consideration.",
+    "membership.helper.admin":
+      "Administrator mode for system review and management.",
+
     "pay.course.title": "Service Payment",
     "pay.course.subtitle": "Private Session · Course (PN / VIP)",
     "pay.course.option.deposit": "30% Deposit",
     "pay.course.option.deposit.m": "30% Deposit",
     "pay.course.option.full": "100% Full Payment",
-    "pay.course.note": "Please review the payment option before proceeding.",
+    "pay.course.note":
+      "Please review the payment option before proceeding.",
 
     "pay.travel.title": "Activity Reservation Confirmation",
     "pay.travel.subtitle": "Lifestyle Companion · Travel · Party",
     "pay.travel.people": "Number of participants",
     "pay.travel.deposit": "20% Deposit",
     "pay.travel.deposit.m": "20% Deposit",
-    "pay.travel.balance": "Remaining balance due on the activity date",
-    "pay.travel.note": "This is not a transportation or ticket fee."
+    "pay.travel.balance":
+      "Remaining balance due on the activity date",
+    "pay.travel.note":
+      "This is not a transportation or ticket fee.",
+
+    "pay.renewal.title": "Membership Renewal",
+    "pay.renewal.subtitle": "Standard · Premium",
+    "pay.renewal.note":
+      "Renewal terms may vary based on your previous usage.",
+    "pay.renewal.cta": "Confirm renewal",
+
+    "pay.upgrade.title": "Membership Upgrade",
+    "pay.upgrade.subtitle":
+      "Standard → Premium · 7 Days → Premium",
+    "pay.upgrade.case1":
+      "Standard → Premium: Pay an additional 2,000 THB. Expiration date remains the same.",
+    "pay.upgrade.case2":
+      "7 Days → Premium: Upgrade within 15 days with an additional 2,000 THB.",
+    "pay.upgrade.note":
+      "After the eligible period, full Premium payment is required.",
+    "pay.upgrade.cta": "Confirm upgrade"
   },
 
+  /* =======================
+     CHINESE (SIMPLIFIED)
+  ======================= */
   zh: {
+
+    "membership.helper.vip":
+      "您属于高等级用户，系统将优先处理。",
+    "membership.helper.blackcard":
+      "您持有 Black Card，享有特殊权限。",
+    "membership.helper.admin":
+      "管理员模式，用于系统管理。",
+
     "pay.course.title": "服务付款",
     "pay.course.subtitle": "私人服务 · 课程 (PN / VIP)",
     "pay.course.option.deposit": "30% 定金",
@@ -54,67 +128,17 @@ Object.assign(window.I18N_DICT, {
     "pay.travel.deposit": "20% 定金",
     "pay.travel.deposit.m": "20% 定金",
     "pay.travel.balance": "剩余款项于活动当天支付",
-    "pay.travel.note": "此费用不包含交通或机票。"
-  }
+    "pay.travel.note": "此费用不包含交通或机票。",
 
-});
-
-/* =========================================
-   Additional i18n Keys – Renewal & Upgrade
-========================================= */
-
-Object.assign(window.I18N_DICT, {
-
-  th: {
-    /* /pay/renewal */
-    "pay.renewal.title": "การต่ออายุสมาชิก",
-    "pay.renewal.subtitle": "Standard · Premium",
-    "pay.renewal.note":
-      "เงื่อนไขการต่ออายุอาจแตกต่างกันตามยอดการใช้งานในรอบที่ผ่านมา",
-
-    "pay.renewal.cta": "ยืนยันการต่ออายุ",
-
-    /* /pay/upgrade */
-    "pay.upgrade.title": "การอัปเกรดสมาชิก",
-    "pay.upgrade.subtitle": "Standard → Premium · 7 Days → Premium",
-    "pay.upgrade.case1":
-      "Standard → Premium : ชำระเพิ่ม 2,000 บาท และคงวันหมดอายุเดิม",
-    "pay.upgrade.case2":
-      "7 Days → Premium : อัปเกรดได้ภายใน 15 วัน โดยชำระเพิ่ม 2,000 บาท",
-    "pay.upgrade.note":
-      "หากเกินระยะเวลาที่กำหนด จะต้องชำระ Premium เต็มจำนวน",
-    "pay.upgrade.cta": "ยืนยันการอัปเกรด"
-  },
-
-  en: {
-    "pay.renewal.title": "Membership Renewal",
-    "pay.renewal.subtitle": "Standard · Premium",
-    "pay.renewal.note":
-      "Renewal terms may vary based on your previous usage.",
-
-    "pay.renewal.cta": "Confirm renewal",
-
-    "pay.upgrade.title": "Membership Upgrade",
-    "pay.upgrade.subtitle": "Standard → Premium · 7 Days → Premium",
-    "pay.upgrade.case1":
-      "Standard → Premium: Pay an additional 2,000 THB. Expiration date remains the same.",
-    "pay.upgrade.case2":
-      "7 Days → Premium: Upgrade within 15 days with an additional 2,000 THB.",
-    "pay.upgrade.note":
-      "After the eligible period, full Premium payment is required.",
-    "pay.upgrade.cta": "Confirm upgrade"
-  },
-
-  zh: {
     "pay.renewal.title": "会员续费",
     "pay.renewal.subtitle": "Standard · Premium",
     "pay.renewal.note":
       "续费条件可能根据以往使用情况有所不同。",
-
     "pay.renewal.cta": "确认续费",
 
     "pay.upgrade.title": "会员升级",
-    "pay.upgrade.subtitle": "Standard → Premium · 7 天 → Premium",
+    "pay.upgrade.subtitle":
+      "Standard → Premium · 7 天 → Premium",
     "pay.upgrade.case1":
       "Standard → Premium：追加支付 2,000 泰铢，到期日不变。",
     "pay.upgrade.case2":
@@ -122,38 +146,13 @@ Object.assign(window.I18N_DICT, {
     "pay.upgrade.note":
       "超过期限需按 Premium 全额支付。",
     "pay.upgrade.cta": "确认升级"
-  }
-
-   Object.assign(window.I18N_DICT, {
-
-  th: {
-    "membership.helper.vip":
-      "คุณอยู่ในกลุ่มผู้ใช้งานระดับสูง ระบบจะจัดลำดับความสำคัญให้คุณ",
-    "membership.helper.blackcard":
-      "คุณถือสถานะ Black Card สิทธิ์และการเข้าถึงเป็นกรณีพิเศษ",
-    "membership.helper.admin":
-      "โหมดผู้ดูแลระบบ สำหรับการตรวจสอบและจัดการข้อมูล"
   },
 
-  en: {
-    "membership.helper.vip":
-      "You are recognized as a high-tier user with priority handling.",
-    "membership.helper.blackcard":
-      "You hold Black Card status with special access and consideration.",
-    "membership.helper.admin":
-      "Administrator mode for system review and management."
-  },
-
-  zh: {
-    "membership.helper.vip":
-      "您属于高等级用户，系统将优先处理。",
-    "membership.helper.blackcard":
-      "您持有 Black Card，享有特殊权限。",
-    "membership.helper.admin":
-      "管理员模式，用于系统管理。"
-  },
-
+  /* =======================
+     CHINESE (TRADITIONAL)
+  ======================= */
   "zh-Hant": {
+
     "membership.helper.vip":
       "您屬於高等級用戶，系統將優先處理。",
     "membership.helper.blackcard":
@@ -163,7 +162,3 @@ Object.assign(window.I18N_DICT, {
   }
 
 });
-
-
-});
-
