@@ -86,3 +86,11 @@ function debugWrap(key) {
 
 if (I18N_DEBUG) return debugWrap(key);
 return "";
+
+const ROLE_LANG_DEFAULT = {
+  guest: "en",
+  member: "en",
+  vip: "en",
+  blackcard: "en",
+  admin: "en"
+};
