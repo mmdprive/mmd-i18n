@@ -1,42 +1,92 @@
 /* =========================================
-   i18n Core Engine – MMD Privé (v1.1)
+   i18n Core Engine – MMD Privé (v1.4 FINAL)
+   - role-based language
+   - role-aware copy
    - fallback language
    - mobile short copy
-   - optional JSON auto-load
+   - debug mode
 ========================================= */
 
 (function () {
   const DEFAULT_LANG = "en";
   const FALLBACK_LANG = "en";
 
+  /* -----------------------------------------
+     Role → Default Language
+  ----------------------------------------- */
+  const ROLE_LANG_DEFAULT = {
+    guest: "en",
+    member: "en",
+    vip: "en",
+    blackcard: "en",
+    admin: "en"
+  };
+
+  /* -----------------------------------------
+     Debug mode (?i18n_debug=1)
+  ----------------------------------------- */
+  const I18N_DEBUG = new URLSearchParams(window.location.search)
+    .has("i18n_debug");
+
+  function debugWrap(key) {
+    return `<span style="
+      color:#ff6b6b;
+      background:rgba(255,107,107,0.12);
+      padding:2px 4px;
+      border-radius:4px;
+      font-size:12px;
+      font-family:monospace;
+    ">${key}</span>`;
+  }
+
+  /* -----------------------------------------
+     Helpers
+  ----------------------------------------- */
+  function getUserRole() {
+    return document.body.dataset.userRole || "guest";
+  }
+
   function detectLang() {
+    const role = getUserRole();
+
     return (
       localStorage.getItem("lang") ||
+      ROLE_LANG_DEFAULT[role] ||
       (navigator.language.startsWith("th") && "th") ||
+      (navigator.language.startsWith("zh-TW") && "zh-Hant") ||
       (navigator.language.startsWith("zh") && "zh") ||
       DEFAULT_LANG
     );
   }
 
   function getValue(lang, key, isMobile) {
-    if (!window.I18N_DICT) return null;
+    const dict = window.I18N_DICT;
+    if (!dict) return "";
 
-    // 1) exact match
-    if (isMobile && I18N_DICT[lang]?.[`${key}.m`])
-      return I18N_DICT[lang][`${key}.m`];
+    const role = getUserRole();
 
-    if (I18N_DICT[lang]?.[key])
-      return I18N_DICT[lang][key];
+    // 1) role-specific
+    if (dict[lang]?.[`${key}.${role}`])
+      return dict[lang][`${key}.${role}`];
 
-    // 2) fallback language
-    if (isMobile && I18N_DICT[FALLBACK_LANG]?.[`${key}.m`])
-      return I18N_DICT[FALLBACK_LANG][`${key}.m`];
+    // 2) mobile short
+    if (isMobile && dict[lang]?.[`${key}.m`])
+      return dict[lang][`${key}.m`];
 
-    if (I18N_DICT[FALLBACK_LANG]?.[key])
-      return I18N_DICT[FALLBACK_LANG][key];
+    // 3) normal
+    if (dict[lang]?.[key])
+      return dict[lang][key];
 
-    // 3) key as last resort (debug-safe)
-    return key;
+    // 4) fallback language (role)
+    if (dict[FALLBACK_LANG]?.[`${key}.${role}`])
+      return dict[FALLBACK_LANG][`${key}.${role}`];
+
+    // 5) fallback language (normal)
+    if (dict[FALLBACK_LANG]?.[key])
+      return dict[FALLBACK_LANG][key];
+
+    // 6) debug / silent
+    return I18N_DEBUG ? debugWrap(key) : "";
   }
 
   function applyLang(lang) {
@@ -44,53 +94,30 @@
       const key = el.dataset.i18n;
       const isMobile = el.dataset.i18nMobile === "true";
       const value = getValue(lang, key, isMobile);
-      if (value) el.innerHTML = value;
+      el.innerHTML = value;
     });
+
     localStorage.setItem("lang", lang);
   }
 
-  // click toggle
+  /* -----------------------------------------
+     Language toggle
+  ----------------------------------------- */
   document.addEventListener("click", e => {
     const btn = e.target.closest("[data-lang]");
     if (btn) applyLang(btn.dataset.lang);
   });
 
-  // init
+  /* -----------------------------------------
+     Init
+  ----------------------------------------- */
   document.addEventListener("DOMContentLoaded", () => {
     applyLang(detectLang());
   });
 
-  // expose (optional)
+  /* -----------------------------------------
+     Expose for Memberstack / manual control
+  ----------------------------------------- */
   window.setLang = applyLang;
+
 })();
-
-/* =========================================
-   i18n Debug Mode – Missing Key Highlighter
-========================================= */
-
-const I18N_DEBUG = new URLSearchParams(window.location.search)
-  .has("i18n_debug");
-
-function debugWrap(key) {
-  return `<span style="
-    color:#ff6b6b;
-    background:rgba(255,107,107,0.12);
-    padding:2px 4px;
-    border-radius:4px;
-    font-size:12px;
-  ">${key}</span>`;
-}
-
-// แก้ใน getValue() เดิม
-// ตรง return key; ให้เปลี่ยนเป็น:
-
-if (I18N_DEBUG) return debugWrap(key);
-return "";
-
-const ROLE_LANG_DEFAULT = {
-  guest: "en",
-  member: "en",
-  vip: "en",
-  blackcard: "en",
-  admin: "en"
-};
