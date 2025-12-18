@@ -1,1 +1,81 @@
+/* =====================================================
+   MMD PRIVÉ — MASTER TEXT & VISUAL LOCK (FINAL)
+   STATUS: LOCKED / PRODUCTION SAFE
+===================================================== */
+
+/* ---------- TEXT TOKENS (DO NOT TOUCH) ---------- */
+:root {
+  --mmd-text-heading: #e9ebf0;          /* H1–H3 */
+  --mmd-text-body: #a2a4b3;             /* paragraph */
+  --mmd-text-eyebrow: rgba(255,255,255,0.6);
+
+  --mmd-bg-main: #050509;
+  --mmd-bg-panel: #10111a;
+  --mmd-gold: #cba65a;
+  --mmd-gold-soft: rgba(203,166,90,0.16);
+}
+
+/* ---------- GLOBAL TEXT BINDING ---------- */
+h1, h2, h3 {
+  color: var(--mmd-text-heading);
+  text-shadow: 0 2px 18px rgba(0,0,0,0.55);
+}
+
+p {
+  color: var(--mmd-text-body);
+}
+
+.mmd-eyebrow,
+.mmd-label {
+  color: var(--mmd-text-eyebrow);
+}
+
+/* ---------- STRICT RULE: NO OPACITY ON CONTAINERS ---------- */
+.mmd-section,
+.mmd-section-header,
+.mmd-card,
+.mmd-hero {
+  opacity: 1 !important;
+}
+
+/* ---------- MEMBERSHIP VISUAL EFFECTS ---------- */
+.mmd-membership .mmd-card {
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+.mmd-membership .mmd-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 90px rgba(0,0,0,.85);
+}
+
+.mmd-card--featured {
+  border: 1px solid var(--mmd-gold-soft);
+  box-shadow: 0 28px 80px rgba(0,0,0,.85);
+}
+
+.mmd-card--featured h3 {
+  color: var(--mmd-gold);
+}
+
+/* ---------- CTA BUTTON SAFETY ---------- */
+.mmd-btn {
+  opacity: 1;
+}
+
+.mmd-btn-primary {
+  background: linear-gradient(135deg, #f3cf7a, #cba65a);
+  color: #141318;
+}
+
+.mmd-btn-ghost {
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--mmd-text-heading);
+}
+
+/* ---------- MOBILE SAFETY ---------- */
+@media (max-width: 640px) {
+  h1, h2 {
+    text-shadow: 0 2px 12px rgba(0,0,0,0.65);
+  }
+}
 
