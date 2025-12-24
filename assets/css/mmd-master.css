@@ -1,81 +1,126 @@
 /* =====================================================
-   MMD PRIVÉ — MASTER TEXT & VISUAL LOCK (FINAL)
-   STATUS: LOCKED / PRODUCTION SAFE
+   MMD PRIVÉ — GLOBAL THEME (LUX / PREMIUM) v1
+   Use: ALL pages
 ===================================================== */
 
-/* ---------- TEXT TOKENS (DO NOT TOUCH) ---------- */
-:root {
-  --mmd-text-heading: #e9ebf0;          /* H1–H3 */
-  --mmd-text-body: #a2a4b3;             /* paragraph */
-  --mmd-text-eyebrow: rgba(255,255,255,0.6);
+:root{
+  /* Core */
+  --mmd-bg:#050509;
+  --mmd-panel:#0b0c13;
+  --mmd-panel-2:#10111a;
+  --mmd-ink:#f2f4f7;
+  --mmd-muted:rgba(242,244,247,.70);
+  --mmd-muted2:rgba(242,244,247,.52);
 
-  --mmd-bg-main: #050509;
-  --mmd-bg-panel: #10111a;
-  --mmd-gold: #cba65a;
-  --mmd-gold-soft: rgba(203,166,90,0.16);
+  /* Gold */
+  --mmd-gold:#cba65a;
+  --mmd-gold-strong:#e0c27a;
+  --mmd-gold-soft:rgba(203,166,90,.18);
+
+  /* Lines / radii / shadows */
+  --mmd-line:rgba(255,255,255,.10);
+  --mmd-line2:rgba(255,255,255,.07);
+  --mmd-r16:16px;
+  --mmd-r22:22px;
+  --mmd-r28:28px;
+  --mmd-shadow:0 22px 70px rgba(0,0,0,.55);
+  --mmd-shadow-strong:0 30px 90px rgba(0,0,0,.65);
+
+  /* Typography */
+  --mmd-font-body: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  --mmd-font-head: "Outfit", system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  --mmd-font-brand: "Antonio", "Outfit", system-ui, -apple-system, Segoe UI, Roboto, Arial;
 }
 
-/* ---------- GLOBAL TEXT BINDING ---------- */
-h1, h2, h3 {
-  color: var(--mmd-text-heading);
-  text-shadow: 0 2px 18px rgba(0,0,0,0.55);
+/* Base reset (safe) */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--mmd-font-body);
+  color:var(--mmd-ink);
+  background:linear-gradient(180deg, #050509, #0b0c13);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* Type */
+h1,h2,h3{
+  font-family:var(--mmd-font-head);
+  color:var(--mmd-ink);
+  text-shadow:0 2px 18px rgba(0,0,0,.55);
+}
+p{color:var(--mmd-muted)}
+
+/* Premium surfaces */
+.mmd-surface{
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  border:1px solid var(--mmd-line2);
+  box-shadow:var(--mmd-shadow);
+  border-radius:var(--mmd-r22);
 }
 
-p {
-  color: var(--mmd-text-body);
+/* Buttons (global) */
+.mmd-btn{
+  border:0;
+  cursor:pointer;
+  padding:12px 14px;
+  border-radius:14px;
+  font-weight:900;
+  letter-spacing:.03em;
+  font-size:12px;
+  text-transform:uppercase;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  user-select:none;
+  white-space:nowrap;
+}
+.mmd-btn--primary{
+  color:#0a0a0a;
+  background:linear-gradient(180deg, var(--mmd-gold-strong), var(--mmd-gold));
+  box-shadow:0 12px 26px rgba(203,166,90,.18);
+}
+.mmd-btn--ghost{
+  color:var(--mmd-ink);
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10);
+}
+.mmd-btn--ghost:hover{
+  border-color:rgba(203,166,90,.28);
+  background:rgba(203,166,90,.06);
 }
 
-.mmd-eyebrow,
-.mmd-label {
-  color: var(--mmd-text-eyebrow);
+/* Pill (global) */
+.mmd-pill{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.03);
+  color:rgba(242,244,247,.86);
+  line-height:1;
 }
 
-/* ---------- STRICT RULE: NO OPACITY ON CONTAINERS ---------- */
-.mmd-section,
-.mmd-section-header,
-.mmd-card,
-.mmd-hero {
-  opacity: 1 !important;
+/* HARD KILL: particles overlay (global) */
+#gold-particles,
+canvas#gold-particles,
+canvas[id*="particle" i],
+canvas[class*="particle" i]{
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
 }
-
-/* ---------- MEMBERSHIP VISUAL EFFECTS ---------- */
-.mmd-membership .mmd-card {
-  transition: transform .35s ease, box-shadow .35s ease;
+body::before,
+body::after{
+  background-image:none !important;
+  box-shadow:none !important;
+  filter:none !important;
 }
-
-.mmd-membership .mmd-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 30px 90px rgba(0,0,0,.85);
-}
-
-.mmd-card--featured {
-  border: 1px solid var(--mmd-gold-soft);
-  box-shadow: 0 28px 80px rgba(0,0,0,.85);
-}
-
-.mmd-card--featured h3 {
-  color: var(--mmd-gold);
-}
-
-/* ---------- CTA BUTTON SAFETY ---------- */
-.mmd-btn {
-  opacity: 1;
-}
-
-.mmd-btn-primary {
-  background: linear-gradient(135deg, #f3cf7a, #cba65a);
-  color: #141318;
-}
-
-.mmd-btn-ghost {
-  border: 1px solid rgba(255,255,255,0.25);
-  color: var(--mmd-text-heading);
-}
-
-/* ---------- MOBILE SAFETY ---------- */
-@media (max-width: 640px) {
-  h1, h2 {
-    text-shadow: 0 2px 12px rgba(0,0,0,0.65);
-  }
-}
-
