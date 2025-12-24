@@ -501,3 +501,70 @@
 
   onReady(initMembershipPay);
 })();
+/* =========================================================
+   MMD Membership — Auto Config Binder (PRODUCTION SAFE)
+   Reads: window.MMD_MEMBERSHIP_CONFIG
+   Sets: PayPal href (and optional fields)
+========================================================= */
+(function () {
+  "use strict";
+
+  function onReady(fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+
+  onReady(function () {
+    var cfg = window.MMD_MEMBERSHIP_CONFIG || {};
+
+    // ---------- 1) PayPal URL (AUTO) ----------
+    // Support: link inside paypalPanel OR any anchor marked data-paypal-link
+    var paypalUrl = (cfg.PAYPAL_URL || "").trim();
+    if (paypalUrl) {
+      // preferred: explicit marker
+      var a1 = document.querySelector('a[data-paypal-link="true"]');
+      // fallback: first button-like link inside #paypalPanel
+      var a2 = document.querySelector('#paypalPanel a[href*="paypal.com"]');
+      var a3 = document.querySelector('#paypalPanel a');
+
+      var a = a1 || a2 || a3;
+      if (a && a.tagName === "A") {
+        a.setAttribute("href", paypalUrl);
+      }
+    }
+
+    // ---------- 2) Optional: PromptPay ID ----------
+    // If your QR builder uses a CONFIG object inside this JS, keep it as-is.
+    // This block only sets global override for other code to consume if you want.
+    if (cfg.PROMPTPAY_ID) {
+      window.MMD_MEMBERSHIP_PROMPTPAY_ID = String(cfg.PROMPTPAY_ID).trim();
+    }
+
+    // ---------- 3) Optional: KTB text nodes ----------
+    // Only update if elements exist
+    if (cfg.KTB_NAME) {
+      document.querySelectorAll("[data-ktb-name]").forEach(function (el) {
+        el.textContent = cfg.KTB_NAME;
+      });
+    }
+    if (cfg.KTB_ACCOUNT) {
+      document.querySelectorAll("[data-ktb-account]").forEach(function (el) {
+        el.textContent = cfg.KTB_ACCOUNT;
+      });
+      // also update copy buttons if present
+      document.querySelectorAll("[data-copy]").forEach(function (btn) {
+        var v = btn.getAttribute("data-copy");
+        if (v && v.replace(/\s/g, "") === "1420335898") {
+          btn.setAttribute("data-copy", String(cfg.KTB_ACCOUNT).trim());
+        }
+      });
+    }
+
+    // ---------- 4) Optional: Hero image override ----------
+    var heroUrl = (cfg.HERO_URL || "").trim();
+    if (heroUrl) {
+      var heroImg = document.querySelector(".mmd-heroR img");
+      if (heroImg) heroImg.setAttribute("src", heroUrl);
+    }
+  });
+})();
