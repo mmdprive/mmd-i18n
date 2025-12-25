@@ -78,4 +78,18 @@
     });
   });
 })();
+
+window.t = function t(key, lang) {
+  const dict = window.I18N_DICT || {};
+  const l = (lang || document.documentElement.lang || "th").toLowerCase();
+
+  // TH is canonical fallback
+  return (
+    (dict[l] && dict[l][key]) ||
+    (dict.th && dict.th[key]) ||
+    (dict.en && dict.en[key]) || // optional second fallback
+    key
+  );
+};
+
 </script>
