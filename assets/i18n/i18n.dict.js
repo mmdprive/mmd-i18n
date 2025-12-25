@@ -114,6 +114,50 @@ Object.assign(window.I18N_DICT, {
 "benefits_lite.cta.benefits": "ดูสิทธื์สมาชิด",
 "benefits_lite.cta.blackcard": "Black Card",
 
+     "membership.subtitle": "Membership Payment",
+"membership.step1.title": "STEP 1 — เลือกแพ็กเกจ & โปร",
+"membership.step2.title": "STEP 2 — เลือกช่องทางชำระเงิน",
+
+"membership.form.package": "แพ็กเกจสมาชิก",
+"membership.form.promo": "Promo Code (ถ้ามี)",
+"membership.form.promo.ph": "e.g., XMAS2025",
+"membership.form.email": "อีเมลลูกค้า (optional)",
+"membership.form.email.ph": "you@example.com",
+"membership.form.name": "ชื่อ (optional)",
+"membership.form.name.ph": "Full name",
+"membership.form.memberId": "Member ID (optional)",
+"membership.form.memberId.ph": "MS / Member ID",
+
+"membership.summary.base": "ราคาปกติ",
+"membership.summary.discount": "ส่วนลด",
+"membership.summary.pay": "ยอดชำระ",
+
+"membership.btn.recalc": "คำนวณใหม่",
+"membership.btn.notify": "Notify Team",
+
+"membership.pay.promptpay.title": "PromptPay (QR)",
+"membership.pay.promptpay.sub": "สร้าง QR ตามยอดที่ต้องชำระ (อัปเดตอัตโนมัติ)",
+"membership.pay.promptpay.pill": "แนะนำ",
+
+"membership.pay.ktb.title": "KTB Bank (โอนบัญชี)",
+"membership.pay.ktb.pill": "KTB",
+"membership.pay.ktb.name": "ชื่อบัญชี: ธัชชะ ป.",
+"membership.pay.ktb.acc": "เลขบัญชี: 1420335898",
+"membership.pay.copy": "COPY",
+
+"membership.pay.paypal.title": "PayPal",
+"membership.pay.paypal.pill": "CREDIT CARD",
+"membership.pay.paypal.fee": "Service charge 4%",
+"membership.pay.paypal.after": "หลังชำระเงินแล้ว กลับมาและกด Notify Team เพื่อแจ้งทีมตรวจสอบ",
+
+"membership.promptpay.id": "PromptPay ID",
+"membership.promptpay.link": "ลิงก์",
+"membership.promptpay.open": "open",
+
+"membership.status.ready": "สถานะ: พร้อมใช้งาน",
+
+"common.close": "Close"
+
      
   },
 
@@ -163,6 +207,21 @@ Object.assign(window.I18N_DICT, {
     "pay.upgrade.note":
       "After the eligible period, full Premium payment is required.",
     "pay.upgrade.cta": "Confirm upgrade"
+
+       "membership.subtitle": "Membership Payment",
+"membership.step1.title": "STEP 1 — Package & Promo",
+"membership.step2.title": "STEP 2 — Choose payment method",
+"membership.form.package": "Membership package",
+"membership.form.promo": "Promo code (optional)",
+"membership.summary.base": "Base price",
+"membership.summary.discount": "Discount",
+"membership.summary.pay": "Pay amount",
+"membership.btn.recalc": "Recalculate",
+"membership.btn.notify": "Notify Team",
+"membership.pay.promptpay.pill": "RECOMMENDED",
+"membership.pay.paypal.after": "After payment, come back and click Notify Team to notify our team.",
+"common.close": "Close"
+
 
      /* Pay – Membership */
 "membership.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
@@ -313,6 +372,20 @@ Object.assign(window.I18N_DICT, {
 "benefits_lite.cta.benefits": "查看会员权益",
 "benefits_lite.cta.blackcard": "Black Card",
 
+     "membership.subtitle": "会员付款",
+"membership.step1.title": "STEP 1 — 选择套餐与优惠",
+"membership.step2.title": "STEP 2 — 选择支付方式",
+"membership.form.package": "会员套餐",
+"membership.summary.base": "原价",
+"membership.summary.discount": "折扣",
+"membership.summary.pay": "支付金额",
+"membership.btn.recalc": "重新计算",
+"membership.btn.notify": "通知团队",
+"membership.pay.promptpay.pill": "推荐",
+"membership.pay.paypal.after": "付款后请返回并点击 Notify Team 通知团队核对。",
+"common.close": "关闭"
+
+
   },
 
   /* =======================
@@ -378,5 +451,23 @@ Object.assign(window.I18N_DICT, {
 "benefits_lite.cta.blackcard": "Black Card",
 
   }
+ /* =======================
+    JAPANEESE
+  ======================= */
+  "jp: {
+"membership.subtitle": "メンバーシップ決済",
+"membership.step1.title": "STEP 1 — プランとプロモ",
+"membership.step2.title": "STEP 2 — 支払い方法",
+"membership.form.package": "メンバーシッププラン",
+"membership.summary.base": "通常価格",
+"membership.summary.discount": "割引",
+"membership.summary.pay": "支払金額",
+"membership.btn.recalc": "再計算",
+"membership.btn.notify": "チームへ通知",
+"membership.pay.promptpay.pill": "おすすめ",
+"membership.pay.paypal.after": "支払い後、このページに戻り Notify Team を押して連絡してください。",
+"common.close": "閉じる"
+
+
 
 });
