@@ -343,3 +343,14 @@ canvas[class*="particle" i]{
   visibility:hidden !important;
   pointer-events:none !important;
 }
+/* ===== FORCE GOLD: Step Titles ===== */
+#mmd-renewal .cardHd .ttl{
+  color: var(--gold2) !important;
+  text-shadow: 0 10px 30px rgba(200,162,79,.08);
+}
+
+/* optional: ทำให้ mini ขวาดูหรูขึ้น */
+#mmd-renewal .cardHd .mini{
+  color: rgba(232,212,154,.62) !important;
+}
+
