@@ -1,0 +1,345 @@
+/* MMD /pay/renewal — LUX UI (Scoped) */
+#mmd-renewal.mmd-pay{
+  --bg0:#050506;
+  --bg1:#0B0B0D;
+  --card: rgba(255,255,255,.035);
+  --line2: rgba(255,255,255,.07);
+  --text:#F4F2EE;
+  --muted: rgba(244,242,238,.72);
+  --muted2: rgba(244,242,238,.52);
+  --gold:#C8A24F;
+  --gold2:#E8D49A;
+  --r14:14px; --r18:18px; --r22:22px; --r28:28px;
+  --shadow: 0 26px 90px rgba(0,0,0,.62);
+  --shadow2: 0 18px 60px rgba(0,0,0,.45);
+  --glowGold: 0 0 0 1px rgba(200,162,79,.26), 0 18px 60px rgba(200,162,79,.10);
+  --glowSoft: 0 0 0 1px rgba(255,255,255,.10), 0 18px 60px rgba(0,0,0,.55);
+  font-family: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  isolation: isolate;
+}
+#mmd-renewal *{ box-sizing:border-box; }
+#mmd-renewal img{ max-width:100%; display:block; }
+#mmd-renewal a{ color:inherit; text-decoration:none; }
+#mmd-renewal .wrap{ max-width:1160px; margin:0 auto; padding:28px 18px 78px; }
+
+/* Topbar */
+#mmd-renewal .topbar{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:16px; }
+#mmd-renewal .brand{ display:flex; align-items:center; gap:12px; min-width:240px; }
+#mmd-renewal .brandLogo{
+  width:46px;height:46px;border-radius:14px; display:grid;place-items:center;
+  background: rgba(255,255,255,.03); border:1px solid var(--line2);
+  overflow:hidden; box-shadow: var(--glowSoft);
+}
+#mmd-renewal .brandLogo img{ width:82%; height:auto; filter:contrast(1.03); }
+#mmd-renewal .brandTxt{ display:flex; flex-direction:column; gap:3px; line-height:1.05; }
+#mmd-renewal .brandTxt .logo{ font-family:"Antonio","Outfit",sans-serif; letter-spacing:.18em; font-size:16px; }
+#mmd-renewal .brandTxt .sub{ font-size:12px; color:var(--muted2); }
+
+/* Language */
+#mmd-renewal .lang{
+  display:flex; gap:8px; border-radius:999px; padding:6px;
+  background: rgba(255,255,255,.035); border:1px solid var(--line2);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--glowSoft);
+}
+#mmd-renewal .lang button{
+  border:0; cursor:pointer; padding:9px 13px; border-radius:999px;
+  background:transparent; color:var(--muted);
+  font-weight:900; font-size:12px; letter-spacing:.03em;
+}
+#mmd-renewal .lang button.active{
+  background: rgba(200,162,79,.18);
+  color: var(--text);
+  border:1px solid rgba(200,162,79,.28);
+  box-shadow: var(--glowGold);
+}
+
+/* Hero */
+#mmd-renewal .hero{
+  display:grid; grid-template-columns: 1.06fr .94fr;
+  border:1px solid var(--line2); border-radius: var(--r28);
+  overflow:hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+  box-shadow: var(--shadow);
+}
+@media (max-width:920px){ #mmd-renewal .hero{ grid-template-columns:1fr; } }
+#mmd-renewal .heroL{ padding:30px 26px 26px; }
+#mmd-renewal .eyebrow{
+  display:flex; gap:10px; align-items:center;
+  color:var(--muted2); font-weight:900; font-size:12px;
+  letter-spacing:.12em; text-transform:uppercase;
+}
+#mmd-renewal .eyebrow .dot{
+  width:6px;height:6px;border-radius:50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200,162,79,.16);
+}
+#mmd-renewal .h1{
+  font-family:"Outfit",sans-serif;
+  margin:14px 0 12px;
+  font-size:42px; line-height:1.04; letter-spacing:-0.02em;
+}
+@media (max-width:520px){ #mmd-renewal .h1{ font-size:34px; } }
+#mmd-renewal .desc{
+  color:var(--muted); font-size:15px; line-height:1.72;
+  max-width:62ch; margin:0 0 18px;
+}
+#mmd-renewal .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+#mmd-renewal .chip{
+  font-size:11px; font-weight:900; letter-spacing:.10em; text-transform:uppercase;
+  padding:10px 12px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  color: rgba(244,242,238,.86);
+  white-space: nowrap;
+}
+#mmd-renewal .chip.gold{
+  border-color: rgba(200,162,79,.28);
+  background: rgba(200,162,79,.12);
+  color: rgba(244,242,238,.92);
+}
+#mmd-renewal .heroR{ position:relative; background:#000; min-height:340px; }
+#mmd-renewal .heroR img{ width:100%; height:100%; object-fit:cover; filter: contrast(1.03) saturate(1.02); }
+#mmd-renewal .heroR::after{
+  content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(1200px 380px at 80% 20%, rgba(0,0,0,.10), rgba(0,0,0,.72)),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.76));
+  pointer-events:none;
+}
+
+/* Grid + Card */
+#mmd-renewal .grid{ display:grid; grid-template-columns: 1fr .98fr; gap:18px; margin-top:18px; }
+@media (max-width:920px){ #mmd-renewal .grid{ grid-template-columns:1fr; } }
+#mmd-renewal .card{
+  border:1px solid var(--line2);
+  border-radius: var(--r28);
+  background: linear-gradient(180deg, rgba(255,255,255,.032), rgba(255,255,255,.014));
+  box-shadow: var(--shadow2);
+  overflow:hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+#mmd-renewal .cardHd{
+  padding:18px 18px 14px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+}
+#mmd-renewal .ttl{ font-family:"Outfit",sans-serif; font-size:16px; font-weight:900; letter-spacing:.02em; }
+#mmd-renewal .mini{ font-size:12px; color:var(--muted2); padding-top:2px; text-align:right; }
+#mmd-renewal .cardBd{ padding:16px 18px 18px; }
+
+/* Form */
+#mmd-renewal .fieldset{ margin:0 0 14px; }
+#mmd-renewal label.baseLabel{
+  display:block; font-size:12px; color:var(--muted2);
+  margin:0 0 8px; letter-spacing:.03em; font-weight:900;
+}
+#mmd-renewal input.text, #mmd-renewal select.text{
+  width:100%;
+  border-radius: var(--r14);
+  border:1px solid rgba(255,255,255,.11);
+  background: rgba(0,0,0,.34);
+  color: var(--text);
+  padding:12px 12px;
+  outline:none;
+  font-size:14px;
+  transition: box-shadow .15s ease, border-color .15s ease;
+  appearance:none;
+}
+#mmd-renewal input.text:focus, #mmd-renewal select.text:focus{
+  border-color: rgba(200,162,79,.42);
+  box-shadow: 0 0 0 4px rgba(200,162,79,.12);
+}
+#mmd-renewal .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:520px){ #mmd-renewal .row2{ grid-template-columns:1fr; } }
+
+/* Summary */
+#mmd-renewal .summary{
+  display:grid; gap:10px; padding:14px;
+  border-radius: var(--r22);
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.30);
+}
+#mmd-renewal .sumRow{ display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:13px; color: var(--muted); }
+#mmd-renewal .sumRow strong{ color: var(--text); }
+#mmd-renewal .sumFinal{ padding-top:10px; border-top:1px solid rgba(255,255,255,.08); margin-top:6px; }
+#mmd-renewal .sumFinal .amt{ font-family:"Outfit",sans-serif; font-size:22px; letter-spacing:.02em; color: var(--gold2); font-weight:900; }
+#mmd-renewal .badgeTier{
+  display:inline-flex; align-items:center; gap:8px;
+  font-weight:900; letter-spacing:.06em; text-transform:uppercase;
+  font-size:11px; padding:8px 10px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  color: rgba(244,242,238,.90);
+}
+#mmd-renewal .badgeTier.gold{
+  border-color: rgba(200,162,79,.30);
+  background: rgba(200,162,79,.14);
+  box-shadow: var(--glowGold);
+}
+
+/* Buttons */
+#mmd-renewal .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+#mmd-renewal .btn{
+  border:0; cursor:pointer; padding:12px 14px;
+  border-radius: var(--r14);
+  font-weight:900; letter-spacing:.04em; font-size:12px; text-transform:uppercase;
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  user-select:none; white-space:nowrap;
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+}
+#mmd-renewal .btn:active{ transform: translateY(1px); }
+#mmd-renewal .btn.primary{
+  color:#0A0A0A;
+  background: linear-gradient(180deg, rgba(232,212,154,1), rgba(200,162,79,1));
+  box-shadow: 0 14px 30px rgba(200,162,79,.16);
+  width:100%;
+}
+#mmd-renewal .btn.ghost{
+  color: var(--text);
+  background: rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10);
+}
+
+/* Payment methods */
+#mmd-renewal .payMethods{ display:grid; gap:12px; margin-bottom:14px; }
+#mmd-renewal .method{
+  border-radius: var(--r22);
+  border:1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.028), rgba(0,0,0,.26));
+  padding:14px;
+  display:flex; gap:12px; align-items:flex-start;
+  cursor:pointer; position:relative;
+  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease, background .14s ease;
+}
+#mmd-renewal .method:hover{
+  transform: translateY(-1px);
+  border-color: rgba(200,162,79,.18);
+  box-shadow: 0 18px 60px rgba(0,0,0,.34);
+}
+#mmd-renewal .method input[type="radio"]{ position:absolute; opacity:0; pointer-events:none; }
+#mmd-renewal .methodIndicator{
+  width:18px; height:18px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.25);
+  box-shadow: inset 0 0 0 3px rgba(0,0,0,.55);
+  margin-top:2px; flex:0 0 auto; position:relative;
+}
+#mmd-renewal .method.is-selected .methodIndicator{
+  border-color: rgba(232,212,154,.55);
+  box-shadow: 0 0 0 4px rgba(200,162,79,.12), inset 0 0 0 3px rgba(0,0,0,.55);
+}
+#mmd-renewal .method.is-selected .methodIndicator::after{
+  content:""; position:absolute; inset:4px;
+  border-radius:999px;
+  background: linear-gradient(180deg, rgba(232,212,154,1), rgba(200,162,79,1));
+}
+#mmd-renewal .methodBody{ flex:1; min-width:0; }
+#mmd-renewal .methodTitle{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  font-family:"Outfit",sans-serif; font-weight:900; letter-spacing:.02em; font-size:14px;
+}
+#mmd-renewal .methodSub{ color: var(--muted); font-size:13px; line-height:1.6; margin-top:6px; }
+#mmd-renewal .method.is-selected{
+  border-color: rgba(200,162,79,.30);
+  box-shadow: var(--glowGold);
+  background: linear-gradient(180deg, rgba(200,162,79,.09), rgba(0,0,0,.26));
+}
+#mmd-renewal .pill{
+  font-size:11px; font-weight:900; letter-spacing:.10em; text-transform:uppercase;
+  padding:7px 10px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  color: rgba(244,242,238,.88);
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+#mmd-renewal .pill.gold{
+  border-color: rgba(200,162,79,.28);
+  background: rgba(200,162,79,.12);
+  color: rgba(244,242,238,.92);
+}
+
+/* PromptPay QR */
+#mmd-renewal .qrBox{
+  display:grid; place-items:center;
+  padding:14px;
+  border-radius: var(--r22);
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.30);
+  min-height:280px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+#mmd-renewal #qr{
+  width:220px; height:220px;
+  border-radius:18px;
+  overflow:hidden;
+  background:#fff;
+  padding:10px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.25);
+}
+
+/* Mechanic */
+#mmd-renewal .mech{ margin-top:14px; border-radius: var(--r22); border:1px solid rgba(255,255,255,.10); background: rgba(0,0,0,.28); overflow:hidden; }
+#mmd-renewal .mechHd{ padding:14px 14px 12px; border-bottom:1px solid rgba(255,255,255,.07); background: rgba(255,255,255,.03); }
+#mmd-renewal .mechTtl{ font-family:"Outfit",sans-serif; font-weight:900; letter-spacing:.02em; color: rgba(244,242,238,.92); font-size:14px; }
+#mmd-renewal .mechSub{ margin-top:6px; color: rgba(244,242,238,.58); font-size:12px; line-height:1.6; }
+#mmd-renewal .mechBody{ padding:12px 14px 14px; }
+#mmd-renewal .mechCols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:920px){ #mmd-renewal .mechCols{ grid-template-columns:1fr; } }
+#mmd-renewal .mechCol{ border:1px solid rgba(255,255,255,.08); border-radius:18px; background: rgba(0,0,0,.22); overflow:hidden; }
+#mmd-renewal .mechColHd{
+  padding:12px 12px 10px; border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:"Outfit",sans-serif; font-weight:900; letter-spacing:.02em;
+  color: rgba(244,242,238,.92);
+}
+#mmd-renewal .mechColHd .unit{ font-family:"DM Sans",sans-serif; font-weight:800; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color: rgba(244,242,238,.55); }
+#mmd-renewal .mechRow{
+  display:flex; justify-content:space-between; gap:10px;
+  padding:12px; border-bottom:1px solid rgba(255,255,255,.06);
+  color: rgba(244,242,238,.70); font-size:13px; line-height:1.55;
+}
+#mmd-renewal .mechRow:last-child{ border-bottom:0; }
+#mmd-renewal .mechRow b{ color: rgba(244,242,238,.92); }
+#mmd-renewal .tag{
+  display:inline-flex; align-items:center;
+  padding:8px 10px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  font-weight:900; font-size:12px;
+  color: rgba(244,242,238,.90);
+  white-space:nowrap;
+}
+#mmd-renewal .tag.gold{
+  border-color: rgba(200,162,79,.30);
+  background: rgba(200,162,79,.14);
+  box-shadow: var(--glowGold);
+  color: rgba(244,242,238,.94);
+}
+#mmd-renewal .mechVip{ margin-top:12px; padding:12px; border-radius:18px; border:1px solid rgba(255,255,255,.08); background: rgba(0,0,0,.22); }
+#mmd-renewal .mechVip .vipRow{
+  display:flex; justify-content:space-between; gap:10px;
+  padding:10px 0; border-bottom:1px solid rgba(255,255,255,.06);
+  color: rgba(244,242,238,.70); font-size:13px; line-height:1.55;
+}
+#mmd-renewal .mechVip .vipRow:last-child{ border-bottom:0; }
+#mmd-renewal .mechNote{ margin-top:10px; color: rgba(244,242,238,.55); font-size:12px; line-height:1.6; }
+
+#mmd-renewal .footer{ margin-top:18px; color: rgba(244,242,238,.38); font-size:11px; text-align:center; }
+
+/* Particle safety */
+#gold-particles,
+canvas#gold-particles,
+canvas[id*="particle" i],
+canvas[class*="particle" i]{
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
