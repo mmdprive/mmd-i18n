@@ -39,6 +39,30 @@
   function buildPromptPayUrl(amount){
     return "https://promptpay.io/" + encodeURIComponent(CONFIG.PROMPTPAY_ID) + "/" + encodeURIComponent(String(Math.trunc(amount)));
   }
+async function ensureQRCodeLib(){
+  if (window.QRCode) return true;
+  return new Promise((resolve)=>{
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js";
+    s.async = true;
+    s.onload = ()=> resolve(true);
+    s.onerror = ()=> resolve(false);
+    document.head.appendChild(s);
+  });
+}
+
+async function renderQR(text){
+  const ok = await ensureQRCodeLib();
+  const el = root.querySelector("#qr");
+  if(!el) return;
+  el.innerHTML = "";
+
+  if(!ok || !window.QRCode){
+    el.innerHTML = "<div style='color:#111;font-weight:900;padding:14px;text-align:center'>QR โหลดไม่สำเร็จ</div>";
+    return;
+  }
+  new QRCode(el, { text, width: 220, height: 220 });
+}  
   function renderQR(url){
     const el = $("#qr"); if(!el) return;
     el.innerHTML = "";
