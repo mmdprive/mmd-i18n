@@ -1,12 +1,7 @@
-<!-- =========================
- MMD LOCAL i18n (DICT + CORE)
- Drop-in Webflow Embed (single block)
-========================= -->
-<script>
-/* =========================================================
-   1) LOCAL DICT (TH / EN / ZH / JP)
-   - You can paste/extend keys inside each language.
-========================================================= */
+/* MMD Privé - Local i18n (Dict + Core)
+   Version: 2025.12.29
+*/
+
 window.I18N_DICT = window.I18N_DICT || {};
 Object.assign(window.I18N_DICT, {
 
