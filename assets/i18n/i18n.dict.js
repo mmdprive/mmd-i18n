@@ -88,31 +88,25 @@ Object.assign(window.I18N_DICT, {
 /* =======================
    Membership Benefits – Lite (Popup)
 ======================= */
-"benefits_lite.title": "Membership benefits",
-"benefits_lite.intro":
-  "เมื่อเป็นสมาชิก MMD Privé คุณจะได้รับ google drive ที่บรรจุฐานข้อมูลภาพที่ใหญ่ที่สุดจากเรา และคุณจะได้รับ invitation link เข้ากลุ่ม telegram ตาม package ที่คุณเลือก ซึ่งในนั้นจะเปรียบเสมือน showroom ให้คุณได้อัพเดทข่าวสาร และรูปภาพใหม่ๆ ตลอดเวลา",
 
-"benefits_lite.preview.t": "Preview",
-"benefits_lite.preview.d": "ดูระบบและแนวคิด โครงสร้างพื้นฐานของเรา",
+  "benefits_lite.preview.t": "Preview",
+  "benefits_lite.preview.d": "ทำความเข้าใจระบบและแนวทางการเข้าถึง (ยังไม่ใช่สมาชิก)",
 
-"benefits_lite.guest.t": "7 Days Guest Pass",
-"benefits_lite.guest.d":
-  "ทดลองแบบจำกัด ไม่ใช่สมาชิก รับสิทธิ์ในการทดลองใช้บริการ premium จริงภายใน 7 วัน",
+  "benefits_lite.guest.t": "7 Days Guest Pass",
+  "benefits_lite.guest.d": "ทดลองใช้งานแบบจำกัด 7 วัน เหมาะสำหรับการใช้งานช่วงสั้น",
 
-"benefits_lite.standard.t": "Standard",
-"benefits_lite.standard.d":
-  "สิทธิ์ในการใช้งานเต็มรูปแบบ สำหรับผู้ที่มีงบใช้จ่ายไม่เกิน 20,000 บาท ต่อครั้ง",
+  "benefits_lite.standard.t": "Standard",
+  "benefits_lite.standard.d": "การเข้าถึงแบบเริ่มต้นสำหรับสมาชิก: โครงสร้างชัด ใช้งานต่อเนื่อง",
 
-"benefits_lite.premium.t": "Premium",
-"benefits_lite.premium.d":
-  "สิทธื์ในการใช้งานเต็มรูปแบบ สำหรับผู้ที่มีงบตั้งแต่ 15,000 - 50,000 บาท++ ต่อครั้ง",
+  "benefits_lite.premium.t": "Premium",
+  "benefits_lite.premium.d": "ระดับความสำคัญสูงขึ้น + สิทธิ์ที่ครบกว่า เหมาะสำหรับผู้ใช้งานจริงจัง",
 
-"benefits_lite.black.t": "Black Card",
-"benefits_lite.black.d":
-  "การเข้าถึงระดับความสัมพันธ์ขั้นสูงสุด โดยคัดเลือกจากผู้ที่สมควรจะได้รับสิทธิ์นี้ ตามเกณฑ์การพืจารณาจากเรา",
+  "benefits_lite.black.t": "Black Card",
+  "benefits_lite.black.d": "การเข้าถึงแบบความสัมพันธ์ ทีมจะให้รายละเอียดเมื่อเหมาะสม",
 
-"benefits_lite.cta.benefits": "ดูสิทธื์สมาชิด",
-"benefits_lite.cta.blackcard": "Black Card",
+  "benefits_lite.cta.benefits": "ดูรายละเอียดสิทธิ์",
+  "benefits_lite.cta.blackcard": "Black Card",
+  "benefits_lite.note": "หมายเหตุ: สิทธิ์อาจอัปเดตตามช่วงเวลาและความเหมาะสม"
 
      "membership.subtitle": "Membership Payment",
 "membership.step1.title": "STEP 1 — เลือกแพ็กเกจ & โปร",
@@ -157,28 +151,7 @@ Object.assign(window.I18N_DICT, {
 "membership.status.ready": "สถานะ: พร้อมใช้งาน",
 
 "common.close": "Close"
-  "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
-  "benefits_lite.hero.title": "สิทธิประโยชน์สมาชิก",
-  "benefits_lite.hero.subtitle": "สรุประดับการเข้าถึงแบบอ่านจบใน 10 วินาที เพื่อเลือกแพ็กเกจที่เหมาะกับคุณ",
 
-  "benefits_lite.preview.t": "Preview",
-  "benefits_lite.preview.d": "ทำความเข้าใจระบบและแนวทางการเข้าถึง (ยังไม่ใช่สมาชิก)",
-
-  "benefits_lite.guest.t": "7 Days Guest Pass",
-  "benefits_lite.guest.d": "ทดลองใช้งานแบบจำกัด 7 วัน เหมาะสำหรับการใช้งานช่วงสั้น",
-
-  "benefits_lite.standard.t": "Standard",
-  "benefits_lite.standard.d": "การเข้าถึงแบบเริ่มต้นสำหรับสมาชิก: โครงสร้างชัด ใช้งานต่อเนื่อง",
-
-  "benefits_lite.premium.t": "Premium",
-  "benefits_lite.premium.d": "ระดับความสำคัญสูงขึ้น + สิทธิ์ที่ครบกว่า เหมาะสำหรับผู้ใช้งานจริงจัง",
-
-  "benefits_lite.black.t": "Black Card",
-  "benefits_lite.black.d": "การเข้าถึงแบบความสัมพันธ์ ทีมจะให้รายละเอียดเมื่อเหมาะสม",
-
-  "benefits_lite.cta.benefits": "ดูรายละเอียดสิทธิ์",
-  "benefits_lite.cta.blackcard": "Black Card",
-  "benefits_lite.note": "หมายเหตุ: สิทธิ์อาจอัปเดตตามช่วงเวลาและความเหมาะสม"
 
      
      
