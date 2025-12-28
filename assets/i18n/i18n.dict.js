@@ -1,17 +1,26 @@
 /* =========================================
-   i18n Dictionary – MMD Privé (FINAL)
+   i18n Dictionary – MMD Privé (LOCK • FIXED)
+   - Valid JS
+   - Keys aligned with benefits-lite embed
 ========================================= */
 
 window.I18N_DICT = window.I18N_DICT || {};
 
 Object.assign(window.I18N_DICT, {
-
   /* =======================
      THAI
   ======================= */
   th: {
+    /* Common */
+    "common.close": "Close",
 
-    /* Membership */
+    /* Lang labels (for pills) */
+    "lang.th": "ไทย",
+    "lang.en": "EN",
+    "lang.zh": "中文",
+    "lang.jp": "JP",
+
+    /* Membership helpers */
     "membership.helper.vip":
       "คุณอยู่ในกลุ่มผู้ใช้งานระดับสูง ระบบจะจัดลำดับความสำคัญให้คุณ",
     "membership.helper.blackcard":
@@ -52,116 +61,130 @@ Object.assign(window.I18N_DICT, {
       "7 Days → Premium : อัปเกรดได้ภายใน 15 วัน โดยชำระเพิ่ม 2,000 บาท",
     "pay.upgrade.note":
       "หากเกินระยะเวลาที่กำหนด จะต้องชำระ Premium เต็มจำนวน",
-    "pay.upgrade.cta": "ยืนยันการอัปเกรด"
-/* =======================
-   Pay – Membership
-======================= */
-"membership.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
-"membership.title": "สมัครสมาชิกแพคเกจรายปี",
-"membership.intro":
-  "Package private ของ MMD จะมีการเก็บค่าสมาชิกรายปี มีอยู่ 2 แพคเกจ คือ Standard และ Premium คุณสามารถเลือกแพคเกจที่ตรงกับความต้องการของคุณได้ ถ้าหากคุณเป็นนักท่องเที่ยว หรืออาจใช้บริการในช่วงเวลาไม่นาน เรามี 7 Days Guest Pass ให้ทดลองใช้ภายใน 7 วัน",
-"membership.benefits": "สิทธิประโยชน์",
+    "pay.upgrade.cta": "ยืนยันการอัปเกรด",
 
-"membership.pkg.standard.name": "Standard Package 1 ปี",
-"membership.pkg.standard.desc":
-  "สิทธิในการเข้าถึงแฟ้มรูปภาพกลุ่ม และ telegram Standard",
-"membership.pkg.standard.price": "1,199 บาท",
+    /* Pay – Membership (main page copy: Per tone) */
+    "membership.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
+    "membership.title": "Membership รายปี",
+    "membership.subtitle": "Membership Payment",
+    "membership.intro":
+      "Membership ของ MMD เป็นระบบรายปี เพื่อให้คุณเข้าถึงข้อมูลและอัปเดตได้ต่อเนื่อง เลือกแพ็กเกจให้ตรงกับจังหวะการใช้งานของคุณ หากต้องการทดลองก่อน เรามี 7 Days Guest Pass สำหรับการใช้งานระยะสั้น",
+    "membership.benefits": "สิทธิประโยชน์",
 
-"membership.pkg.premium.name": "Premium Package 1 ปี",
-"membership.pkg.premium.desc":
-  "สิทธิในการเข้าถึงแฟ้มรูปภาพกลุ่ม และ telegram Premium + Standard",
-"membership.pkg.premium.price": "2,999 บาท",
+    "membership.pkg.standard.name": "Standard (1 ปี)",
+    "membership.pkg.standard.desc":
+      "เข้าถึงคลังภาพกลุ่ม + Telegram Standard",
+    "membership.pkg.standard.price": "1,199 บาท",
 
-"membership.pkg.guest7.name": "7 Days Guest Pass 7 วัน",
-"membership.pkg.guest7.desc":
-  "สิทธิในการเข้าถึงแฟ้มรูปภาพกลุ่ม และ telegram Premium + Standard ทั้งหมด 7 วัน",
-"membership.pkg.guest7.price": "1,499 บาท",
+    "membership.pkg.premium.name": "Premium (1 ปี)",
+    "membership.pkg.premium.desc":
+      "เข้าถึงคลังภาพกลุ่ม + Telegram Premium และ Standard",
+    "membership.pkg.premium.price": "2,999 บาท",
 
-"membership.pay.title": "ช่องทางชำระเงิน",
-"membership.pay.bank.title": "โอนผ่านธนาคาร",
-"membership.pay.bank.name": "KTB Bank (ธ.กรุงไทย)",
-"membership.pay.bank.acc": "เลขที่บัญชี 1420335898",
-"membership.pay.bank.owner": "ชื่อบัญชี ธัชชะ ประ",
-"membership.pay.paypal.title": "PayPal / Card",
-"membership.pay.paypal.cta": "ชำระผ่าน PayPal",
+    "membership.pkg.guest7.name": "7 Days Guest Pass (7 วัน)",
+    "membership.pkg.guest7.desc":
+      "ทดลองใช้งาน 7 วัน: เข้าถึงคลังภาพกลุ่ม + Telegram Premium และ Standard",
+    "membership.pkg.guest7.price": "1,499 บาท",
 
-/* =======================
-   Membership Benefits – Lite (Popup)
-======================= */
+    "membership.step1.title": "STEP 1 — เลือกแพ็กเกจ & โปรโมชัน",
+    "membership.step2.title": "STEP 2 — เลือกช่องทางชำระเงิน",
 
-  "benefits_lite.preview.t": "Preview",
-  "benefits_lite.preview.d": "ทำความเข้าใจระบบและแนวทางการเข้าถึง (ยังไม่ใช่สมาชิก)",
+    "membership.form.package": "แพ็กเกจสมาชิก",
+    "membership.form.promo": "Promo Code (ถ้ามี)",
+    "membership.form.promo.ph": "เช่น XMAS2025",
+    "membership.form.email": "อีเมลลูกค้า (optional)",
+    "membership.form.email.ph": "you@example.com",
+    "membership.form.name": "ชื่อ (optional)",
+    "membership.form.name.ph": "Full name",
+    "membership.form.memberId": "Member ID (optional)",
+    "membership.form.memberId.ph": "MS / Member ID",
 
-  "benefits_lite.guest.t": "7 Days Guest Pass",
-  "benefits_lite.guest.d": "ทดลองใช้งานแบบจำกัด 7 วัน เหมาะสำหรับการใช้งานช่วงสั้น",
+    "membership.summary.base": "ราคาปกติ",
+    "membership.summary.discount": "ส่วนลด",
+    "membership.summary.pay": "ยอดชำระ",
 
-  "benefits_lite.standard.t": "Standard",
-  "benefits_lite.standard.d": "การเข้าถึงแบบเริ่มต้นสำหรับสมาชิก: โครงสร้างชัด ใช้งานต่อเนื่อง",
+    "membership.btn.recalc": "คำนวณใหม่",
+    "membership.btn.notify": "Notify Team",
 
-  "benefits_lite.premium.t": "Premium",
-  "benefits_lite.premium.d": "ระดับความสำคัญสูงขึ้น + สิทธิ์ที่ครบกว่า เหมาะสำหรับผู้ใช้งานจริงจัง",
+    "membership.pay.title": "ช่องทางชำระเงิน",
 
-  "benefits_lite.black.t": "Black Card",
-  "benefits_lite.black.d": "การเข้าถึงแบบความสัมพันธ์ ทีมจะให้รายละเอียดเมื่อเหมาะสม",
+    "membership.pay.promptpay.title": "PromptPay (QR)",
+    "membership.pay.promptpay.sub": "สร้าง QR ตามยอดชำระ (อัปเดตอัตโนมัติ)",
+    "membership.pay.promptpay.pill": "แนะนำ",
 
-  "benefits_lite.cta.benefits": "ดูรายละเอียดสิทธิ์",
-  "benefits_lite.cta.blackcard": "Black Card",
-  "benefits_lite.note": "หมายเหตุ: สิทธิ์อาจอัปเดตตามช่วงเวลาและความเหมาะสม"
+    "membership.pay.ktb.title": "KTB Bank (โอนบัญชี)",
+    "membership.pay.ktb.pill": "KTB",
+    "membership.pay.ktb.name": "ชื่อบัญชี: ธัชชะ ป.",
+    "membership.pay.ktb.acc": "เลขบัญชี: 1420335898",
+    "membership.pay.copy": "COPY",
 
-     "membership.subtitle": "Membership Payment",
-"membership.step1.title": "STEP 1 — เลือกแพ็กเกจ & โปร",
-"membership.step2.title": "STEP 2 — เลือกช่องทางชำระเงิน",
+    "membership.pay.paypal.title": "PayPal",
+    "membership.pay.paypal.pill": "CREDIT CARD",
+    "membership.pay.paypal.fee": "Service charge 4%",
+    "membership.pay.paypal.after":
+      "หลังชำระเงินแล้ว ให้กลับมาที่หน้านี้และกด Notify Team เพื่อแจ้งทีมตรวจสอบ",
 
-"membership.form.package": "แพ็กเกจสมาชิก",
-"membership.form.promo": "Promo Code (ถ้ามี)",
-"membership.form.promo.ph": "e.g., XMAS2025",
-"membership.form.email": "อีเมลลูกค้า (optional)",
-"membership.form.email.ph": "you@example.com",
-"membership.form.name": "ชื่อ (optional)",
-"membership.form.name.ph": "Full name",
-"membership.form.memberId": "Member ID (optional)",
-"membership.form.memberId.ph": "MS / Member ID",
+    "membership.promptpay.id": "PromptPay ID",
+    "membership.promptpay.link": "ลิงก์",
+    "membership.promptpay.open": "open",
+    "membership.status.ready": "สถานะ: พร้อมใช้งาน",
 
-"membership.summary.base": "ราคาปกติ",
-"membership.summary.discount": "ส่วนลด",
-"membership.summary.pay": "ยอดชำระ",
+    /* =======================
+       Membership Benefits – Lite (Popup/page)
+       Keys MUST match embed:
+       - benefits_lite.title
+       - benefits_lite.hero.eyebrow / hero.h / hero.p
+       - benefits_lite.hero.cta_primary / hero.cta_secondary
+       - benefits_lite.preview.* guest.* standard.* premium.* black.*
+       - benefits_lite.note
+    ======================= */
+    "benefits_lite.title": "Benefits",
 
-"membership.btn.recalc": "คำนวณใหม่",
-"membership.btn.notify": "Notify Team",
+    "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+    "benefits_lite.hero.h": "Membership Benefits",
+    "benefits_lite.hero.p":
+      "ภาพรวมแบบกระชับของระดับการเข้าถึง เพื่อให้คุณเลือกแพ็กเกจได้ตรงกับการใช้งานจริง",
+    "benefits_lite.hero.cta_primary": "View Full Benefits",
+    "benefits_lite.hero.cta_secondary": "Black Card",
 
-"membership.pay.promptpay.title": "PromptPay (QR)",
-"membership.pay.promptpay.sub": "สร้าง QR ตามยอดที่ต้องชำระ (อัปเดตอัตโนมัติ)",
-"membership.pay.promptpay.pill": "แนะนำ",
+    "benefits_lite.preview.t": "Preview",
+    "benefits_lite.preview.d":
+      "ทำความเข้าใจระบบ แนวทาง และระดับการเข้าถึง (ยังไม่ใช่สมาชิก)",
 
-"membership.pay.ktb.title": "KTB Bank (โอนบัญชี)",
-"membership.pay.ktb.pill": "KTB",
-"membership.pay.ktb.name": "ชื่อบัญชี: ธัชชะ ป.",
-"membership.pay.ktb.acc": "เลขบัญชี: 1420335898",
-"membership.pay.copy": "COPY",
+    "benefits_lite.guest.t": "7 Days Guest Pass",
+    "benefits_lite.guest.d":
+      "ทดลองใช้งานแบบจำกัด 7 วัน เหมาะสำหรับการใช้งานช่วงสั้น",
 
-"membership.pay.paypal.title": "PayPal",
-"membership.pay.paypal.pill": "CREDIT CARD",
-"membership.pay.paypal.fee": "Service charge 4%",
-"membership.pay.paypal.after": "หลังชำระเงินแล้ว กลับมาและกด Notify Team เพื่อแจ้งทีมตรวจสอบ",
+    "benefits_lite.standard.t": "Standard",
+    "benefits_lite.standard.d":
+      "ระดับเริ่มต้นสำหรับสมาชิก โครงสร้างชัด ใช้งานต่อเนื่องได้",
 
-"membership.promptpay.id": "PromptPay ID",
-"membership.promptpay.link": "ลิงก์",
-"membership.promptpay.open": "open",
+    "benefits_lite.premium.t": "Premium",
+    "benefits_lite.premium.d":
+      "ลำดับความสำคัญสูงขึ้น + สิทธิ์ครบกว่า เหมาะสำหรับผู้ใช้งานจริงจัง",
 
-"membership.status.ready": "สถานะ: พร้อมใช้งาน",
+    "benefits_lite.black.t": "Black Card",
+    "benefits_lite.black.d":
+      "การเข้าถึงแบบความสัมพันธ์ ทีมจะให้รายละเอียดเมื่อเหมาะสม",
 
-"common.close": "Close"
-
-
-     
-     
+    "benefits_lite.note":
+      "หมายเหตุ: สิทธิ์อาจมีการอัปเดตตามช่วงเวลาและความเหมาะสม"
   },
 
   /* =======================
      ENGLISH
   ======================= */
   en: {
+    /* Common */
+    "common.close": "Close",
 
+    /* Lang labels */
+    "lang.th": "TH",
+    "lang.en": "EN",
+    "lang.zh": "中文",
+    "lang.jp": "JP",
+
+    /* Membership helpers */
     "membership.helper.vip":
       "You are recognized as a high-tier user with priority handling.",
     "membership.helper.blackcard":
@@ -169,328 +192,225 @@ Object.assign(window.I18N_DICT, {
     "membership.helper.admin":
       "Administrator mode for system review and management.",
 
+    /* Pay – Course */
     "pay.course.title": "Service Payment",
     "pay.course.subtitle": "Private Session · Course (PN / VIP)",
     "pay.course.option.deposit": "30% Deposit",
     "pay.course.option.deposit.m": "30% Deposit",
     "pay.course.option.full": "100% Full Payment",
-    "pay.course.note":
-      "Please review the payment option before proceeding.",
+    "pay.course.note": "Please review the payment option before proceeding.",
 
+    /* Pay – Travel */
     "pay.travel.title": "Activity Reservation Confirmation",
     "pay.travel.subtitle": "Lifestyle Companion · Travel · Party",
     "pay.travel.people": "Number of participants",
     "pay.travel.deposit": "20% Deposit",
     "pay.travel.deposit.m": "20% Deposit",
-    "pay.travel.balance":
-      "Remaining balance due on the activity date",
-    "pay.travel.note":
-      "This is not a transportation or ticket fee.",
+    "pay.travel.balance": "Remaining balance due on the activity date",
+    "pay.travel.note": "This is not a transportation or ticket fee.",
 
+    /* Pay – Renewal */
     "pay.renewal.title": "Membership Renewal",
     "pay.renewal.subtitle": "Standard · Premium",
-    "pay.renewal.note":
-      "Renewal terms may vary based on your previous usage.",
+    "pay.renewal.note": "Renewal terms may vary based on your previous usage.",
     "pay.renewal.cta": "Confirm renewal",
 
+    /* Pay – Upgrade */
     "pay.upgrade.title": "Membership Upgrade",
-    "pay.upgrade.subtitle":
-      "Standard → Premium · 7 Days → Premium",
+    "pay.upgrade.subtitle": "Standard → Premium · 7 Days → Premium",
     "pay.upgrade.case1":
       "Standard → Premium: Pay an additional 2,000 THB. Expiration date remains the same.",
     "pay.upgrade.case2":
       "7 Days → Premium: Upgrade within 15 days with an additional 2,000 THB.",
     "pay.upgrade.note":
       "After the eligible period, full Premium payment is required.",
-    "pay.upgrade.cta": "Confirm upgrade"
+    "pay.upgrade.cta": "Confirm upgrade",
 
-       "membership.subtitle": "Membership Payment",
-"membership.step1.title": "STEP 1 — Package & Promo",
-"membership.step2.title": "STEP 2 — Choose payment method",
-"membership.form.package": "Membership package",
-"membership.form.promo": "Promo code (optional)",
-"membership.summary.base": "Base price",
-"membership.summary.discount": "Discount",
-"membership.summary.pay": "Pay amount",
-"membership.btn.recalc": "Recalculate",
-"membership.btn.notify": "Notify Team",
-"membership.pay.promptpay.pill": "RECOMMENDED",
-"membership.pay.paypal.after": "After payment, come back and click Notify Team to notify our team.",
-"common.close": "Close"
+    /* Pay – Membership */
+    "membership.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
+    "membership.title": "Annual membership",
+    "membership.subtitle": "Membership Payment",
+    "membership.intro":
+      "MMD membership is billed annually for consistent access and ongoing updates. Choose the plan that matches your usage. If you prefer to try first, the 7 Days Guest Pass is designed for short-term access.",
+    "membership.benefits": "Benefits",
 
+    "membership.step1.title": "STEP 1 — Package & Promo",
+    "membership.step2.title": "STEP 2 — Choose payment method",
 
-     /* Pay – Membership */
-"membership.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
-"membership.title": "Annual membership packages",
-"membership.intro":
-  "MMD private packages are billed annually. There are two packages: Standard and Premium. Choose the package that matches your needs. If you are traveling or only need access for a short period, we offer a 7 Days Guest Pass for a 7-day trial.",
-"membership.benefits": "Benefits",
+    "membership.form.package": "Membership package",
+    "membership.form.promo": "Promo code (optional)",
+    "membership.form.promo.ph": "e.g., XMAS2025",
+    "membership.form.email": "Customer email (optional)",
+    "membership.form.email.ph": "you@example.com",
+    "membership.form.name": "Name (optional)",
+    "membership.form.name.ph": "Full name",
+    "membership.form.memberId": "Member ID (optional)",
+    "membership.form.memberId.ph": "MS / Member ID",
 
-"membership.pkg.standard.name": "Standard Package (1 year)",
-"membership.pkg.standard.desc":
-  "Access to group photo folders and Telegram Standard.",
-"membership.pkg.standard.price": "1,199 THB",
+    "membership.summary.base": "Base price",
+    "membership.summary.discount": "Discount",
+    "membership.summary.pay": "Pay amount",
 
-"membership.pkg.premium.name": "Premium Package (1 year)",
-"membership.pkg.premium.desc":
-  "Access to group photo folders and Telegram Premium + Standard.",
-"membership.pkg.premium.price": "2,999 THB",
+    "membership.btn.recalc": "Recalculate",
+    "membership.btn.notify": "Notify Team",
 
-"membership.pkg.guest7.name": "7 Days Guest Pass (7 days)",
-"membership.pkg.guest7.desc":
-  "Access to group photo folders and Telegram Premium + Standard for 7 days.",
-"membership.pkg.guest7.price": "1,499 THB",
+    "membership.pay.promptpay.pill": "RECOMMENDED",
+    "membership.pay.paypal.after":
+      "After payment, return to this page and click Notify Team so our team can verify.",
 
-"membership.pay.title": "Payment methods",
-"membership.pay.bank.title": "Bank transfer",
-"membership.pay.bank.name": "KTB Bank",
-"membership.pay.bank.acc": "Account No. 1420335898",
-"membership.pay.bank.owner": "Account name: Thatcha Pra",
-"membership.pay.paypal.title": "PayPal / Card",
-"membership.pay.paypal.cta": "Pay via PayPal",
+    /* Benefits – Lite */
+    "benefits_lite.title": "Benefits",
 
-/* Benefits – Lite */
-"benefits_lite.title": "Membership benefits",
-"benefits_lite.intro":
-  "As an MMD Privé member, you receive access to our Google Drive containing our largest image database, plus an invitation link to the Telegram group based on your selected package. This functions as a showroom for ongoing updates, news, and new images.",
+    "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+    "benefits_lite.hero.h": "Membership Benefits",
+    "benefits_lite.hero.p":
+      "A concise overview of access tiers to help you choose what fits your actual usage.",
+    "benefits_lite.hero.cta_primary": "View Full Benefits",
+    "benefits_lite.hero.cta_secondary": "Black Card",
 
-"benefits_lite.preview.t": "Preview",
-"benefits_lite.preview.d": "Understand our system, philosophy, and baseline structure.",
+    "benefits_lite.preview.t": "Preview",
+    "benefits_lite.preview.d":
+      "Understand the system, approach, and access structure (not a membership).",
 
-"benefits_lite.guest.t": "7 Days Guest Pass",
-"benefits_lite.guest.d": "Limited trial (not a membership). Experience real Premium access for 7 days.",
+    "benefits_lite.guest.t": "7 Days Guest Pass",
+    "benefits_lite.guest.d":
+      "Short-term access for 7 days, designed for quick usage.",
 
-"benefits_lite.standard.t": "Standard",
-"benefits_lite.standard.d": "Full access for members with spending up to 20,000 THB per session.",
+    "benefits_lite.standard.t": "Standard",
+    "benefits_lite.standard.d":
+      "The baseline membership tier with clear structure and continuity.",
 
-"benefits_lite.premium.t": "Premium",
-"benefits_lite.premium.d": "Full access for members with spending from 15,000–50,000 THB++ per session.",
+    "benefits_lite.premium.t": "Premium",
+    "benefits_lite.premium.d":
+      "Higher priority with fuller access, designed for serious users.",
 
-"benefits_lite.black.t": "Black Card",
-"benefits_lite.black.d": "Highest relationship-tier access. Granted by selection based on our internal criteria.",
+    "benefits_lite.black.t": "Black Card",
+    "benefits_lite.black.d":
+      "Relationship-tier access. Details are shared when appropriate.",
 
-"benefits_lite.cta.benefits": "View member benefits",
-"benefits_lite.cta.blackcard": "Black Card",
-
-   
-  "benefits_lite.note": "Note: Access may be updated over time."
-
+    "benefits_lite.note": "Note: Access may evolve over time."
   },
 
   /* =======================
      CHINESE (SIMPLIFIED)
   ======================= */
   zh: {
+    /* Common */
+    "common.close": "关闭",
 
-    "membership.helper.vip":
-      "您属于高等级用户，系统将优先处理。",
-    "membership.helper.blackcard":
-      "您持有 Black Card，享有特殊权限。",
-    "membership.helper.admin":
-      "管理员模式，用于系统管理。",
+    /* Lang labels */
+    "lang.th": "泰",
+    "lang.en": "EN",
+    "lang.zh": "中文",
+    "lang.jp": "JP",
 
-    "pay.course.title": "服务付款",
-    "pay.course.subtitle": "私人服务 · 课程 (PN / VIP)",
-    "pay.course.option.deposit": "30% 定金",
-    "pay.course.option.deposit.m": "30% 定金",
-    "pay.course.option.full": "全额付款 100%",
-    "pay.course.note": "请在继续前确认付款方式。",
+    /* Benefits – Lite (aligned keys) */
+    "benefits_lite.title": "权益",
 
-    "pay.travel.title": "活动预订确认",
-    "pay.travel.subtitle": "陪同 · 出行 · 派对",
-    "pay.travel.people": "参与人数",
-    "pay.travel.deposit": "20% 定金",
-    "pay.travel.deposit.m": "20% 定金",
-    "pay.travel.balance": "剩余款项于活动当天支付",
-    "pay.travel.note": "此费用不包含交通或机票。",
+    "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+    "benefits_lite.hero.h": "会员权益概览",
+    "benefits_lite.hero.p":
+      "用简洁方式说明不同层级权限，帮助你选择最符合实际使用的方案。",
+    "benefits_lite.hero.cta_primary": "查看完整权益",
+    "benefits_lite.hero.cta_secondary": "黑卡",
 
-    "pay.renewal.title": "会员续费",
-    "pay.renewal.subtitle": "Standard · Premium",
-    "pay.renewal.note":
-      "续费条件可能根据以往使用情况有所不同。",
-    "pay.renewal.cta": "确认续费",
+    "benefits_lite.preview.t": "预览",
+    "benefits_lite.preview.d": "了解系统与访问方式（非会员）。",
 
-    "pay.upgrade.title": "会员升级",
-    "pay.upgrade.subtitle":
-      "Standard → Premium · 7 天 → Premium",
-    "pay.upgrade.case1":
-      "Standard → Premium：追加支付 2,000 泰铢，到期日不变。",
-    "pay.upgrade.case2":
-      "7 天 → Premium：15 天内可升级，追加支付 2,000 泰铢。",
-    "pay.upgrade.note":
-      "超过期限需按 Premium 全额支付。",
-    "pay.upgrade.cta": "确认升级"
+    "benefits_lite.guest.t": "7 天体验",
+    "benefits_lite.guest.d": "适合短期使用的 7 天限时权限。",
 
- "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
-  "benefits_lite.hero.title": "会员权益概览",
-  "benefits_lite.hero.subtitle": "快速了解不同层级权限，选择适合你的方案。",
+    "benefits_lite.standard.t": "Standard",
+    "benefits_lite.standard.d": "基础会员层级：结构清晰，可持续使用。",
 
-  "benefits_lite.preview.t": "预览",
-  "benefits_lite.preview.d": "了解系统与访问方式（非会员）。",
+    "benefits_lite.premium.t": "Premium",
+    "benefits_lite.premium.d": "更高优先级与更完整权限，适合深度用户。",
 
-  "benefits_lite.guest.t": "7 天体验",
-  "benefits_lite.guest.d": "适合短期使用的 7 天游览权限。",
+    "benefits_lite.black.t": "黑卡",
+    "benefits_lite.black.d": "基于关系的访问，细节将由团队在合适时提供。",
 
-  "benefits_lite.standard.t": "标准会员",
-  "benefits_lite.standard.d": "基础会员权限：结构清晰，可持续使用。",
-
-  "benefits_lite.premium.t": "高级会员",
-  "benefits_lite.premium.d": "更高优先级与更完整权限，适合深度用户。",
-
-  "benefits_lite.black.t": "黑卡",
-  "benefits_lite.black.d": "基于关系的访问，具体细节将由团队在合适时提供。",
-
-  "benefits_lite.cta.benefits": "查看完整权益",
-  "benefits_lite.cta.blackcard": "黑卡",
-  "benefits_lite.note": "注：权限可能会随时间更新。"
-       
-
-     /* Pay – Membership */
-"membership.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
-"membership.title": "年度会员套餐",
-"membership.intro":
-  "MMD 私人套餐按年计费，分为 Standard 与 Premium 两种。请选择最符合你需求的套餐。如仅短期或旅行期间使用，我们提供 7 天体验的 Guest Pass。",
-"membership.benefits": "会员权益",
-
-"membership.pkg.standard.name": "Standard（1 年）",
-"membership.pkg.standard.desc": "可访问群组图片资料与 Telegram Standard。",
-"membership.pkg.standard.price": "1,199 THB",
-
-"membership.pkg.premium.name": "Premium（1 年）",
-"membership.pkg.premium.desc": "可访问群组图片资料与 Telegram Premium + Standard。",
-"membership.pkg.premium.price": "2,999 THB",
-
-"membership.pkg.guest7.name": "7 天体验卡",
-"membership.pkg.guest7.desc": "7 天内可访问群组图片资料与 Premium + Standard Telegram。",
-"membership.pkg.guest7.price": "1,499 THB",
-
-"membership.pay.title": "付款方式",
-"membership.pay.bank.title": "银行转账",
-"membership.pay.bank.name": "KTB 银行",
-"membership.pay.bank.acc": "账号 1420335898",
-"membership.pay.bank.owner": "户名：Thatcha Pra",
-"membership.pay.paypal.title": "PayPal / Card",
-"membership.pay.paypal.cta": "使用 PayPal 付款",
-
-/* Benefits – Lite */
-"benefits_lite.title": "会员权益",
-"benefits_lite.intro":
-  "成为 MMD Privé 会员后，你将获得我们最大的图片数据库（Google Drive）访问权限，并根据所选套餐获得 Telegram 群组邀请链接。该群组相当于 showroom，可持续更新资讯与新图片。",
-
-"benefits_lite.preview.t": "预览",
-"benefits_lite.preview.d": "了解我们的系统理念与基础结构。",
-
-"benefits_lite.guest.t": "7 天体验卡",
-"benefits_lite.guest.d": "有限体验（非会员）。7 天内体验真实 Premium 权限。",
-
-"benefits_lite.standard.t": "Standard",
-"benefits_lite.standard.d": "完整权限，适用于单次预算不超过 20,000 THB 的用户。",
-
-"benefits_lite.premium.t": "Premium",
-"benefits_lite.premium.d": "完整权限，适用于单次预算约 15,000–50,000 THB++ 的用户。",
-
-"benefits_lite.black.t": "Black Card",
-"benefits_lite.black.d": "最高关系层级权限，将按我们的标准进行筛选授予。",
-
-"benefits_lite.cta.benefits": "查看会员权益",
-"benefits_lite.cta.blackcard": "Black Card",
-
-     "membership.subtitle": "会员付款",
-"membership.step1.title": "STEP 1 — 选择套餐与优惠",
-"membership.step2.title": "STEP 2 — 选择支付方式",
-"membership.form.package": "会员套餐",
-"membership.summary.base": "原价",
-"membership.summary.discount": "折扣",
-"membership.summary.pay": "支付金额",
-"membership.btn.recalc": "重新计算",
-"membership.btn.notify": "通知团队",
-"membership.pay.promptpay.pill": "推荐",
-"membership.pay.paypal.after": "付款后请返回并点击 Notify Team 通知团队核对。",
-"common.close": "关闭"
-
-
+    "benefits_lite.note": "注：权限可能会随时间更新。"
   },
 
   /* =======================
      CHINESE (TRADITIONAL)
   ======================= */
   "zh-Hant": {
+    /* Common */
+    "common.close": "關閉",
 
-    "membership.helper.vip":
-      "您屬於高等級用戶，系統將優先處理。",
-    "membership.helper.blackcard":
-      "您持有 Black Card，享有特殊權限。",
-    "membership.helper.admin":
-      "管理員模式，用於系統管理。"
+    /* Lang labels */
+    "lang.th": "泰",
+    "lang.en": "EN",
+    "lang.zh": "中文",
+    "lang.jp": "JP",
 
-     /* Pay – Membership */
-"membership.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
-"membership.title": "年度會員方案",
-"membership.intro":
-  "MMD 私人方案採年費制，提供 Standard 與 Premium 兩種。如僅短期或旅遊期間使用，可選擇 7 天體驗的 Guest Pass。",
-"membership.benefits": "會員權益",
+    /* Benefits – Lite (aligned keys) */
+    "benefits_lite.title": "權益",
 
-"membership.pkg.standard.name": "Standard（1 年）",
-"membership.pkg.standard.desc": "可存取群組圖片資料與 Telegram Standard。",
-"membership.pkg.standard.price": "1,199 THB",
+    "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+    "benefits_lite.hero.h": "會員權益概覽",
+    "benefits_lite.hero.p":
+      "以精簡方式說明不同層級權限，協助你選擇最符合實際使用的方案。",
+    "benefits_lite.hero.cta_primary": "查看完整權益",
+    "benefits_lite.hero.cta_secondary": "黑卡",
 
-"membership.pkg.premium.name": "Premium（1 年）",
-"membership.pkg.premium.desc": "可存取群組圖片資料與 Telegram Premium + Standard。",
-"membership.pkg.premium.price": "2,999 THB",
+    "benefits_lite.preview.t": "預覽",
+    "benefits_lite.preview.d": "了解系統與存取方式（非會員）。",
 
-"membership.pkg.guest7.name": "7 天體驗卡",
-"membership.pkg.guest7.desc": "7 天內可存取群組圖片資料與 Premium + Standard Telegram。",
-"membership.pkg.guest7.price": "1,499 THB",
+    "benefits_lite.guest.t": "7 天體驗",
+    "benefits_lite.guest.d": "適合短期使用的 7 天限時權限。",
 
-"membership.pay.title": "付款方式",
-"membership.pay.bank.title": "銀行轉帳",
-"membership.pay.bank.name": "KTB 銀行",
-"membership.pay.bank.acc": "帳號 1420335898",
-"membership.pay.bank.owner": "戶名：Thatcha Pra",
-"membership.pay.paypal.title": "PayPal / Card",
-"membership.pay.paypal.cta": "使用 PayPal 付款",
+    "benefits_lite.standard.t": "Standard",
+    "benefits_lite.standard.d": "基礎會員層級：結構清晰，可持續使用。",
 
-/* Benefits – Lite */
-"benefits_lite.title": "會員權益",
-"benefits_lite.intro":
-  "成為 MMD Privé 會員後，你將獲得我們最大的圖片資料庫（Google Drive）存取權限，並依所選方案取得 Telegram 群組邀請連結。該群組如 showroom，可持續更新資訊與新圖片。",
+    "benefits_lite.premium.t": "Premium",
+    "benefits_lite.premium.d": "更高優先級與更完整權限，適合深度用戶。",
 
-"benefits_lite.preview.t": "預覽",
-"benefits_lite.preview.d": "了解我們的系統理念與基礎結構。",
+    "benefits_lite.black.t": "黑卡",
+    "benefits_lite.black.d": "基於關係的存取，細節將由團隊於合適時提供。",
 
-"benefits_lite.guest.t": "7 天體驗卡",
-"benefits_lite.guest.d": "有限體驗（非會員）。7 天內體驗真實 Premium 權限。",
+    "benefits_lite.note": "註：權限可能會隨時間更新。"
+  },
 
-"benefits_lite.standard.t": "Standard",
-"benefits_lite.standard.d": "完整權限，適用於單次預算不超過 20,000 THB 的用戶。",
-
-"benefits_lite.premium.t": "Premium",
-"benefits_lite.premium.d": "完整權限，適用於單次預算約 15,000–50,000 THB++ 的用戶。",
-
-"benefits_lite.black.t": "Black Card",
-"benefits_lite.black.d": "最高關係層級權限，將依我們的標準篩選授予。",
-
-"benefits_lite.cta.benefits": "查看會員權益",
-"benefits_lite.cta.blackcard": "Black Card",
-
-  }
- /* =======================
-    JAPANEESE
+  /* =======================
+     JAPANESE
   ======================= */
-  "jp: {
-"membership.subtitle": "メンバーシップ決済",
-"membership.step1.title": "STEP 1 — プランとプロモ",
-"membership.step2.title": "STEP 2 — 支払い方法",
-"membership.form.package": "メンバーシッププラン",
-"membership.summary.base": "通常価格",
-"membership.summary.discount": "割引",
-"membership.summary.pay": "支払金額",
-"membership.btn.recalc": "再計算",
-"membership.btn.notify": "チームへ通知",
-"membership.pay.promptpay.pill": "おすすめ",
-"membership.pay.paypal.after": "支払い後、このページに戻り Notify Team を押して連絡してください。",
-"common.close": "閉じる"
+  jp: {
+    /* Common */
+    "common.close": "閉じる",
 
+    /* Lang labels */
+    "lang.th": "TH",
+    "lang.en": "EN",
+    "lang.zh": "中文",
+    "lang.jp": "JP",
 
+    /* Benefits – Lite (aligned keys) */
+    "benefits_lite.title": "特典",
 
+    "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+    "benefits_lite.hero.h": "Membership Benefits",
+    "benefits_lite.hero.p":
+      "利用スタイルに合うプランを選べるよう、アクセス階層を簡潔にまとめています。",
+    "benefits_lite.hero.cta_primary": "View Full Benefits",
+    "benefits_lite.hero.cta_secondary": "Black Card",
+
+    "benefits_lite.preview.t": "Preview",
+    "benefits_lite.preview.d": "仕組みとアクセス方針を理解する（非会員）。",
+
+    "benefits_lite.guest.t": "7 Days Guest Pass",
+    "benefits_lite.guest.d": "短期利用向けの7日間アクセス。",
+
+    "benefits_lite.standard.t": "Standard",
+    "benefits_lite.standard.d": "基本の会員階層。構造が明確で継続利用に適しています。",
+
+    "benefits_lite.premium.t": "Premium",
+    "benefits_lite.premium.d": "優先度が高く、より充実したアクセス。ヘビーユーザー向け。",
+
+    "benefits_lite.black.t": "Black Card",
+    "benefits_lite.black.d": "関係性に基づくアクセス。詳細は適切なタイミングでご案内します。",
+
+    "benefits_lite.note": "注：権限は状況により更新される場合があります。"
+  }
 });
