@@ -1,9 +1,18 @@
-/* MMD Privé - Local i18n (Dict + Core)
-   Version: 2025.12.29
-*/
+
+/* MMD Privé Local i18n - Dict + Core */
 
 window.I18N_DICT = window.I18N_DICT || {};
 Object.assign(window.I18N_DICT, {
+  th: { /* dict */ },
+  en: { /* dict */ },
+  zh: { /* dict */ },
+  ja: { /* dict */ }
+});
+
+(function () {
+  // core engine ที่ผมให้ไป
+})();
+
 
   th: {
     /* ===== Package Names ===== */
