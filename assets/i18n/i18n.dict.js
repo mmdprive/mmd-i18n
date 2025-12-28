@@ -179,6 +179,8 @@ Object.assign(window.I18N_DICT, {
   "benefits_lite.cta.benefits": "ดูรายละเอียดสิทธิ์",
   "benefits_lite.cta.blackcard": "Black Card",
   "benefits_lite.note": "หมายเหตุ: สิทธิ์อาจอัปเดตตามช่วงเวลาและความเหมาะสม"
+
+     
      
   },
 
@@ -297,27 +299,7 @@ Object.assign(window.I18N_DICT, {
 "benefits_lite.cta.benefits": "View member benefits",
 "benefits_lite.cta.blackcard": "Black Card",
 
-       "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
-  "benefits_lite.hero.title": "Membership Benefits",
-  "benefits_lite.hero.subtitle": "A fast overview of access tiers so you can choose the right package.",
-
-  "benefits_lite.preview.t": "Preview",
-  "benefits_lite.preview.d": "Understand the system and access approach (not a membership).",
-
-  "benefits_lite.guest.t": "7 Days Guest Pass",
-  "benefits_lite.guest.d": "Limited 7-day access for short visits.",
-
-  "benefits_lite.standard.t": "Standard",
-  "benefits_lite.standard.d": "Core membership access with clear structure and continuity.",
-
-  "benefits_lite.premium.t": "Premium",
-  "benefits_lite.premium.d": "Higher priority with expanded access for serious users.",
-
-  "benefits_lite.black.t": "Black Card",
-  "benefits_lite.black.d": "Relationship-based access. Details shared when appropriate.",
-
-  "benefits_lite.cta.benefits": "View full benefits",
-  "benefits_lite.cta.blackcard": "Black Card",
+   
   "benefits_lite.note": "Note: Access may be updated over time."
 
   },
