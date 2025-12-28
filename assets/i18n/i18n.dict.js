@@ -157,7 +157,28 @@ Object.assign(window.I18N_DICT, {
 "membership.status.ready": "สถานะ: พร้อมใช้งาน",
 
 "common.close": "Close"
+  "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+  "benefits_lite.hero.title": "สิทธิประโยชน์สมาชิก",
+  "benefits_lite.hero.subtitle": "สรุประดับการเข้าถึงแบบอ่านจบใน 10 วินาที เพื่อเลือกแพ็กเกจที่เหมาะกับคุณ",
 
+  "benefits_lite.preview.t": "Preview",
+  "benefits_lite.preview.d": "ทำความเข้าใจระบบและแนวทางการเข้าถึง (ยังไม่ใช่สมาชิก)",
+
+  "benefits_lite.guest.t": "7 Days Guest Pass",
+  "benefits_lite.guest.d": "ทดลองใช้งานแบบจำกัด 7 วัน เหมาะสำหรับการใช้งานช่วงสั้น",
+
+  "benefits_lite.standard.t": "Standard",
+  "benefits_lite.standard.d": "การเข้าถึงแบบเริ่มต้นสำหรับสมาชิก: โครงสร้างชัด ใช้งานต่อเนื่อง",
+
+  "benefits_lite.premium.t": "Premium",
+  "benefits_lite.premium.d": "ระดับความสำคัญสูงขึ้น + สิทธิ์ที่ครบกว่า เหมาะสำหรับผู้ใช้งานจริงจัง",
+
+  "benefits_lite.black.t": "Black Card",
+  "benefits_lite.black.d": "การเข้าถึงแบบความสัมพันธ์ ทีมจะให้รายละเอียดเมื่อเหมาะสม",
+
+  "benefits_lite.cta.benefits": "ดูรายละเอียดสิทธิ์",
+  "benefits_lite.cta.blackcard": "Black Card",
+  "benefits_lite.note": "หมายเหตุ: สิทธิ์อาจอัปเดตตามช่วงเวลาและความเหมาะสม"
      
   },
 
@@ -276,6 +297,29 @@ Object.assign(window.I18N_DICT, {
 "benefits_lite.cta.benefits": "View member benefits",
 "benefits_lite.cta.blackcard": "Black Card",
 
+       "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+  "benefits_lite.hero.title": "Membership Benefits",
+  "benefits_lite.hero.subtitle": "A fast overview of access tiers so you can choose the right package.",
+
+  "benefits_lite.preview.t": "Preview",
+  "benefits_lite.preview.d": "Understand the system and access approach (not a membership).",
+
+  "benefits_lite.guest.t": "7 Days Guest Pass",
+  "benefits_lite.guest.d": "Limited 7-day access for short visits.",
+
+  "benefits_lite.standard.t": "Standard",
+  "benefits_lite.standard.d": "Core membership access with clear structure and continuity.",
+
+  "benefits_lite.premium.t": "Premium",
+  "benefits_lite.premium.d": "Higher priority with expanded access for serious users.",
+
+  "benefits_lite.black.t": "Black Card",
+  "benefits_lite.black.d": "Relationship-based access. Details shared when appropriate.",
+
+  "benefits_lite.cta.benefits": "View full benefits",
+  "benefits_lite.cta.blackcard": "Black Card",
+  "benefits_lite.note": "Note: Access may be updated over time."
+
   },
 
   /* =======================
@@ -321,6 +365,30 @@ Object.assign(window.I18N_DICT, {
     "pay.upgrade.note":
       "超过期限需按 Premium 全额支付。",
     "pay.upgrade.cta": "确认升级"
+
+ "benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+  "benefits_lite.hero.title": "会员权益概览",
+  "benefits_lite.hero.subtitle": "快速了解不同层级权限，选择适合你的方案。",
+
+  "benefits_lite.preview.t": "预览",
+  "benefits_lite.preview.d": "了解系统与访问方式（非会员）。",
+
+  "benefits_lite.guest.t": "7 天体验",
+  "benefits_lite.guest.d": "适合短期使用的 7 天游览权限。",
+
+  "benefits_lite.standard.t": "标准会员",
+  "benefits_lite.standard.d": "基础会员权限：结构清晰，可持续使用。",
+
+  "benefits_lite.premium.t": "高级会员",
+  "benefits_lite.premium.d": "更高优先级与更完整权限，适合深度用户。",
+
+  "benefits_lite.black.t": "黑卡",
+  "benefits_lite.black.d": "基于关系的访问，具体细节将由团队在合适时提供。",
+
+  "benefits_lite.cta.benefits": "查看完整权益",
+  "benefits_lite.cta.blackcard": "黑卡",
+  "benefits_lite.note": "注：权限可能会随时间更新。"
+       
 
      /* Pay – Membership */
 "membership.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
