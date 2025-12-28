@@ -1,19 +1,7 @@
-
-/* MMD Privé Local i18n - Dict + Core */
+/* MMD Privé Local i18n - Dict + Core (JS only) */
 
 window.I18N_DICT = window.I18N_DICT || {};
 Object.assign(window.I18N_DICT, {
-  th: { /* dict */ },
-  en: { /* dict */ },
-  zh: { /* dict */ },
-  ja: { /* dict */ }
-});
-
-(function () {
-  // core engine ที่ผมให้ไป
-})();
-
-
   th: {
     /* ===== Package Names ===== */
     "comparison.pkg.guest": "7 Days Guest Pass",
@@ -88,8 +76,10 @@ Object.assign(window.I18N_DICT, {
     "comparison.premium.rule.note": "สิทธิ์เป็นแบบไล่ระดับ และขึ้นกับเงื่อนไขของระบบ",
 
     /* ===== Notes ===== */
-    "comparison.note.vip": "ผู้ที่มียอดใช้จ่ายภายใน 365 วันบิลรวมเกิน 120,000 บาท จะได้รับสิทธิ์เข้ากลุ่ม Telegram: MMD VIP Lounge ทันที",
-    "comparison.note.expiry": "เมื่อสมาชิกหมดอายุ จะถูกถอดออกจาก Google Drive ทันที และคงสิทธิ์ได้เฉพาะใน Telegram Standard เท่านั้น"
+    "comparison.note.vip":
+      "ผู้ที่มียอดใช้จ่ายภายใน 365 วันบิลรวมเกิน 120,000 บาท จะได้รับสิทธิ์เข้ากลุ่ม Telegram: MMD VIP Lounge ทันที",
+    "comparison.note.expiry":
+      "เมื่อสมาชิกหมดอายุ จะถูกถอดออกจาก Google Drive ทันที และคงสิทธิ์ได้เฉพาะใน Telegram Standard เท่านั้น"
   },
 
   en: {
@@ -158,8 +148,10 @@ Object.assign(window.I18N_DICT, {
     "comparison.premium.rule.r3": "3+ sessions: Access Secret Exclusive Models",
     "comparison.premium.rule.note": "Access is progressive and subject to eligibility",
 
-    "comparison.note.vip": "Members with total spending over THB 120,000 within 365 days will gain instant access to Telegram: MMD VIP Lounge.",
-    "comparison.note.expiry": "Upon expiry, Google Drive access will be revoked immediately, and only Telegram Standard access will remain."
+    "comparison.note.vip":
+      "Members with total spending over THB 120,000 within 365 days will gain instant access to Telegram: MMD VIP Lounge.",
+    "comparison.note.expiry":
+      "Upon expiry, Google Drive access will be revoked immediately, and only Telegram Standard access will remain."
   },
 
   zh: {
@@ -228,8 +220,10 @@ Object.assign(window.I18N_DICT, {
     "comparison.premium.rule.r3": "使用3次以上：访问更高级的秘密专属模特",
     "comparison.premium.rule.note": "权限为递进式，需符合系统条件",
 
-    "comparison.note.vip": "365天内累计消费超过120,000泰铢的会员，可立即加入 Telegram：MMD VIP Lounge。",
-    "comparison.note.expiry": "会员到期后将立即移除 Google Drive 权限，仅保留 Telegram Standard 权限。"
+    "comparison.note.vip":
+      "365天内累计消费超过120,000泰铢的会员，可立即加入 Telegram：MMD VIP Lounge。",
+    "comparison.note.expiry":
+      "会员到期后将立即移除 Google Drive 权限，仅保留 Telegram Standard 权限。"
   },
 
   ja: {
@@ -298,34 +292,26 @@ Object.assign(window.I18N_DICT, {
     "comparison.premium.rule.r3": "3回以上利用：シークレット専属モデルにアクセス可能",
     "comparison.premium.rule.note": "権限は段階的に付与され、条件に基づきます",
 
-    "comparison.note.vip": "365日以内の累計利用額が120,000バーツを超えると、Telegram：MMD VIP Lounge へ即時参加できます。",
-    "comparison.note.expiry": "有効期限終了後、Google Drive アクセスは即時停止され、Telegram Standard のみが維持されます。"
+    "comparison.note.vip":
+      "365日以内の累計利用額が120,000バーツを超えると、Telegram：MMD VIP Lounge へ即時参加できます。",
+    "comparison.note.expiry":
+      "有効期限終了後、Google Drive アクセスは即時停止され、Telegram Standard のみが維持されます。"
   }
-
 });
-</script>
 
-<script>
 /* =========================================================
-   2) CORE i18n ENGINE
-   - Applies translations to:
-     [data-i18n]              -> innerHTML
-     [data-i18n-placeholder]  -> placeholder
-     [data-i18n-title]        -> title
-   - Language resolution order:
-     ?lang=xx -> localStorage -> <html lang=""> -> default
+   CORE i18n ENGINE (no <script> tags in this file)
 ========================================================= */
 (function () {
   "use strict";
 
   const STORAGE_KEY = "mmd_lang";
   const DEFAULT_LANG = "th";
-  const SUPPORTED = ["th","en","zh","ja"];
+  const SUPPORTED = ["th", "en", "zh", "ja"];
 
   function normalizeLang(raw) {
     if (!raw) return null;
     const s = String(raw).toLowerCase();
-    // map common variants
     if (s.startsWith("zh")) return "zh";
     if (s.startsWith("ja") || s.startsWith("jp")) return "ja";
     if (s.startsWith("en")) return "en";
@@ -356,6 +342,40 @@ Object.assign(window.I18N_DICT, {
     return DEFAULT_LANG;
   }
 
+  function applyI18n(forcedLang) {
+    const lang = forcedLang || getLang();
+    const dict = (window.I18N_DICT && window.I18N_DICT[lang]) || {};
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (!key) return;
+      const val = dict[key];
+      if (val != null) el.innerHTML = val;
+    });
+
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (!key) return;
+      const val = dict[key];
+      if (val != null) el.setAttribute("placeholder", val);
+    });
+
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-title");
+      if (!key) return;
+      const val = dict[key];
+      if (val != null) el.setAttribute("title", val);
+    });
+
+    document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+      const bLang = normalizeLang(btn.getAttribute("data-lang-btn"));
+      if (!bLang) return;
+      btn.setAttribute("aria-current", bLang === lang ? "true" : "false");
+    });
+
+    window.dispatchEvent(new CustomEvent("mmd:i18n:applied", { detail: { lang } }));
+  }
+
   function setLang(lang) {
     const next = normalizeLang(lang) || DEFAULT_LANG;
     localStorage.setItem(STORAGE_KEY, next);
@@ -369,51 +389,6 @@ Object.assign(window.I18N_DICT, {
     return dict[key];
   }
 
-  function applyNodeText(el, value) {
-    // allow explicit HTML in dict (used for line breaks / emphasis in table)
-    el.innerHTML = value;
-  }
-
-  function applyI18n(forcedLang) {
-    const lang = forcedLang || getLang();
-    const dict = (window.I18N_DICT && window.I18N_DICT[lang]) || {};
-
-    // data-i18n -> innerHTML
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
-      if (!key) return;
-      const val = dict[key];
-      if (val != null) applyNodeText(el, val);
-    });
-
-    // placeholder
-    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-placeholder");
-      if (!key) return;
-      const val = dict[key];
-      if (val != null) el.setAttribute("placeholder", val);
-    });
-
-    // title
-    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-title");
-      if (!key) return;
-      const val = dict[key];
-      if (val != null) el.setAttribute("title", val);
-    });
-
-    // optional: mark active language buttons
-    document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
-      const bLang = normalizeLang(btn.getAttribute("data-lang-btn"));
-      if (!bLang) return;
-      btn.setAttribute("aria-current", bLang === lang ? "true" : "false");
-    });
-
-    // dispatch event for other scripts (optional hook)
-    window.dispatchEvent(new CustomEvent("mmd:i18n:applied", { detail: { lang } }));
-  }
-
-  // Expose API
   window.MMD = window.MMD || {};
   window.MMD.i18n = window.MMD.i18n || {};
   window.MMD.i18n.getLang = getLang;
@@ -421,14 +396,12 @@ Object.assign(window.I18N_DICT, {
   window.MMD.i18n.apply = applyI18n;
   window.MMD.i18n.t = t;
 
-  // Auto-apply
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => applyI18n());
   } else {
     applyI18n();
   }
 
-  // Optional: auto-wire click handlers for elements with [data-set-lang]
   document.addEventListener("click", (e) => {
     const el = e.target && e.target.closest && e.target.closest("[data-set-lang]");
     if (!el) return;
@@ -438,25 +411,3 @@ Object.assign(window.I18N_DICT, {
     setLang(lang);
   });
 })();
-</script>
-
-<!-- =========================
- HOW TO USE (examples)
- 1) Text:
-   <div data-i18n="comparison.note.vip"></div>
-
- 2) Placeholder:
-   <input data-i18n-placeholder="ui.search.placeholder" />
-
- 3) Title tooltip:
-   <span data-i18n-title="comparison.premium.rule.note">i</span>
-
- 4) Language switch:
-   <a href="#" data-set-lang="th" data-lang-btn="th">TH</a>
-   <a href="#" data-set-lang="en" data-lang-btn="en">EN</a>
-   <a href="#" data-set-lang="zh" data-lang-btn="zh">中文</a>
-   <a href="#" data-set-lang="ja" data-lang-btn="ja">日本語</a>
-
- Quick test in console:
-   MMD.i18n.setLang('en')
-========================= -->
