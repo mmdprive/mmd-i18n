@@ -153,5 +153,46 @@ window.I18N_DICT.th = Object.assign({}, window.I18N_DICT.th || {}, {
 "benefits_lite.table.val.premium_access": "สมาชิกเต็มรูปแบบ",
 "benefits_lite.table.val.black_access": "เชิงความสัมพันธ์"
 
+// TH — Benefits Lite (Per Lux)
+"benefits_lite.title": "Benefits",
+"benefits_lite.hero.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
+"benefits_lite.hero.h": "สิทธิ์สมาชิกโดยสรุป",
+"benefits_lite.hero.p": "ภาพรวมแบบกระชับ เพื่อเลือกแพ็กเกจที่เหมาะกับรูปแบบการใช้งานของคุณ",
+"benefits_lite.hero.cta_primary": "ดูสิทธิ์แบบละเอียด",
+"benefits_lite.hero.cta_secondary": "Black Card",
+
+"benefits_lite.preview.t": "Preview",
+"benefits_lite.preview.d": "สำรวจระบบและแนวทางการเข้าถึง เพื่อประเมินความเหมาะสมก่อนสมัคร",
+
+"benefits_lite.guest.t": "7 Days Guest Pass",
+"benefits_lite.guest.d": "ทดลองใช้งาน 7 วัน เหมาะสำหรับช่วงสั้นหรือช่วงเดินทาง",
+
+"benefits_lite.standard.t": "Standard",
+"benefits_lite.standard.d": "ทางเลือกเริ่มต้นสำหรับสมาชิก: โครงสร้างชัด และใช้งานต่อเนื่อง",
+
+"benefits_lite.premium.t": "Premium",
+"benefits_lite.premium.d": "ระดับความสำคัญสูงขึ้น พร้อมสิทธิ์ที่ครบกว่า เหมาะกับผู้ใช้งานจริงจัง",
+
+"benefits_lite.black.t": "Black Card",
+"benefits_lite.black.d": "การเข้าถึงระดับความสัมพันธ์ ทีมจะให้รายละเอียดเมื่อเหมาะสม",
+
+"benefits_lite.note": "หมายเหตุ: สิทธิ์อาจอัปเดตตามช่วงเวลาและความเหมาะสม",
+
+// TH — Compare table
+"benefits_lite.compare.title": "ตารางเปรียบเทียบสิทธิ์",
+"benefits_lite.compare.sub": "ดูภาพรวมสิทธิ์แบบรวดเร็ว ก่อนเลือกแพ็กเกจ",
+"benefits_lite.compare.h.feature": "รายการสิทธิ์",
+"benefits_lite.compare.h.preview": "Preview",
+"benefits_lite.compare.h.guest": "7 Days",
+"benefits_lite.compare.h.standard": "Standard",
+"benefits_lite.compare.h.premium": "Premium",
+"benefits_lite.compare.h.black": "Black",
+"benefits_lite.compare.r1": "เข้าชมโครงสร้างระบบ / แนวทาง",
+"benefits_lite.compare.r2": "สิทธิ์เข้าถึงฐานข้อมูลรูป (Google Drive)",
+"benefits_lite.compare.r3": "ลิงก์เข้ากลุ่ม Telegram",
+"benefits_lite.compare.r4": "อัปเดต / คอนเทนต์ใหม่ (ตามรอบ)",
+"benefits_lite.compare.r5": "ลำดับความสำคัญในการดูแล",
+"benefits_lite.compare.r6": "Black Card consideration",
+
 
 });
