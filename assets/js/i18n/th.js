@@ -85,4 +85,73 @@ window.I18N_DICT.th = Object.assign({}, window.I18N_DICT.th || {}, {
   "comparison.note.expiry":
     "เมื่อสมาชิกหมดอายุ จะถูกถอดออกจาก Google Drive ทันที และคงสิทธิ์ได้เฉพาะใน Telegram Standard เท่านั้น"
 
+   /* ===== Benefits Lite (Per Lux • TH) ===== */
+"benefits_lite.title": "Benefits",
+"benefits_lite.hero.eyebrow": "MEMBERSHIP PAYMENT",
+"benefits_lite.hero.h": "Membership Benefits",
+"benefits_lite.hero.p": "ภาพรวมสิทธิ์แบบกระชับ เพื่อให้คุณเลือกแพ็กเกจได้ตรงระดับการใช้งาน",
+"benefits_lite.hero.cta_primary": "ดูสิทธิ์แบบเต็ม",
+"benefits_lite.hero.cta_secondary": "Black Card",
+
+"benefits_lite.section.overview": "สรุปสิทธิ์แบบเร็ว",
+"benefits_lite.section.compare": "ตารางเปรียบเทียบสิทธิ์",
+"benefits_lite.note": "หมายเหตุ: สิทธิ์และเงื่อนไขอาจมีการปรับตามช่วงเวลา ความเหมาะสม และดุลยพินิจของทีม",
+
+/* Cards (Per Lux tone) */
+"benefits_lite.preview.t": "Preview",
+"benefits_lite.preview.d": "สำรวจระบบและแนวทางการเข้าถึง เพื่อประเมินความเหมาะสมก่อนสมัคร",
+"benefits_lite.guest.t": "7 Days Guest Pass",
+"benefits_lite.guest.d": "ทดลองใช้งาน 7 วัน สำหรับการใช้งานระยะสั้นหรือช่วงเดินทาง",
+"benefits_lite.standard.t": "Standard",
+"benefits_lite.standard.d": "ทางเลือกเริ่มต้นสำหรับสมาชิก: โครงสร้างชัดเจน และใช้งานต่อเนื่อง",
+"benefits_lite.premium.t": "Premium",
+"benefits_lite.premium.d": "สิทธิ์ครบกว่าและลำดับความสำคัญสูงขึ้น เหมาะกับผู้ใช้งานจริงจัง",
+"benefits_lite.black.t": "Black Card",
+"benefits_lite.black.d": "ระดับความสัมพันธ์ ทีมจะแจ้งรายละเอียดเมื่อเหมาะสม",
+
+/* Compare table */
+"benefits_lite.table.col.feature": "หัวข้อ",
+"benefits_lite.table.col.preview": "Preview",
+"benefits_lite.table.col.guest7": "7 Days",
+"benefits_lite.table.col.standard": "Standard",
+"benefits_lite.table.col.premium": "Premium",
+"benefits_lite.table.col.black": "Black",
+
+"benefits_lite.table.row.drive": "คลังภาพ (Drive / Gallery)",
+"benefits_lite.table.row.telegram": "Telegram Group",
+"benefits_lite.table.row.updates": "อัปเดตคอนเทนต์ / ข่าวสาร",
+"benefits_lite.table.row.support": "การดูแลและลำดับความสำคัญ",
+"benefits_lite.table.row.access": "สิทธิ์ในการเข้าถึงระดับแพ็กเกจ",
+
+"benefits_lite.table.val.preview_drive": "—",
+"benefits_lite.table.val.guest7_drive": "ทดลอง (ระยะเวลา 7 วัน)",
+"benefits_lite.table.val.standard_drive": "มาตรฐานสมาชิก",
+"benefits_lite.table.val.premium_drive": "ครบกว่า + เร็วกว่า",
+"benefits_lite.table.val.black_drive": "ตามดุลยพินิจทีม",
+
+"benefits_lite.table.val.preview_tg": "—",
+"benefits_lite.table.val.guest7_tg": "ทดลอง 7 วัน",
+"benefits_lite.table.val.standard_tg": "Standard",
+"benefits_lite.table.val.premium_tg": "Premium + Standard",
+"benefits_lite.table.val.black_tg": "เฉพาะกรณี",
+
+"benefits_lite.table.val.preview_updates": "ดูภาพรวมระบบ",
+"benefits_lite.table.val.guest7_updates": "ระหว่างช่วงทดลอง",
+"benefits_lite.table.val.standard_updates": "อัปเดตตามรอบ",
+"benefits_lite.table.val.premium_updates": "อัปเดตต่อเนื่องกว่า",
+"benefits_lite.table.val.black_updates": "ตามความเหมาะสม",
+
+"benefits_lite.table.val.preview_support": "—",
+"benefits_lite.table.val.guest7_support": "มาตรฐาน",
+"benefits_lite.table.val.standard_support": "มาตรฐานสมาชิก",
+"benefits_lite.table.val.premium_support": "Priority",
+"benefits_lite.table.val.black_support": "Priority สูงสุด",
+
+"benefits_lite.table.val.preview_access": "ทำความเข้าใจระบบ",
+"benefits_lite.table.val.guest7_access": "ทดลองก่อนสมัคร",
+"benefits_lite.table.val.standard_access": "สมาชิกเริ่มต้น",
+"benefits_lite.table.val.premium_access": "สมาชิกเต็มรูปแบบ",
+"benefits_lite.table.val.black_access": "เชิงความสัมพันธ์"
+
+
 });
