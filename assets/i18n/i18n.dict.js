@@ -461,6 +461,9 @@ Object.assign(window.I18N_DICT, {
 /* =======================
    EN
 ======================= */
+/* =======================
+   EN
+======================= */
   en: Object.assign({}, window.I18N_DICT.en || {}, {
 
     "lang.th": "TH",
@@ -515,13 +518,37 @@ Object.assign(window.I18N_DICT, {
     "comparison.premium.rule.note": "Progressive access based on system rules.",
 
     "comparison.note.vip": "Spend over 120,000 THB (combined bills within 365 days) to access Telegram: MMD VIP Lounge.",
+    "comparison.note.expiry": "When membership expires, Google Drive access is removed immediately; Telegram Standard may remain.",
+
+    "comparison.pkg.guest": "7 Days",
+    "comparison.pkg.standard": "Standard",
+    "comparison.pkg.premium": "Premium",
+    "comparison.pkg.black": "Black",
+
+    "comparison.row.suitable": "Best for",
+    "comparison.row.duration": "Duration",
+    "comparison.row.services": "Eligible services",
+    "comparison.row.public": "Public Models",
+    "comparison.row.private_std": "Private Standard Models",
+    "comparison.row.private_pre": "Private Premium Models",
+    "comparison.row.exclusive": "Exclusive Models",
+    "comparison.row.drive": "Google Drive access",
+    "comparison.row.telegram": "Telegram group",
+    "comparison.row.trial": "Premium trial",
+
+    "comparison.premium.rule.title": "Premium exclusive rule",
+    "comparison.premium.rule.r2": "2+ sessions: unlock curated Exclusive Models",
+    "comparison.premium.rule.r3": "3+ sessions: access Secret Exclusive Models",
+    "comparison.premium.rule.note": "Progressive access based on system rules.",
+
+    "comparison.note.vip": "Spend over 120,000 THB (combined bills within 365 days) to access Telegram: MMD VIP Lounge.",
     "comparison.note.expiry": "When membership expires, Google Drive access is removed immediately; Telegram Standard may remain."
   }),
 
 /* =======================
    ZH (Simplified)
 ======================= */
-  zh: Object.assign({}, window.I18N_DICT.zh || {}, {
+zh: Object.assign({}, window.I18N_DICT.zh || {}, {
     "lang.th": "泰",
     "lang.en": "English",
     "lang.zh": "中文",
@@ -565,6 +592,7 @@ Object.assign(window.I18N_DICT, {
     "comparison.title": "特典比較",
     "comparison.sub": "全体像を素早く確認できます。"
   })
+   
 });
 
 });
