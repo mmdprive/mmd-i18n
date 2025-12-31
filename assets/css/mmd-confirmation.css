@@ -111,7 +111,7 @@
   background: radial-gradient(1200px 900px at 50% 50%, transparent 55%, rgba(0,0,0,.72) 100%);
 }
 
-/* -------- Card (keeps your original layout feel) -------- */
+/* -------- Card -------- */
 #mmd-confirmation .mmd-confirm-wrap{
   position:relative;
   width: min(760px, 100%);
@@ -170,7 +170,6 @@
   font-size:12px;
   letter-spacing:.06em;
   text-transform:uppercase;
-
   background: var(--accent-soft);
   border: 1px solid var(--accent-line);
   color: var(--accent);
@@ -278,6 +277,7 @@
   border-radius:12px;
   box-shadow: 0 14px 44px rgba(0,0,0,.45);
   overflow:hidden;
+  display:block;
 }
 #mmd-confirmation .mmd-hash{ font-size:12px; color: var(--muted); }
 
