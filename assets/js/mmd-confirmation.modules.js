@@ -1,9 +1,6 @@
 /* =========================================
    MMD PRIVÉ — CONFIRMATION MODULES
-   Modules:
-   - payment(ctx)
-   - job(ctx)
-   - model(ctx)
+   Pages: payment | job | model
 ========================================= */
 
 (function () {
@@ -12,140 +9,126 @@
   window.MMD = window.MMD || {};
   const MMD = window.MMD;
 
-  function money(ctx) {
-    if (!ctx.amount_fmt) return "";
-    return `${ctx.amount_fmt} ${ctx.currency || ""}`.trim();
+  function row(label, value, mono){
+    const cls = mono ? "mmd-info-value mono" : "mmd-info-value";
+    return `
+      <div class="mmd-info-row">
+        <div class="mmd-info-label">${label}</div>
+        <div class="${cls}">${value || "—"}</div>
+      </div>
+    `;
   }
 
-  function methodLabel(ctx, t) {
+  function btn(label, href, primary, action){
+    const cls = "mmdc-btn" + (primary ? " primary" : " ghost");
+    if (href) return `<a class="${cls}" href="${href}" data-action="${action||""}">${label}</a>`;
+    return `<button class="${cls}" type="button" data-action="${action||""}">${label}</button>`;
+  }
+
+  function actions(ctx, t){
+    const out = [];
+    if (ctx.status === "failed"){
+      out.push(btn(t("confirmation.common.cta.try_again","Try Again"), "", true, "retry"));
+    }
+    out.push(btn(t("confirmation.common.cta.continue","Continue"), ctx.nextUrl || "", true, "next"));
+    if (ctx.supportUrl){
+      out.push(btn(t("confirmation.common.cta.support","Support"), ctx.supportUrl, false, "support"));
+    }
+    return out.join("");
+  }
+
+  function methodLabel(ctx, t){
     const map = {
-      credit_card: t("confirmation.payment.method.credit_card", "Credit Card"),
-      promptpay: t("confirmation.payment.method.promptpay", "PromptPay"),
-      paypal: t("confirmation.payment.method.paypal", "PayPal"),
-      bank_transfer: t("confirmation.payment.method.bank_transfer", "Bank Transfer"),
+      credit_card: t("confirmation.payment.method.credit_card","Credit Card"),
+      promptpay: t("confirmation.payment.method.promptpay","PromptPay"),
+      paypal: t("confirmation.payment.method.paypal","PayPal"),
+      bank_transfer: t("confirmation.payment.method.bank_transfer","Bank Transfer"),
     };
-    return map[ctx.payment_method] || ctx.payment_method;
+    return map[ctx.method] || ctx.method;
   }
 
-  function commonActions(ctx, t) {
-    const actions = [];
-    if (ctx.next_url) {
-      actions.push({ kind: "primary", action: "next", label: t("confirmation.common.cta.continue", "Continue"), href: ctx.next_url });
-    } else {
-      actions.push({ kind: "primary", action: "next", label: t("confirmation.common.cta.continue", "Continue") });
-    }
-    if (ctx.support_url) {
-      actions.push({ kind: "ghost", action: "support", label: t("confirmation.common.cta.support", "Support"), href: ctx.support_url });
-    }
-    return actions;
+  function statusShort(ctx, t){
+    const map = {
+      success: t("confirmation.common.status.success.short","success"),
+      pending: t("confirmation.common.status.pending.short","pending"),
+      failed:  t("confirmation.common.status.failed.short","failed"),
+    };
+    return map[ctx.status] || ctx.status;
   }
 
-  function payment(ctx, { t }) {
-    const rows = [
-      { label: t("confirmation.common.fields.order_id", "Order"), value: ctx.order_id_masked || "" , mono: true },
-      { label: t("confirmation.payment.fields.method", "Method"), value: methodLabel(ctx, t) },
-      { label: t("confirmation.payment.fields.amount", "Amount"), value: money(ctx) },
-      { label: t("confirmation.payment.fields.ref", "Reference"), value: ctx.ref_code || "", mono: true },
-      { label: t("confirmation.common.fields.status", "Status"), value: t(`confirmation.common.status.${ctx.status}.short`, ctx.status) },
-    ];
+  function payment(ctx, { t }){
+    const leftHtml = [
+      row(t("confirmation.common.fields.order_id","Order"), ctx.orderIdMasked, true),
+      row(t("confirmation.payment.fields.method","Method"), methodLabel(ctx,t)),
+      row(t("confirmation.payment.fields.amount","Amount"), ctx.amountText),
+      ctx.refCode ? row(t("confirmation.common.fields.ref","Reference"), ctx.refCode, true) : "",
+      row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t))
+    ].join("");
 
-    let extrasHtml = "";
-    if (ctx.payment_method === "promptpay") {
-      extrasHtml = `
-        <div class="mmdc-panel mmdc-payment-only">
-          <p class="mmdc-panel-h">${t("confirmation.payment.extras.promptpay.title", "PromptPay QR")}</p>
-          <div class="mmdc-qr">
-            <div>
-              <p class="mmdc-panel-p">${t("confirmation.payment.extras.promptpay.desc", "If you need to pay again, use the QR below.")}</p>
-              <div class="mmdc-divider"></div>
-              <p class="mmdc-panel-p">${t("confirmation.payment.extras.promptpay.note", "Payments may take a moment to reflect.")}</p>
-            </div>
-            <div class="mmdc-qr-box" data-qr="promptpay">
-              <span style="color:rgba(255,255,255,.55);font-size:12px;">QR</span>
-            </div>
+    const rightHtml = `
+      <div data-only="payment">
+        <div class="mmd-budget-box">
+          <div class="mmd-budget-label">${t("confirmation.payment.summary.total","Total")}</div>
+          <div class="mmd-budget-value">${ctx.amountText}</div>
+          <div class="mmd-payment-breakdown">
+            <div>${t("confirmation.payment.summary.method","Method")}</div><div>${methodLabel(ctx,t)}</div>
+            <div>${t("confirmation.payment.summary.status","Status")}</div><div>${statusShort(ctx,t)}</div>
           </div>
         </div>
-      `;
-    }
 
-    const status = (ctx.status === "success")
-      ? { h: t("confirmation.payment.status.success.h", "Payment Confirmed"),
-          p: t("confirmation.payment.status.success.p", "Your payment has been confirmed.") }
-      : (ctx.status === "pending")
-      ? { h: t("confirmation.payment.status.pending.h", "Payment Pending"),
-          p: t("confirmation.payment.status.pending.p", "We’re verifying your payment. Please keep your reference.") }
-      : { h: t("confirmation.payment.status.failed.h", "Payment Not Completed"),
-          p: t("confirmation.payment.status.failed.p", "Please try again or use another method.") };
-
-    const actions = commonActions(ctx, t);
-    if (ctx.status === "failed") {
-      actions.unshift({ kind: "primary", action: "retry", label: t("confirmation.common.cta.try_again", "Try Again") });
-    }
-
-    return { status, rows, extrasHtml, actions };
-  }
-
-  function job(ctx, { t }) {
-    const rows = [
-      { label: t("confirmation.common.fields.order_id", "Job"), value: ctx.order_id_masked || "", mono: true },
-      { label: t("confirmation.job.fields.ref", "Reference"), value: ctx.ref_code || "", mono: true },
-      { label: t("confirmation.common.fields.status", "Status"), value: t(`confirmation.common.status.${ctx.status}.short`, ctx.status) },
-    ];
-
-    const extrasHtml = `
-      <div class="mmdc-panel mmdc-job-only">
-        <p class="mmdc-panel-h">${t("confirmation.job.extras.next.title", "Next Steps")}</p>
-        <p class="mmdc-panel-p">${t("confirmation.job.extras.next.desc", "You can continue to your job detail page or contact support if you need changes.")}</p>
+        <div class="mmd-verify">
+          <div class="mmd-verify-qr" aria-label="QR" data-qr="placeholder"></div>
+          <div>
+            <div class="mmd-hash">${t("confirmation.payment.verify.note","Keep your reference for verification.")}</div>
+            <div class="mmd-hash">${ctx.refCode ? ctx.refCode : ""}</div>
+          </div>
+        </div>
       </div>
     `;
 
-    const status = (ctx.status === "success")
-      ? { h: t("confirmation.job.status.success.h", "Job Confirmed"),
-          p: t("confirmation.job.status.success.p", "Your request has been confirmed and queued.") }
-      : (ctx.status === "pending")
-      ? { h: t("confirmation.job.status.pending.h", "Job Pending"),
-          p: t("confirmation.job.status.pending.p", "We’re reviewing your request. You will be notified shortly.") }
-      : { h: t("confirmation.job.status.failed.h", "Job Not Completed"),
-          p: t("confirmation.job.status.failed.p", "Please contact support to resolve this issue.") };
-
-    const actions = commonActions(ctx, t);
-    if (ctx.status === "failed" && ctx.support_url) {
-      // keep support prominent
-      actions.unshift({ kind: "primary", action: "support", label: t("confirmation.common.cta.contact_support", "Contact Support"), href: ctx.support_url });
-    }
-
-    return { status, rows, extrasHtml, actions };
+    return { leftHtml, rightHtml, actionsHtml: actions(ctx,t) };
   }
 
-  function model(ctx, { t }) {
-    const rows = [
-      { label: t("confirmation.common.fields.order_id", "Confirmation"), value: ctx.order_id_masked || "", mono: true },
-      { label: t("confirmation.model.fields.ref", "Reference"), value: ctx.ref_code || "", mono: true },
-      { label: t("confirmation.common.fields.status", "Status"), value: t(`confirmation.common.status.${ctx.status}.short`, ctx.status) },
-    ];
+  function job(ctx, { t }){
+    const leftHtml = [
+      row(t("confirmation.common.fields.order_id","Job"), ctx.orderIdMasked, true),
+      ctx.refCode ? row(t("confirmation.common.fields.ref","Reference"), ctx.refCode, true) : "",
+      row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t)),
+    ].join("");
 
-    const extrasHtml = `
-      <div class="mmdc-panel mmdc-model-only">
-        <p class="mmdc-panel-h">${t("confirmation.model.extras.title", "Model Locked")}</p>
-        <p class="mmdc-panel-p">${t("confirmation.model.extras.desc", "Your selected model is reserved under this confirmation.")}</p>
+    const rightHtml = `
+      <div data-only="job">
+        <div class="mmd-budget-box">
+          <div class="mmd-budget-label">${t("confirmation.job.panel.title","Next Steps")}</div>
+          <div class="mmd-hash" style="margin-top:10px;">
+            ${t("confirmation.job.panel.desc","You can continue to your job detail page or contact support if you need changes.")}
+          </div>
+        </div>
       </div>
     `;
 
-    const status = (ctx.status === "success")
-      ? { h: t("confirmation.model.status.success.h", "Model Confirmed"),
-          p: t("confirmation.model.status.success.p", "Your selection has been confirmed.") }
-      : (ctx.status === "pending")
-      ? { h: t("confirmation.model.status.pending.h", "Model Pending"),
-          p: t("confirmation.model.status.pending.p", "We’re verifying availability. Please wait for final confirmation.") }
-      : { h: t("confirmation.model.status.failed.h", "Model Not Completed"),
-          p: t("confirmation.model.status.failed.p", "Please choose another model or contact support.") };
+    return { leftHtml, rightHtml, actionsHtml: actions(ctx,t) };
+  }
 
-    const actions = commonActions(ctx, t);
-    if (ctx.status === "failed") {
-      actions.unshift({ kind: "primary", action: "retry", label: t("confirmation.model.cta.choose_again", "Choose Again") });
-    }
+  function model(ctx, { t }){
+    const leftHtml = [
+      row(t("confirmation.common.fields.order_id","Confirmation"), ctx.orderIdMasked, true),
+      ctx.refCode ? row(t("confirmation.common.fields.ref","Reference"), ctx.refCode, true) : "",
+      row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t)),
+    ].join("");
 
-    return { status, rows, extrasHtml, actions };
+    const rightHtml = `
+      <div data-only="model">
+        <div class="mmd-budget-box">
+          <div class="mmd-budget-label">${t("confirmation.model.panel.title","Model Locked")}</div>
+          <div class="mmd-hash" style="margin-top:10px;">
+            ${t("confirmation.model.panel.desc","Your selected model is reserved under this confirmation.")}
+          </div>
+        </div>
+      </div>
+    `;
+
+    return { leftHtml, rightHtml, actionsHtml: actions(ctx,t) };
   }
 
   MMD.confirmation = MMD.confirmation || {};
