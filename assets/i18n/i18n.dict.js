@@ -596,4 +596,103 @@ zh: Object.assign({}, window.I18N_DICT.zh || {}, {
 });
 
 });
+/* =======================
+   BLACK CARD — ALL LANG
+======================= */
+
+Object.assign(window.I18N_DICT, {
+
+  /* ---------- TH ---------- */
+  th: {
+    "blackcard.eyebrow": "MMD PRIVÉ • BLACK CARD",
+    "blackcard.title": "Black Card Status",
+    "blackcard.intro":
+      "Black Card ไม่ใช่แพ็กเกจ และไม่ใช่สิ่งที่สามารถสมัครหรือซื้อได้ แต่เป็นสถานะความสัมพันธ์ระดับสูงสุดภายในระบบของ MMD Privé",
+
+    "blackcard.section.what": "What Black Card Is",
+    "blackcard.what.desc":
+      "Black Card คือระดับการเข้าถึงที่เกิดจากความต่อเนื่อง ความเข้าใจระบบ และความเหมาะสมในระยะยาว ไม่ได้อิงจากยอดเงินเพียงอย่างเดียว",
+
+    "blackcard.section.compare": "Conceptual Comparison",
+
+    "blackcard.compare.premium":
+      "Premium คือการเข้าถึงแบบแพ็กเกจ โครงสร้างชัด สิทธิ์ครบ และมีลำดับความสำคัญสูง เหมาะกับผู้ใช้งานจริงจังที่ต้องการระบบที่คาดการณ์ได้",
+
+    "blackcard.compare.blackcard":
+      "Black Card คือการเข้าถึงเชิงความสัมพันธ์ ไม่ยึดติดกับโครงสร้างแพ็กเกจ การดูแลและการตัดสินใจขึ้นกับบริบทและความเหมาะสมในแต่ละช่วงเวลา",
+
+    "blackcard.note":
+      "หมายเหตุ: Black Card จะถูกพิจารณาและแจ้งให้ทราบโดยทีมเท่านั้น ไม่มีขั้นตอนการสมัคร ไม่มีฟอร์ม และไม่มีราคากำหนด"
+  },
+
+  /* ---------- EN ---------- */
+  en: {
+    "blackcard.eyebrow": "MMD PRIVÉ • BLACK CARD",
+    "blackcard.title": "Black Card Status",
+    "blackcard.intro":
+      "Black Card is not a package and cannot be applied for or purchased. It represents the highest relationship-based access within MMD Privé.",
+
+    "blackcard.section.what": "What Black Card Is",
+    "blackcard.what.desc":
+      "Black Card access is built on continuity, understanding of the system, and long-term suitability — not spending alone.",
+
+    "blackcard.section.compare": "Conceptual Comparison",
+
+    "blackcard.compare.premium":
+      "Premium is a structured package with defined benefits and priority, designed for serious users who value predictability.",
+
+    "blackcard.compare.blackcard":
+      "Black Card is relationship-based access. Decisions, care, and access are contextual rather than package-driven.",
+
+    "blackcard.note":
+      "Note: Black Card is granted and communicated by the team only. There is no application, form, or fixed price."
+  },
+
+  /* ---------- ZH (Simplified) ---------- */
+  zh: {
+    "blackcard.eyebrow": "MMD PRIVÉ • 黑卡",
+    "blackcard.title": "Black Card 状态",
+    "blackcard.intro":
+      "Black Card 不是套餐，也无法申请或购买，而是 MMD Privé 内部最高级别的关系型访问权限。",
+
+    "blackcard.section.what": "Black Card 是什么",
+    "blackcard.what.desc":
+      "Black Card 建立在长期合作、系统理解与整体适配度之上，而不仅仅取决于消费金额。",
+
+    "blackcard.section.compare": "概念对比",
+
+    "blackcard.compare.premium":
+      "Premium 是结构清晰的套餐型权限，适合希望明确权益与优先级的深度用户。",
+
+    "blackcard.compare.blackcard":
+      "Black Card 属于关系型访问，决策与照顾方式取决于当下的情境与长期信任。",
+
+    "blackcard.note":
+      "说明：Black Card 仅由团队评估并主动告知，不提供申请流程、表单或固定价格。"
+  },
+
+  /* ---------- JP ---------- */
+  jp: {
+    "blackcard.eyebrow": "MMD PRIVÉ • BLACK CARD",
+    "blackcard.title": "Black Card ステータス",
+    "blackcard.intro":
+      "Black Card はプランではなく、申し込みや購入ができるものではありません。MMD Privé における最上位の関係性アクセスです。",
+
+    "blackcard.section.what": "What Black Card Is",
+    "blackcard.what.desc":
+      "Black Card は、継続性・システム理解・長期的な適合性に基づくアクセスであり、金額のみでは判断されません。",
+
+    "blackcard.section.compare": "Conceptual Comparison",
+
+    "blackcard.compare.premium":
+      "Premium は構造化されたプラン型アクセスで、明確な特典と優先度を求めるユーザー向けです。",
+
+    "blackcard.compare.blackcard":
+      "Black Card は関係性ベースのアクセスで、判断や対応は状況と信頼関係に応じて行われます。",
+
+    "blackcard.note":
+      "注記：Black Card はチームからのみ案内されます。申請・フォーム・固定価格は存在しません。"
+  }
+
+});
 
