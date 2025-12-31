@@ -1,0 +1,134 @@
+#mmd-blackcard{
+  background:#050507;
+  color:#F4F2EE;
+  font-family:"DM Sans",system-ui;
+}
+
+/* HERO */
+.bc-hero{
+  position:relative;
+  min-height:86vh;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+
+.bc-hero-media img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  animation:heroFade 3.2s ease forwards;
+}
+
+.bc-hero-media img:nth-child(2){
+  animation-delay:1.6s;
+}
+
+@keyframes heroFade{
+  from{opacity:0; transform:scale(1.04);}
+  to{opacity:.92; transform:scale(1);}
+}
+
+.bc-hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    180deg,
+    rgba(0,0,0,.35),
+    rgba(0,0,0,.85)
+  );
+}
+
+.bc-hero-content{
+  position:relative;
+  z-index:2;
+  max-width:720px;
+  text-align:center;
+  padding:64px 24px;
+}
+
+.bc-eyebrow{
+  letter-spacing:.22em;
+  font-weight:800;
+  font-size:12px;
+  opacity:.75;
+}
+
+.bc-title{
+  font-family:"Outfit",sans-serif;
+  font-size:clamp(36px,6vw,64px);
+  font-weight:900;
+  margin:16px 0;
+  background:linear-gradient(180deg,#F6EBC3,#C8A24F);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.bc-intro{
+  font-size:15px;
+  line-height:1.9;
+  opacity:.78;
+}
+
+/* Invitation */
+.bc-invite{
+  margin-top:32px;
+  font-weight:900;
+  letter-spacing:.14em;
+  font-size:12px;
+  color:#C8A24F;
+}
+
+/* SECTION */
+.bc-section{
+  max-width:920px;
+  margin:96px auto;
+  padding:0 24px;
+}
+
+.bc-section h2{
+  font-family:"Outfit";
+  font-size:28px;
+  margin-bottom:16px;
+}
+
+.bc-section p{
+  line-height:1.9;
+  opacity:.78;
+}
+
+/* COMPARE */
+.bc-compare-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+  margin-top:32px;
+}
+
+.bc-compare-card{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:32px;
+  background:rgba(255,255,255,.03);
+}
+
+.bc-compare-card.blackcard{
+  border-color:rgba(200,162,79,.35);
+  background:linear-gradient(
+    180deg,
+    rgba(200,162,79,.12),
+    rgba(0,0,0,.4)
+  );
+}
+
+.bc-note{
+  text-align:center;
+  font-size:12px;
+  opacity:.45;
+  margin:64px auto 96px;
+  max-width:640px;
+}
