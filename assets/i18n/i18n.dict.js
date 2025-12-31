@@ -1,25 +1,12 @@
-/* =========================================
-   i18n Dictionary – MMD Privé (LOCK)
-   - Add/override only (safe merge)
-   - Benefits Lite + Comparison + Black Card
-========================================= */
-
 window.I18N_DICT = window.I18N_DICT || {};
 
 Object.assign(window.I18N_DICT, {
-
-  /* =======================
-     TH
-  ======================= */
   th: Object.assign({}, window.I18N_DICT.th || {}, {
-
-    /* Language labels */
     "lang.th": "ไทย",
     "lang.en": "English",
     "lang.zh": "中文",
     "lang.jp": "日本語",
 
-    /* Benefits Lite */
     "benefits_lite.title": "สิทธิ์สมาชิก (สรุป)",
     "benefits_lite.hero.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
     "benefits_lite.hero.h": "สิทธิ์สมาชิกโดยสรุป",
@@ -42,7 +29,6 @@ Object.assign(window.I18N_DICT, {
     "benefits_lite.black.t": "Black Card",
     "benefits_lite.black.d": "การเข้าถึงระดับความสัมพันธ์ ทีมจะให้รายละเอียดเมื่อเหมาะสม",
 
-    /* Comparison */
     "comparison.title": "ตารางเปรียบเทียบสิทธิ์",
     "comparison.sub": "ดูภาพรวมสิทธิ์แบบรวดเร็ว ก่อนเลือกแพ็กเกจ",
 
@@ -114,26 +100,18 @@ Object.assign(window.I18N_DICT, {
     "comparison.note.vip": "ผู้ที่มียอดใช้จ่ายภายใน 365 วันบิลรวมเกิน 120,000 บาท จะได้รับสิทธิ์เข้ากลุ่ม Telegram: MMD VIP Lounge ทันที",
     "comparison.note.expiry": "เมื่อสมาชิกหมดอายุ จะถูกถอดออกจาก Google Drive ทันที และคงสิทธิ์ได้เฉพาะใน Telegram Standard เท่านั้น",
 
-    /* Black Card */
     "blackcard.eyebrow": "MMD PRIVÉ • BLACK CARD",
     "blackcard.title": "Black Card Status",
     "blackcard.intro": "Black Card ไม่ใช่แพ็กเกจ และไม่ใช่สิ่งที่สามารถสมัครหรือซื้อได้ แต่เป็นสถานะความสัมพันธ์ระดับสูงสุดภายในระบบของ MMD Privé",
-
     "blackcard.section.what": "What Black Card Is",
     "blackcard.what.desc": "Black Card คือระดับการเข้าถึงที่เกิดจากความต่อเนื่อง ความเข้าใจระบบ และความเหมาะสมในระยะยาว ไม่ได้อิงจากยอดเงินเพียงอย่างเดียว",
-
     "blackcard.section.compare": "Conceptual Comparison",
     "blackcard.compare.premium": "Premium คือการเข้าถึงแบบแพ็กเกจ โครงสร้างชัด สิทธิ์ครบ และมีลำดับความสำคัญสูง เหมาะกับผู้ใช้งานจริงจังที่ต้องการระบบที่คาดการณ์ได้",
     "blackcard.compare.blackcard": "Black Card คือการเข้าถึงเชิงความสัมพันธ์ ไม่ยึดติดกับโครงสร้างแพ็กเกจ การดูแลและการตัดสินใจขึ้นกับบริบทและความเหมาะสมในแต่ละช่วงเวลา",
-
     "blackcard.note": "หมายเหตุ: Black Card จะถูกพิจารณาและแจ้งให้ทราบโดยทีมเท่านั้น ไม่มีขั้นตอนการสมัคร ไม่มีฟอร์ม และไม่มีราคากำหนด"
   }),
 
-/* =======================
-   EN
-======================= */
   en: Object.assign({}, window.I18N_DICT.en || {}, {
-
     "lang.th": "TH",
     "lang.en": "English",
     "lang.zh": "中文",
@@ -148,7 +126,7 @@ Object.assign(window.I18N_DICT, {
 
     "benefits_lite.section.overview": "Quick overview",
     "benefits_lite.section.compare": "Benefits comparison",
-    "benefits_lite.note": "Note: Access and terms may change over time at the team’s discretion.",
+    "benefits_lite.note": "Note: Access and terms may change over time at the team's discretion.",
 
     "benefits_lite.preview.t": "Preview",
     "benefits_lite.preview.d": "Understand the system and access approach before subscribing.",
@@ -191,28 +169,20 @@ Object.assign(window.I18N_DICT, {
     "blackcard.eyebrow": "MMD PRIVÉ • BLACK CARD",
     "blackcard.title": "Black Card Status",
     "blackcard.intro": "Black Card is not a package and cannot be applied for or purchased. It represents the highest relationship-based access within MMD Privé.",
-
     "blackcard.section.what": "What Black Card Is",
-    "blackcard.what.desc": "Black Card access is built on continuity, understanding of the system, and long-term suitability — not spending alone.",
-
+    "blackcard.what.desc": "Black Card access is built on continuity, understanding of the system, and long-term suitability - not spending alone.",
     "blackcard.section.compare": "Conceptual Comparison",
     "blackcard.compare.premium": "Premium is a structured package with defined benefits and priority, designed for serious users who value predictability.",
     "blackcard.compare.blackcard": "Black Card is relationship-based access. Decisions, care, and access are contextual rather than package-driven.",
-
     "blackcard.note": "Note: Black Card is granted and communicated by the team only. There is no application, form, or fixed price."
   }),
 
-/* =======================
-   ZH (Simplified)
-======================= */
   zh: Object.assign({}, window.I18N_DICT.zh || {}, {
-
     "lang.th": "泰",
     "lang.en": "English",
     "lang.zh": "中文",
     "lang.jp": "日本語",
 
-    /* Benefits Lite */
     "benefits_lite.title": "权益",
     "benefits_lite.hero.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
     "benefits_lite.hero.h": "会员权益概览",
@@ -235,7 +205,6 @@ Object.assign(window.I18N_DICT, {
     "benefits_lite.black.t": "Black Card",
     "benefits_lite.black.d": "关系层级访问，团队会在合适时机说明细节。",
 
-    /* Comparison */
     "comparison.title": "权益对比表",
     "comparison.sub": "快速浏览全局，再选择方案。",
 
@@ -307,32 +276,23 @@ Object.assign(window.I18N_DICT, {
     "comparison.note.vip": "在 365 天内累计账单消费超过 120,000 泰铢，可立即进入 Telegram：MMD VIP Lounge。",
     "comparison.note.expiry": "会员到期后将立即移除 Google Drive 访问权限；Telegram Standard 可能保留。",
 
-    /* Black Card */
     "blackcard.eyebrow": "MMD PRIVÉ • 黑卡",
     "blackcard.title": "Black Card 状态",
     "blackcard.intro": "Black Card 不是套餐，也无法申请或购买，而是 MMD Privé 内部最高级别的关系型访问权限。",
-
     "blackcard.section.what": "Black Card 是什么",
     "blackcard.what.desc": "Black Card 建立在长期合作、系统理解与整体适配度之上，而不仅仅取决于消费金额。",
-
     "blackcard.section.compare": "概念对比",
     "blackcard.compare.premium": "Premium 是结构清晰的套餐型权限，适合希望明确权益与优先级的深度用户。",
     "blackcard.compare.blackcard": "Black Card 属于关系型访问，决策与照顾方式取决于当下的情境与长期信任。",
-
     "blackcard.note": "说明：Black Card 仅由团队评估并主动告知，不提供申请流程、表单或固定价格。"
   }),
 
-/* =======================
-   JP
-======================= */
   jp: Object.assign({}, window.I18N_DICT.jp || {}, {
-
     "lang.th": "TH",
     "lang.en": "English",
     "lang.zh": "中文",
     "lang.jp": "日本語",
 
-    /* Benefits Lite */
     "benefits_lite.title": "特典",
     "benefits_lite.hero.eyebrow": "MMD PRIVÉ • MEMBERSHIP",
     "benefits_lite.hero.h": "会員特典（サマリー）",
@@ -355,7 +315,6 @@ Object.assign(window.I18N_DICT, {
     "benefits_lite.black.t": "Black Card",
     "benefits_lite.black.d": "関係性レベルのアクセス。詳細は適切なタイミングで案内されます。",
 
-    /* Comparison */
     "comparison.title": "特典比較",
     "comparison.sub": "全体像を素早く確認してから選べます。",
 
@@ -427,19 +386,14 @@ Object.assign(window.I18N_DICT, {
     "comparison.note.vip": "365日以内の合算請求が 120,000 THB を超えると、Telegram：MMD VIP Lounge に即時アクセス可能。",
     "comparison.note.expiry": "会員期限切れ後、Google Drive アクセスは即時解除。Telegram Standard は維持される場合があります。",
 
-    /* Black Card */
     "blackcard.eyebrow": "MMD PRIVÉ • BLACK CARD",
     "blackcard.title": "Black Card ステータス",
     "blackcard.intro": "Black Card はプランではなく、申し込みや購入ができるものではありません。MMD Privé における最上位の関係性アクセスです。",
-
     "blackcard.section.what": "What Black Card Is",
     "blackcard.what.desc": "Black Card は、継続性・システム理解・長期的な適合性に基づくアクセスであり、金額のみでは判断されません。",
-
     "blackcard.section.compare": "Conceptual Comparison",
     "blackcard.compare.premium": "Premium は構造化されたプラン型アクセスで、明確な特典と優先度を求めるユーザー向けです。",
     "blackcard.compare.blackcard": "Black Card は関係性ベースのアクセスで、判断や対応は状況と信頼関係に応じて行われます。",
-
     "blackcard.note": "注記：Black Card はチームからのみ案内されます。申請・フォーム・固定価格は存在しません。"
   })
-
 });
