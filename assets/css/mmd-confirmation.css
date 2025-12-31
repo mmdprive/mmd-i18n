@@ -1,0 +1,625 @@
+<!-- =========================
+  MMD PRIVÉ — /confirmation (Unified)
+  Put this in Webflow Embed (Body)
+========================== -->
+<div id="mmd-confirmation"
+  data-confirmation-page="payment" 
+  data-user-tier="vip"
+  data-status="success"
+  data-locale="th"
+  data-order-id="MM231231-0192"
+  data-ref-code="TXN-77A19"
+  data-amount="12900"
+  data-currency="THB"
+  data-payment-method="promptpay"
+  data-next-url="/dashboard"
+  data-support-url="/support"
+>
+  <!-- Render target (JS will fill) -->
+</div>
+
+<style>
+/* =====================================================
+   MMD CONFIRMATION — GLOBAL BLACK × GOLD (UNIFIED)
+   Scope: #mmd-confirmation (full page)
+   Supports: pages job/payment/model, tiers standard/premium/vip/svip
+===================================================== */
+
+#mmd-confirmation{
+  /* -------- Tokens (base) -------- */
+  --bg:#070709;
+  --panel: rgba(11,12,19,.92);
+  --panel-deep: rgba(7,8,13,.96);
+
+  --ink:#f9fafb;
+  --muted:#b7bbd0;
+
+  --accent:#cba65a;
+  --accent-soft: rgba(203,166,90,.14);
+  --accent-line: rgba(203,166,90,.22);
+  --line-strong: rgba(203,166,90,.25);
+
+  --shadow: 0 22px 70px rgba(0,0,0,.55);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+
+  --hero-url: none; /* set by page+tier via attributes */
+  min-height:100vh;
+  width:100%;
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "DM Sans", "Outfit", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* -------- Tier Overrides -------- */
+#mmd-confirmation[data-user-tier="standard"]{
+  --accent:#b9bdc7;
+  --accent-soft: rgba(185,189,199,.14);
+  --accent-line: rgba(185,189,199,.20);
+  --line-strong: rgba(185,189,199,.22);
+}
+#mmd-confirmation[data-user-tier="premium"]{
+  /* keep base gold */
+}
+#mmd-confirmation[data-user-tier="vip"]{
+  --accent:#d7b05a;
+  --accent-soft: rgba(215,176,90,.16);
+  --accent-line: rgba(215,176,90,.22);
+  --line-strong: rgba(215,176,90,.25);
+}
+#mmd-confirmation[data-user-tier="svip"]{
+  --accent:#e7d8b2;
+  --accent-soft: rgba(231,216,178,.14);
+  --accent-line: rgba(231,216,178,.18);
+  --line-strong: rgba(231,216,178,.20);
+}
+
+/* -------- Status (optional accent) -------- */
+#mmd-confirmation[data-status="pending"]{
+  --accent:#9DB6FF;
+  --accent-soft: rgba(157,182,255,.16);
+  --accent-line: rgba(157,182,255,.20);
+  --line-strong: rgba(157,182,255,.22);
+}
+#mmd-confirmation[data-status="failed"]{
+  --accent:#FF6B6B;
+  --accent-soft: rgba(255,107,107,.14);
+  --accent-line: rgba(255,107,107,.18);
+  --line-strong: rgba(255,107,107,.20);
+}
+
+/* -------- Hero mapping (replace URLs with yours) -------- */
+/* page default hero */
+#mmd-confirmation[data-confirmation-page="payment"]{ --hero-url: url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/693f64ab77a0768280a581db_MD%20AI.png"); }
+#mmd-confirmation[data-confirmation-page="job"]{ --hero-url: url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/6942cb8f78740ce201b98600_1vCreFfGBGD3mEmaVbGC.png"); }
+#mmd-confirmation[data-confirmation-page="model"]{ --hero-url: url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/6942cb8f78740ce201b98600_1vCreFfGBGD3mEmaVbGC.png"); }
+
+/* tier refine example (optional) */
+/* #mmd-confirmation[data-user-tier="svip"][data-confirmation-page="payment"]{ --hero-url: url("..."); } */
+
+#mmd-confirmation .mmdc-shell{
+  position:relative;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding: clamp(18px, 3vw, 44px);
+  background:
+    radial-gradient(900px 600px at 20% 10%, rgba(255,255,255,.05), transparent 55%),
+    radial-gradient(900px 600px at 80% 90%, rgba(255,255,255,.04), transparent 60%),
+    linear-gradient(180deg, #050506 0%, var(--bg) 55%, #050506 100%);
+  overflow:hidden;
+}
+
+#mmd-confirmation .mmdc-hero{
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(5,5,9,.86),rgba(5,5,9,.97)),
+    var(--hero-url) center top/cover no-repeat;
+  opacity:.95;
+}
+#mmd-confirmation .mmdc-hero:after{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(1200px 900px at 50% 50%, transparent 55%, rgba(0,0,0,.72) 100%);
+}
+
+#mmd-confirmation .mmd-confirm-wrap{
+  position:relative;
+  width: min(760px, 100%);
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow);
+  background: linear-gradient(180deg, var(--panel), var(--panel-deep));
+  opacity:0;
+  transform:translateY(14px);
+}
+#mmd-confirmation .mmd-confirm-wrap.is-visible{ animation: mmdcFadeIn .6s ease forwards; }
+@keyframes mmdcFadeIn{ to{ opacity:1; transform:none; } }
+
+/* Header */
+#mmd-confirmation .mmdc-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+#mmd-confirmation .mmdc-brand{
+  display:flex; align-items:center; gap:12px;
+  min-width:0;
+}
+#mmd-confirmation .mmdc-logo{
+  width:38px; height:38px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  flex:0 0 auto;
+}
+#mmd-confirmation .mmdc-logo img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+#mmd-confirmation .mmdc-title{
+  margin:0;
+  font-family:"Outfit", ui-sans-serif, system-ui;
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:.2px;
+}
+#mmd-confirmation .mmdc-subtitle{
+  margin:2px 0 0 0;
+  font-size:13px;
+  color: var(--muted);
+}
+
+/* Pill status */
+#mmd-confirmation .mmd-status{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:12px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  color: var(--accent);
+}
+#mmd-confirmation .mmd-status-dot{
+  width:8px;height:8px;border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 30px var(--accent-soft);
+}
+
+/* Grid */
+#mmd-confirmation .mmd-confirm-grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:44px;
+  margin-top:24px;
+}
+
+/* Info rows */
+#mmd-confirmation .mmd-info-row{
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:12px;
+  margin-bottom:14px;
+}
+#mmd-confirmation .mmd-info-label{
+  font-size:12px;
+  color: var(--muted);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+#mmd-confirmation .mmd-info-value{
+  font-size:15px;
+  color: var(--ink);
+}
+
+/* Timeline */
+#mmd-confirmation .mmd-timeline{
+  display:flex;
+  gap:24px;
+  margin:18px 0 24px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--line-strong);
+}
+#mmd-confirmation .mmd-step{
+  flex:1;
+  text-align:center;
+  font-size:12px;
+  color: var(--muted);
+}
+#mmd-confirmation .mmd-step::before{
+  content:'';
+  display:block;
+  width:10px;height:10px;
+  margin:0 auto 10px;
+  border-radius:50%;
+  background: rgba(255,255,255,.16);
+}
+#mmd-confirmation .mmd-step.is-done{ color: var(--accent); }
+#mmd-confirmation .mmd-step.is-done::before{ background: var(--accent); }
+
+/* Payment box */
+#mmd-confirmation .mmd-budget-box{
+  padding:22px;
+  border-radius:20px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border: 1px solid var(--accent-line);
+}
+#mmd-confirmation .mmd-budget-label{
+  font-size:13px;
+  color: var(--muted);
+}
+#mmd-confirmation .mmd-budget-value{
+  font-size:36px;
+  font-weight:650;
+  color: var(--accent);
+  margin:10px 0;
+  letter-spacing:.02em;
+}
+#mmd-confirmation .mmd-payment-breakdown{
+  display:grid;
+  grid-template-columns:1fr auto;
+  row-gap:6px;
+  font-size:14px;
+  color: var(--muted);
+}
+
+/* Verify */
+#mmd-confirmation .mmd-verify{
+  margin-top:26px;
+  padding-top:18px;
+  border-top:1px dashed var(--line-strong);
+  display:flex;
+  gap:16px;
+  align-items:center;
+}
+#mmd-confirmation .mmd-verify-qr{
+  width:84px;height:84px;
+  background:#fff;
+  border-radius:12px;
+  box-shadow: 0 14px 44px rgba(0,0,0,.45);
+  overflow:hidden;
+}
+#mmd-confirmation .mmd-hash{ font-size:12px; color: var(--muted); }
+
+/* Actions */
+#mmd-confirmation .mmdc-actions{
+  margin-top: 22px;
+  display:flex;
+  gap:10px;
+  flex-wrap: wrap;
+}
+#mmd-confirmation .mmdc-btn{
+  appearance:none;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.90);
+  border-radius: 16px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: .1px;
+  cursor: pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width: 160px;
+  transition: transform .14s ease, background .14s ease, border-color .14s ease;
+}
+#mmd-confirmation .mmdc-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.18);
+}
+#mmd-confirmation .mmdc-btn.primary{
+  border-color: var(--accent-line);
+  background: radial-gradient(900px 200px at 30% 30%, var(--accent-soft), rgba(255,255,255,.03));
+}
+#mmd-confirmation .mmdc-btn.ghost{
+  background: transparent;
+}
+
+/* Page-only sections */
+#mmd-confirmation [data-only]{ display:none; }
+#mmd-confirmation[data-confirmation-page="payment"] [data-only="payment"]{ display:block; }
+#mmd-confirmation[data-confirmation-page="job"] [data-only="job"]{ display:block; }
+#mmd-confirmation[data-confirmation-page="model"] [data-only="model"]{ display:block; }
+
+/* Mobile */
+@media(max-width:768px){
+  #mmd-confirmation .mmd-confirm-grid{ grid-template-columns:1fr; gap:28px; }
+  #mmd-confirmation .mmd-info-row{ grid-template-columns:1fr; }
+  #mmd-confirmation .mmd-budget-value{ font-size:30px; }
+}
+
+/* Print */
+@media print{
+  body{ background:#fff; color:#111; }
+  #mmd-confirmation{ background:#fff!important; }
+  #mmd-confirmation .mmdc-shell{ padding:0; }
+  #mmd-confirmation .mmdc-hero{ display:none; }
+  #mmd-confirmation .mmd-confirm-wrap{ background:#fff!important; border:none; box-shadow:none; margin:0; padding:0; }
+  #mmd-confirmation .mmd-status{ background:none; border:none; color:#111; }
+}
+</style>
+
+<script>
+/* =====================================================
+   MMD CONFIRMATION — Unified JS (Core + Modules in one)
+===================================================== */
+(function () {
+  "use strict";
+
+  const root = document.getElementById("mmd-confirmation");
+  if (!root) return;
+
+  const d = root.dataset;
+
+  const ctx = {
+    page: (d.confirmationPage || "payment").toLowerCase(),
+    tier: (d.userTier || "standard").toLowerCase(),
+    status: (d.status || "success").toLowerCase(),
+    locale: (d.locale || "en").toLowerCase(),
+    orderId: (d.orderId || "").trim(),
+    refCode: (d.refCode || "").trim(),
+    amount: (d.amount || "").toString().replace(/,/g,"").trim(),
+    currency: (d.currency || "THB").toUpperCase(),
+    method: (d.paymentMethod || "credit_card").toLowerCase(),
+    nextUrl: (d.nextUrl || "").trim(),
+    supportUrl: (d.supportUrl || "").trim(),
+  };
+
+  const allow = {
+    page: new Set(["payment","job","model"]),
+    tier: new Set(["standard","premium","vip","svip"]),
+    status: new Set(["success","pending","failed"])
+  };
+
+  if (!allow.page.has(ctx.page)) ctx.page = "payment";
+  if (!allow.tier.has(ctx.tier)) ctx.tier = "standard";
+  if (!allow.status.has(ctx.status)) ctx.status = "success";
+
+  root.setAttribute("data-confirmation-page", ctx.page);
+  root.setAttribute("data-user-tier", ctx.tier);
+  root.setAttribute("data-status", ctx.status);
+  root.setAttribute("data-locale", ctx.locale);
+
+  function t(key, fallback) {
+    try {
+      if (window.MMD && MMD.i18n && typeof MMD.i18n.t === "function") {
+        const v = MMD.i18n.t(key);
+        if (v && v !== key) return v;
+      }
+    } catch (e) {}
+    return fallback || key;
+  }
+
+  function maskId(id) {
+    if (!id) return "—";
+    if (id.length <= 6) return id;
+    return id.slice(0,2) + "****" + id.slice(-4);
+  }
+
+  function money(amount, currency) {
+    const n = Number(amount);
+    if (!Number.isFinite(n)) return "—";
+    return new Intl.NumberFormat(ctx.locale, { maximumFractionDigits: 0 }).format(n) + " " + currency;
+  }
+
+  function statusLabel() {
+    const map = {
+      success: t("confirmation.common.status.success.short","success"),
+      pending: t("confirmation.common.status.pending.short","pending"),
+      failed: t("confirmation.common.status.failed.short","failed"),
+    };
+    return map[ctx.status] || ctx.status;
+  }
+
+  function methodLabel() {
+    const map = {
+      credit_card: t("confirmation.payment.method.credit_card","Credit Card"),
+      promptpay: t("confirmation.payment.method.promptpay","PromptPay"),
+      paypal: t("confirmation.payment.method.paypal","PayPal"),
+      bank_transfer: t("confirmation.payment.method.bank_transfer","Bank Transfer"),
+    };
+    return map[ctx.method] || ctx.method;
+  }
+
+  function statusCopy() {
+    // page-specific top line
+    const base = {
+      success: { h: t("confirmation.common.status.success.h","Confirmed"), p: t("confirmation.common.status.success.p","Your confirmation has been recorded successfully.") },
+      pending: { h: t("confirmation.common.status.pending.h","Pending"), p: t("confirmation.common.status.pending.p","We’re verifying your details. You will be notified once completed.") },
+      failed:  { h: t("confirmation.common.status.failed.h","Not Completed"), p: t("confirmation.common.status.failed.p","Please try again or contact support.") },
+    };
+
+    const byPage = {
+      payment: {
+        success: { h: t("confirmation.payment.status.success.h","Payment Confirmed"), p: t("confirmation.payment.status.success.p","Your payment has been confirmed.") },
+        pending: { h: t("confirmation.payment.status.pending.h","Payment Pending"), p: t("confirmation.payment.status.pending.p","We’re verifying your payment. Please keep your reference.") },
+        failed:  { h: t("confirmation.payment.status.failed.h","Payment Not Completed"), p: t("confirmation.payment.status.failed.p","Please try again or use another method.") },
+      },
+      job: {
+        success: { h: t("confirmation.job.status.success.h","Job Confirmed"), p: t("confirmation.job.status.success.p","Your request has been confirmed and queued.") },
+        pending: { h: t("confirmation.job.status.pending.h","Job Pending"), p: t("confirmation.job.status.pending.p","We’re reviewing your request.") },
+        failed:  { h: t("confirmation.job.status.failed.h","Job Not Completed"), p: t("confirmation.job.status.failed.p","Please contact support to resolve this issue.") },
+      },
+      model: {
+        success: { h: t("confirmation.model.status.success.h","Model Confirmed"), p: t("confirmation.model.status.success.p","Your selection has been confirmed.") },
+        pending: { h: t("confirmation.model.status.pending.h","Model Pending"), p: t("confirmation.model.status.pending.p","We’re verifying availability.") },
+        failed:  { h: t("confirmation.model.status.failed.h","Model Not Completed"), p: t("confirmation.model.status.failed.p","Please choose another model or contact support.") },
+      }
+    };
+
+    return (byPage[ctx.page] && byPage[ctx.page][ctx.status]) || base[ctx.status] || base.success;
+  }
+
+  function actionsHtml() {
+    const btn = (label, href, primary, action) => {
+      const cls = "mmdc-btn" + (primary ? " primary" : " ghost");
+      if (href) return `<a class="${cls}" href="${href}" data-action="${action||""}">${label}</a>`;
+      return `<button class="${cls}" type="button" data-action="${action||""}">${label}</button>`;
+    };
+
+    const out = [];
+    if (ctx.status === "failed") {
+      out.push(btn(t("confirmation.common.cta.try_again","Try Again"), "", true, "retry"));
+    }
+    out.push(btn(t("confirmation.common.cta.continue","Continue"), ctx.nextUrl || "", true, "next"));
+    if (ctx.supportUrl) out.push(btn(t("confirmation.common.cta.support","Support"), ctx.supportUrl, false, "support"));
+    return out.join("");
+  }
+
+  function leftColRows() {
+    const rows = [];
+
+    rows.push(row(t("confirmation.common.fields.order_id","Order"), maskId(ctx.orderId), true));
+    if (ctx.page === "payment") {
+      rows.push(row(t("confirmation.payment.fields.method","Method"), methodLabel()));
+      rows.push(row(t("confirmation.payment.fields.amount","Amount"), money(ctx.amount, ctx.currency)));
+    }
+    if (ctx.refCode) rows.push(row(t("confirmation.common.fields.ref","Reference"), ctx.refCode, true));
+    rows.push(row(t("confirmation.common.fields.status","Status"), statusLabel()));
+
+    return rows.join("");
+  }
+
+  function row(label, value, mono) {
+    const vClass = mono ? "mmd-info-value mono" : "mmd-info-value";
+    return `<div class="mmd-info-row">
+      <div class="mmd-info-label">${label}</div>
+      <div class="${vClass}">${value || "—"}</div>
+    </div>`;
+  }
+
+  function rightColModule() {
+    if (ctx.page === "payment") {
+      return `
+        <div data-only="payment">
+          <div class="mmd-budget-box">
+            <div class="mmd-budget-label">${t("confirmation.payment.summary.total","Total")}</div>
+            <div class="mmd-budget-value">${money(ctx.amount, ctx.currency)}</div>
+            <div class="mmd-payment-breakdown">
+              <div>${t("confirmation.payment.summary.method","Method")}</div><div>${methodLabel()}</div>
+              <div>${t("confirmation.payment.summary.status","Status")}</div><div>${statusLabel()}</div>
+            </div>
+          </div>
+
+          <div class="mmd-verify">
+            <div class="mmd-verify-qr" aria-label="QR" data-qr="placeholder"></div>
+            <div>
+              <div class="mmd-hash">${t("confirmation.payment.verify.note","Keep your reference for verification.")}</div>
+              <div class="mmd-hash">${ctx.refCode ? ctx.refCode : ""}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (ctx.page === "job") {
+      return `
+        <div data-only="job">
+          <div class="mmd-budget-box">
+            <div class="mmd-budget-label">${t("confirmation.job.panel.title","Next Steps")}</div>
+            <div class="mmd-hash" style="margin-top:10px;">
+              ${t("confirmation.job.panel.desc","You can continue to your job detail page or contact support if you need changes.")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div data-only="model">
+        <div class="mmd-budget-box">
+          <div class="mmd-budget-label">${t("confirmation.model.panel.title","Model Locked")}</div>
+          <div class="mmd-hash" style="margin-top:10px;">
+            ${t("confirmation.model.panel.desc","Your selected model is reserved under this confirmation.")}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  const copy = statusCopy();
+
+  root.innerHTML = `
+    <div class="mmdc-shell">
+      <div class="mmdc-hero" aria-hidden="true"></div>
+
+      <section class="mmd-confirm-wrap" role="region" aria-label="Confirmation">
+        <div class="mmdc-head">
+          <div class="mmdc-brand">
+            <div class="mmdc-logo">
+              <!-- optional logo -->
+              <!-- <img src="YOUR_LOGO_URL" alt="MMD Privé"> -->
+            </div>
+            <div>
+              <h1 class="mmdc-title">MMD Privé</h1>
+              <p class="mmdc-subtitle">${t("confirmation.common.subtitle","Confirmation")}</p>
+            </div>
+          </div>
+
+          <div class="mmd-status" aria-label="Status">
+            <span class="mmd-status-dot"></span>
+            <span>${copy.h}</span>
+          </div>
+        </div>
+
+        <div class="mmd-timeline" aria-label="Progress">
+          <div class="mmd-step is-done">${t("confirmation.timeline.step1","Submitted")}</div>
+          <div class="mmd-step ${ctx.status !== "failed" ? "is-done" : ""}">${t("confirmation.timeline.step2","Verified")}</div>
+          <div class="mmd-step ${ctx.status === "success" ? "is-done" : ""}">${t("confirmation.timeline.step3","Confirmed")}</div>
+        </div>
+
+        <div class="mmd-confirm-grid">
+          <div>
+            ${leftColRows()}
+          </div>
+          <div>
+            ${rightColModule()}
+          </div>
+        </div>
+
+        <div class="mmdc-actions">
+          ${actionsHtml()}
+        </div>
+      </section>
+    </div>
+  `;
+
+  // animate in
+  const wrap = root.querySelector(".mmd-confirm-wrap");
+  if (wrap) requestAnimationFrame(() => wrap.classList.add("is-visible"));
+
+  // actions
+  root.addEventListener("click", function (e) {
+    const el = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
+    if (!el) return;
+    const action = el.getAttribute("data-action") || "";
+
+    // emit events for integrations
+    try { window.dispatchEvent(new CustomEvent("mmd:confirmation:action", { detail: { action, ctx } })); } catch (err) {}
+
+    if (action === "next" && ctx.nextUrl) return; // allow anchor to navigate
+    if (action === "support" && ctx.supportUrl) return;
+
+    if (action === "retry") {
+      e.preventDefault();
+      // integrate retry logic here if needed
+      return;
+    }
+  }, { passive: false });
+
+  try { window.dispatchEvent(new CustomEvent("mmd:confirmation:ready", { detail: { ctx } })); } catch (err) {}
+})();
+</script>
