@@ -1,10 +1,7 @@
 /* =========================================
-   MMD PRIVÉ — CONFIRMATION CORE (Unified)
-   - Reads dataset from #mmd-confirm
-   - Normalizes ctx
-   - Renders shell
-   - Dispatches to modules (payment/job/model)
-   - Binds actions and emits events
+   MMD PRIVÉ — CONFIRMATION CORE
+   - Normalizes ctx from #mmd-confirmation dataset
+   - Exposes: MMD.confirmation.init(root?, overrides?)
 ========================================= */
 
 (function () {
@@ -13,125 +10,211 @@
   window.MMD = window.MMD || {};
   const MMD = window.MMD;
 
-  const ROOT_ID = "mmd-confirm";
-  const DEFAULTS = {
-    page: "payment",
-    tier: "standard",
-    status: "success",
-    locale: "en",
-    currency: "THB",
-    payment_method: "credit_card",
-  };
+  const ROOT_ID = "mmd-confirmation";
 
   const ALLOW = {
-    page: new Set(["payment", "job", "model"]),
-    tier: new Set(["standard", "premium", "vip", "svip"]),
-    status: new Set(["success", "pending", "failed"]),
-    locale: new Set(["th", "en", "zh", "ja"]),
-    payment_method: new Set(["credit_card", "promptpay", "paypal", "bank_transfer"]),
+    page: new Set(["payment","job","model"]),
+    tier: new Set(["standard","premium","vip","svip"]),
+    status: new Set(["success","pending","failed"]),
   };
 
-  function $(sel, root) {
-    return (root || document).querySelector(sel);
+  function safeLower(v){ return (v == null ? "" : String(v)).trim().toLowerCase(); }
+  function toUpper(v){ return (v == null ? "" : String(v)).trim().toUpperCase(); }
+
+  function t(key, fallback){
+    try{
+      if (MMD.i18n && typeof MMD.i18n.t === "function"){
+        const v = MMD.i18n.t(key);
+        if (v && v !== key) return v;
+      }
+    } catch(e){}
+    return fallback || key;
   }
 
-  function safeLower(v) {
-    return (v == null ? "" : String(v)).trim().toLowerCase();
+  function maskId(id){
+    if (!id) return "—";
+    const s = String(id).trim();
+    if (s.length <= 6) return s;
+    return s.slice(0,2) + "****" + s.slice(-4);
   }
 
-  function toNumber(v) {
+  function numberize(v){
     if (v == null) return null;
-    const s = String(v).replace(/,/g, "").trim();
+    const s = String(v).replace(/,/g,"").trim();
     if (!s) return null;
     const n = Number(s);
     return Number.isFinite(n) ? n : null;
   }
 
-  function maskId(id) {
-    if (!id) return "";
-    const s = String(id).trim();
-    if (s.length <= 6) return s;
-    return s.slice(0, 2) + "****" + s.slice(-4);
+  function money(n, locale, currency){
+    if (n == null) return "—";
+    return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(n) + " " + currency;
   }
 
-  function readDataset(root) {
+  function read(root){
     const d = root.dataset || {};
     return {
-      page: safeLower(d.confirmPage),
+      page: safeLower(d.confirmationPage),
       tier: safeLower(d.userTier),
       status: safeLower(d.status),
-      locale: safeLower(d.locale),
-      order_id: d.orderId ? String(d.orderId).trim() : "",
-      ref_code: d.refCode ? String(d.refCode).trim() : "",
-      amount: toNumber(d.amount),
-      currency: (d.currency ? String(d.currency).trim() : "").toUpperCase(),
-      payment_method: safeLower(d.paymentMethod),
-      next_url: d.nextUrl ? String(d.nextUrl).trim() : "",
-      support_url: d.supportUrl ? String(d.supportUrl).trim() : "",
-      // extensible: extra fields can be added without breaking shell
+      locale: safeLower(d.locale) || "en",
+
+      orderId: (d.orderId || "").trim(),
+      refCode: (d.refCode || "").trim(),
+
+      amount: numberize(d.amount),
+      currency: toUpper(d.currency) || "THB",
+
+      method: safeLower(d.paymentMethod) || "credit_card",
+
+      nextUrl: (d.nextUrl || "").trim(),
+      supportUrl: (d.supportUrl || "").trim(),
     };
   }
 
-  function normalize(ctx) {
+  function normalize(ctx){
     const out = Object.assign({}, ctx);
+    if (!ALLOW.page.has(out.page)) out.page = "payment";
+    if (!ALLOW.tier.has(out.tier)) out.tier = "standard";
+    if (!ALLOW.status.has(out.status)) out.status = "success";
 
-    out.page = ALLOW.page.has(out.page) ? out.page : DEFAULTS.page;
-    out.tier = ALLOW.tier.has(out.tier) ? out.tier : DEFAULTS.tier;
-    out.status = ALLOW.status.has(out.status) ? out.status : DEFAULTS.status;
-    out.locale = ALLOW.locale.has(out.locale) ? out.locale : DEFAULTS.locale;
-
-    out.currency = out.currency || DEFAULTS.currency;
-    out.payment_method = ALLOW.payment_method.has(out.payment_method) ? out.payment_method : DEFAULTS.payment_method;
-
-    out.order_id_masked = maskId(out.order_id);
-    out.amount_fmt = (out.amount == null)
-      ? ""
-      : new Intl.NumberFormat(out.locale, { maximumFractionDigits: 0 }).format(out.amount);
+    out.orderIdMasked = maskId(out.orderId);
+    out.amountText = money(out.amount, out.locale, out.currency);
 
     return out;
   }
 
-  function t(key, fallback) {
-    // Hook into your existing i18n core: MMD.i18n.t(key)
-    // fallback if not available.
-    try {
-      if (MMD.i18n && typeof MMD.i18n.t === "function") {
-        const v = MMD.i18n.t(key);
-        if (v && v !== key) return v;
+  function setAttrs(root, ctx){
+    root.setAttribute("data-confirmation-page", ctx.page);
+    root.setAttribute("data-user-tier", ctx.tier);
+    root.setAttribute("data-status", ctx.status);
+    root.setAttribute("data-locale", ctx.locale);
+  }
+
+  function statusCopy(ctx){
+    const base = {
+      success: { h: t("confirmation.common.status.success.h","Confirmed"), p: t("confirmation.common.status.success.p","Your confirmation has been recorded successfully.") },
+      pending: { h: t("confirmation.common.status.pending.h","Pending"), p: t("confirmation.common.status.pending.p","We’re verifying your details. You will be notified once completed.") },
+      failed:  { h: t("confirmation.common.status.failed.h","Not Completed"), p: t("confirmation.common.status.failed.p","Please try again or contact support.") },
+    };
+
+    const byPage = {
+      payment: {
+        success: { h: t("confirmation.payment.status.success.h","Payment Confirmed"), p: t("confirmation.payment.status.success.p","Your payment has been confirmed.") },
+        pending: { h: t("confirmation.payment.status.pending.h","Payment Pending"), p: t("confirmation.payment.status.pending.p","We’re verifying your payment. Please keep your reference.") },
+        failed:  { h: t("confirmation.payment.status.failed.h","Payment Not Completed"), p: t("confirmation.payment.status.failed.p","Please try again or use another method.") },
+      },
+      job: {
+        success: { h: t("confirmation.job.status.success.h","Job Confirmed"), p: t("confirmation.job.status.success.p","Your request has been confirmed and queued.") },
+        pending: { h: t("confirmation.job.status.pending.h","Job Pending"), p: t("confirmation.job.status.pending.p","We’re reviewing your request.") },
+        failed:  { h: t("confirmation.job.status.failed.h","Job Not Completed"), p: t("confirmation.job.status.failed.p","Please contact support to resolve this issue.") },
+      },
+      model: {
+        success: { h: t("confirmation.model.status.success.h","Model Confirmed"), p: t("confirmation.model.status.success.p","Your selection has been confirmed.") },
+        pending: { h: t("confirmation.model.status.pending.h","Model Pending"), p: t("confirmation.model.status.pending.p","We’re verifying availability.") },
+        failed:  { h: t("confirmation.model.status.failed.h","Model Not Completed"), p: t("confirmation.model.status.failed.p","Please choose another model or contact support.") },
       }
-    } catch (e) {}
-    return fallback || key;
+    };
+
+    return (byPage[ctx.page] && byPage[ctx.page][ctx.status]) || base[ctx.status] || base.success;
   }
 
-  function iconSvg(kind) {
-    // Minimal inline SVG so no external deps.
-    if (kind === "success") {
-      return `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`;
-    }
-    if (kind === "pending") {
-      return `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M12 8v5l3 2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      </svg>`;
-    }
-    return `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 9v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      <path d="M12 17h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-    </svg>`;
-  }
-
-  function renderShell(root, ctx) {
-    // Build once; then only update inner areas.
-    root.innerHTML = `
+  function shellHtml(ctx){
+    const copy = statusCopy(ctx);
+    return `
       <div class="mmdc-shell">
         <div class="mmdc-hero" aria-hidden="true"></div>
 
-        <section class="mmdc-card" role="region" aria-label="Confirmation">
-          <header class="mmdc-header">
+        <section class="mmd-confirm-wrap" role="region" aria-label="Confirmation">
+          <div class="mmdc-head">
             <div class="mmdc-brand">
-              <div class="mmdc-logo" data-slot="logo">
-                <!-- optional logo image injected by user or left blank -->
+              <div class="mmdc-logo">
+                <!-- optional: inject img via custom code if needed -->
+                <!-- <img src="YOUR_LOGO_URL" alt="MMD Privé"> -->
               </div>
+              <div>
+                <h1 class="mmdc-title">MMD Privé</h1>
+                <p class="mmdc-subtitle">${t("confirmation.common.subtitle","Confirmation")}</p>
+              </div>
+            </div>
+
+            <div class="mmd-status" aria-label="Status">
+              <span class="mmd-status-dot"></span>
+              <span>${copy.h}</span>
+            </div>
+          </div>
+
+          <div class="mmd-timeline" aria-label="Progress">
+            <div class="mmd-step is-done">${t("confirmation.timeline.step1","Submitted")}</div>
+            <div class="mmd-step ${ctx.status !== "failed" ? "is-done" : ""}">${t("confirmation.timeline.step2","Verified")}</div>
+            <div class="mmd-step ${ctx.status === "success" ? "is-done" : ""}">${t("confirmation.timeline.step3","Confirmed")}</div>
+          </div>
+
+          <div class="mmd-confirm-grid">
+            <div data-slot="left"></div>
+            <div data-slot="right"></div>
+          </div>
+
+          <div class="mmdc-actions" data-slot="actions"></div>
+        </section>
+      </div>
+    `;
+  }
+
+  function render(root, ctx){
+    root.innerHTML = shellHtml(ctx);
+
+    const wrap = root.querySelector(".mmd-confirm-wrap");
+    if (wrap) requestAnimationFrame(() => wrap.classList.add("is-visible"));
+
+    const left = root.querySelector('[data-slot="left"]');
+    const right = root.querySelector('[data-slot="right"]');
+    const actions = root.querySelector('[data-slot="actions"]');
+
+    const modules = MMD.confirmation && MMD.confirmation.modules;
+    if (!modules || typeof modules[ctx.page] !== "function") return;
+
+    const payload = modules[ctx.page](ctx, { t });
+
+    if (left) left.innerHTML = payload.leftHtml || "";
+    if (right) right.innerHTML = payload.rightHtml || "";
+    if (actions) actions.innerHTML = payload.actionsHtml || "";
+
+    try{ window.dispatchEvent(new CustomEvent("mmd:confirmation:ready", { detail: { ctx } })); } catch(e){}
+  }
+
+  function bindActions(root, ctx){
+    root.addEventListener("click", function(e){
+      const el = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
+      if (!el) return;
+
+      const action = el.getAttribute("data-action") || "";
+      try{ window.dispatchEvent(new CustomEvent("mmd:confirmation:action", { detail: { action, ctx } })); } catch(err){}
+
+      if (action === "retry"){
+        e.preventDefault();
+        return;
+      }
+    }, { passive:false });
+  }
+
+  function init(rootEl, overrides){
+    const root = rootEl || document.getElementById(ROOT_ID);
+    if (!root) return;
+
+    const raw = read(root);
+    const ctx = normalize(Object.assign({}, raw, overrides || {}));
+    setAttrs(root, ctx);
+
+    render(root, ctx);
+
+    if (!root.__mmdConfirmBound){
+      root.__mmdConfirmBound = true;
+      bindActions(root, ctx);
+    }
+  }
+
+  MMD.confirmation = MMD.confirmation || {};
+  MMD.confirmation.init = init;
+
+})();
