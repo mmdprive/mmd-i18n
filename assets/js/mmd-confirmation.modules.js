@@ -1,6 +1,8 @@
 /* =========================================
    MMD PRIVÉ — CONFIRMATION MODULES
    Pages: payment | job | model
+   - PromptPay QR: uses promptpay.io image (phone locked)
+   - Shows QR only when status is pending/failed
 ========================================= */
 
 (function () {
@@ -8,6 +10,9 @@
 
   window.MMD = window.MMD || {};
   const MMD = window.MMD;
+
+  // LOCKED PromptPay phone (per your request)
+  const PROMPTPAY_PHONE = "0829528889";
 
   function row(label, value, mono){
     const cls = mono ? "mmd-info-value mono" : "mmd-info-value";
@@ -27,10 +32,14 @@
 
   function actions(ctx, t){
     const out = [];
+
+    // failed => show retry first
     if (ctx.status === "failed"){
       out.push(btn(t("confirmation.common.cta.try_again","Try Again"), "", true, "retry"));
     }
+
     out.push(btn(t("confirmation.common.cta.continue","Continue"), ctx.nextUrl || "", true, "next"));
+
     if (ctx.supportUrl){
       out.push(btn(t("confirmation.common.cta.support","Support"), ctx.supportUrl, false, "support"));
     }
@@ -56,6 +65,12 @@
     return map[ctx.status] || ctx.status;
   }
 
+  function promptpayQrSrc(amountNumber){
+    // promptpay.io expects plain number; if no amount, show generic QR
+    if (amountNumber == null) return `https://promptpay.io/${PROMPTPAY_PHONE}.png`;
+    return `https://promptpay.io/${PROMPTPAY_PHONE}/${String(amountNumber)}.png`;
+  }
+
   function payment(ctx, { t }){
     const leftHtml = [
       row(t("confirmation.common.fields.order_id","Order"), ctx.orderIdMasked, true),
@@ -64,6 +79,24 @@
       ctx.refCode ? row(t("confirmation.common.fields.ref","Reference"), ctx.refCode, true) : "",
       row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t))
     ].join("");
+
+    // QR: only show when pending/failed AND method is promptpay
+    let verifyHtml = "";
+    const shouldShowQr = (ctx.status !== "success") && (ctx.method === "promptpay");
+    if (shouldShowQr){
+      const qrSrc = promptpayQrSrc(ctx.amount);
+      verifyHtml = `
+        <div class="mmd-verify">
+          <img class="mmd-verify-qr"
+               src="${qrSrc}"
+               alt="PromptPay QR">
+          <div>
+            <div class="mmd-hash">${t("confirmation.payment.verify.note","Keep your reference for verification.")}</div>
+            <div class="mmd-hash">${ctx.refCode ? ctx.refCode : ""}</div>
+          </div>
+        </div>
+      `;
+    }
 
     const rightHtml = `
       <div data-only="payment">
@@ -75,14 +108,7 @@
             <div>${t("confirmation.payment.summary.status","Status")}</div><div>${statusShort(ctx,t)}</div>
           </div>
         </div>
-
-        <div class="mmd-verify">
-          <div class="mmd-verify-qr" aria-label="QR" data-qr="placeholder"></div>
-          <div>
-            <div class="mmd-hash">${t("confirmation.payment.verify.note","Keep your reference for verification.")}</div>
-            <div class="mmd-hash">${ctx.refCode ? ctx.refCode : ""}</div>
-          </div>
-        </div>
+        ${verifyHtml}
       </div>
     `;
 
