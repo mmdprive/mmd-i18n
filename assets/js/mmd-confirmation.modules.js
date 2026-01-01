@@ -1,8 +1,9 @@
 /* =========================================
-   MMD PRIVÉ — CONFIRMATION MODULES
+   MMD PRIVÉ — CONFIRMATION MODULES (v2)
    Pages: payment | job | model
-   - PromptPay QR: uses promptpay.io image (phone locked)
-   - Shows QR only when status is pending/failed
+   - PromptPay QR via promptpay.io (phone locked)
+   - Shows QR only when status != success AND method=promptpay
+   - Deposit/Balance supported for ALL tiers
 ========================================= */
 
 (function () {
@@ -11,7 +12,7 @@
   window.MMD = window.MMD || {};
   const MMD = window.MMD;
 
-  // LOCKED PromptPay phone (per your request)
+  // LOCKED PromptPay phone
   const PROMPTPAY_PHONE = "0829528889";
 
   function row(label, value, mono){
@@ -33,16 +34,27 @@
   function actions(ctx, t){
     const out = [];
 
-    // failed => show retry first
-    if (ctx.status === "failed"){
-      out.push(btn(t("confirmation.common.cta.try_again","Try Again"), "", true, "retry"));
+    // Primary: Continue (if exists)
+    if (ctx.nextUrl){
+      out.push(btn(t("confirmation.common.cta.continue","Continue"), ctx.nextUrl, true, "next"));
     }
 
-    out.push(btn(t("confirmation.common.cta.continue","Continue"), ctx.nextUrl || "", true, "next"));
+    // Print always available (premium feel)
+    out.push(btn(t("confirmation.common.cta.print","Print / Save PDF"), "", false, "print"));
 
+    // Terms modal if there are terms items (or always, your call)
+    out.push(btn(t("confirmation.common.cta.terms","Terms & Conditions"), "", false, "terms"));
+
+    // Support
     if (ctx.supportUrl){
       out.push(btn(t("confirmation.common.cta.support","Support"), ctx.supportUrl, false, "support"));
     }
+
+    // Failed -> show retry at the front
+    if (ctx.status === "failed"){
+      out.unshift(btn(t("confirmation.common.cta.try_again","Try Again"), "", true, "retry"));
+    }
+
     return out.join("");
   }
 
@@ -66,33 +78,56 @@
   }
 
   function promptpayQrSrc(amountNumber){
-    // promptpay.io expects plain number; if no amount, show generic QR
     if (amountNumber == null) return `https://promptpay.io/${PROMPTPAY_PHONE}.png`;
     return `https://promptpay.io/${PROMPTPAY_PHONE}/${String(amountNumber)}.png`;
   }
 
+  function locationBlock(ctx, t){
+    if (!ctx.locationName && !ctx.locationUrl) return "";
+    const link = ctx.locationUrl
+      ? `<a class="mmd-link" href="${ctx.locationUrl}" target="_blank" rel="noopener">${t("confirmation.common.cta.view_map","View map")}</a>`
+      : "";
+    const val = `${ctx.locationName || "—"}${link ? `<br>${link}` : ""}`;
+    return row(t("confirmation.common.fields.location","Location"), val, false);
+  }
+
   function payment(ctx, { t }){
     const leftHtml = [
-      row(t("confirmation.common.fields.order_id","Order"), ctx.orderIdMasked, true),
-      row(t("confirmation.payment.fields.method","Method"), methodLabel(ctx,t)),
-      row(t("confirmation.payment.fields.amount","Amount"), ctx.amountText),
-      ctx.refCode ? row(t("confirmation.common.fields.ref","Reference"), ctx.refCode, true) : "",
+      row(t("confirmation.common.fields.reference","Reference"), ctx.refCode || ctx.orderIdMasked, true),
+      row(t("confirmation.common.fields.service","Service"), ctx.service || "—"),
+      row(t("confirmation.common.fields.model","Model"), ctx.modelCode || "—"),
+      row(t("confirmation.common.fields.date","Date"), ctx.date || "—"),
+      row(t("confirmation.common.fields.time","Time"), ctx.time || "—"),
+      locationBlock(ctx,t),
       row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t))
     ].join("");
 
-    // QR: only show when pending/failed AND method is promptpay
+    // Payment panel: show amount + deposit/balance if provided
+    const breakdownRows = [
+      `<div>${t("confirmation.payment.summary.total","Total")}</div><div>${ctx.amountText}</div>`,
+      (ctx.deposit != null) ? `<div>${t("confirmation.payment.summary.deposit","Deposit")}</div><div>${ctx.depositText}</div>` : "",
+      (ctx.balance != null) ? `<div>${t("confirmation.payment.summary.balance","Balance")}</div><div>${ctx.balanceText}</div>` : "",
+      `<div>${t("confirmation.payment.summary.method","Method")}</div><div>${methodLabel(ctx,t)}</div>`
+    ].filter(Boolean).join("");
+
+    // QR: show only when pending/failed AND method promptpay
     let verifyHtml = "";
     const shouldShowQr = (ctx.status !== "success") && (ctx.method === "promptpay");
     if (shouldShowQr){
       const qrSrc = promptpayQrSrc(ctx.amount);
+      const hashLine = ctx.hash ? `<div class="mmd-hash">${t("confirmation.payment.verify.code","Verification Code")}: <span class="mmd-info-value mono">${ctx.hash}</span></div>` : "";
+      const barcodeLine = ctx.barcode ? `<div class="mmd-barcode" title="${ctx.barcode}">${ctx.barcode}</div>` : "";
+      const adminHint = `<div class="mmd-hash">${t("confirmation.payment.verify.hint","Admin scan to verify payment")}</div>`;
+
       verifyHtml = `
         <div class="mmd-verify">
-          <img class="mmd-verify-qr"
-               src="${qrSrc}"
-               alt="PromptPay QR">
+          <img class="mmd-verify-qr" src="${qrSrc}" alt="PromptPay QR">
           <div>
             <div class="mmd-hash">${t("confirmation.payment.verify.note","Keep your reference for verification.")}</div>
             <div class="mmd-hash">${ctx.refCode ? ctx.refCode : ""}</div>
+            ${hashLine}
+            ${barcodeLine}
+            ${adminHint}
           </div>
         </div>
       `;
@@ -101,11 +136,10 @@
     const rightHtml = `
       <div data-only="payment">
         <div class="mmd-budget-box">
-          <div class="mmd-budget-label">${t("confirmation.payment.summary.total","Total")}</div>
+          <div class="mmd-budget-label">${t("confirmation.payment.summary.title","Payment Summary")}</div>
           <div class="mmd-budget-value">${ctx.amountText}</div>
           <div class="mmd-payment-breakdown">
-            <div>${t("confirmation.payment.summary.method","Method")}</div><div>${methodLabel(ctx,t)}</div>
-            <div>${t("confirmation.payment.summary.status","Status")}</div><div>${statusShort(ctx,t)}</div>
+            ${breakdownRows}
           </div>
         </div>
         ${verifyHtml}
@@ -117,9 +151,13 @@
 
   function job(ctx, { t }){
     const leftHtml = [
-      row(t("confirmation.common.fields.order_id","Job"), ctx.orderIdMasked, true),
-      ctx.refCode ? row(t("confirmation.common.fields.ref","Reference"), ctx.refCode, true) : "",
-      row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t)),
+      row(t("confirmation.common.fields.reference","Reference"), ctx.refCode || ctx.orderIdMasked, true),
+      row(t("confirmation.common.fields.service","Service"), ctx.service || "—"),
+      row(t("confirmation.common.fields.model","Model"), ctx.modelCode || "—"),
+      row(t("confirmation.common.fields.date","Date"), ctx.date || "—"),
+      row(t("confirmation.common.fields.time","Time"), ctx.time || "—"),
+      locationBlock(ctx,t),
+      row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t))
     ].join("");
 
     const rightHtml = `
@@ -127,7 +165,7 @@
         <div class="mmd-budget-box">
           <div class="mmd-budget-label">${t("confirmation.job.panel.title","Next Steps")}</div>
           <div class="mmd-hash" style="margin-top:10px;">
-            ${t("confirmation.job.panel.desc","You can continue to your job detail page or contact support if you need changes.")}
+            ${t("confirmation.job.panel.desc","Your booking is recorded. If you need changes, contact support.")}
           </div>
         </div>
       </div>
@@ -138,17 +176,21 @@
 
   function model(ctx, { t }){
     const leftHtml = [
-      row(t("confirmation.common.fields.order_id","Confirmation"), ctx.orderIdMasked, true),
-      ctx.refCode ? row(t("confirmation.common.fields.ref","Reference"), ctx.refCode, true) : "",
-      row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t)),
+      row(t("confirmation.common.fields.reference","Reference"), ctx.refCode || ctx.orderIdMasked, true),
+      row(t("confirmation.common.fields.service","Service"), ctx.service || "—"),
+      row(t("confirmation.common.fields.model","Model"), ctx.modelCode || "—"),
+      row(t("confirmation.common.fields.date","Date"), ctx.date || "—"),
+      row(t("confirmation.common.fields.time","Time"), ctx.time || "—"),
+      locationBlock(ctx,t),
+      row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t))
     ].join("");
 
     const rightHtml = `
       <div data-only="model">
         <div class="mmd-budget-box">
-          <div class="mmd-budget-label">${t("confirmation.model.panel.title","Model Locked")}</div>
+          <div class="mmd-budget-label">${t("confirmation.model.panel.title","Assignment Locked")}</div>
           <div class="mmd-hash" style="margin-top:10px;">
-            ${t("confirmation.model.panel.desc","Your selected model is reserved under this confirmation.")}
+            ${t("confirmation.model.panel.desc","This assignment is reserved under this confirmation.")}
           </div>
         </div>
       </div>
