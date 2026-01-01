@@ -4,6 +4,7 @@
    Pages: job | payment | model
    Tiers: standard | premium | vip | svip
    Status: success | pending | failed
+   Flags: data-expired="1"
 ========================================= */
 
 #mmd-confirmation{
@@ -42,9 +43,7 @@
   --accent-line: rgba(185,189,199,.20);
   --line-strong: rgba(185,189,199,.22);
 }
-#mmd-confirmation[data-user-tier="premium"]{
-  /* keep base gold */
-}
+#mmd-confirmation[data-user-tier="premium"]{ /* base gold */ }
 #mmd-confirmation[data-user-tier="vip"]{
   --accent:#d7b05a;
   --accent-soft: rgba(215,176,90,.16);
@@ -58,7 +57,7 @@
   --line-strong: rgba(231,216,178,.20);
 }
 
-/* -------- Status Overrides (optional accent shift) -------- */
+/* -------- Status Overrides -------- */
 #mmd-confirmation[data-status="pending"]{
   --accent:#9DB6FF;
   --accent-soft: rgba(157,182,255,.16);
@@ -72,7 +71,7 @@
   --line-strong: rgba(255,107,107,.20);
 }
 
-/* -------- Hero Mapping (replace URLs with your final assets) -------- */
+/* -------- Hero Mapping (ปรับ URL ของคุณได้) -------- */
 #mmd-confirmation[data-confirmation-page="payment"]{
   --hero-url: url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/693f64ab77a0768280a581db_MD%20AI.png");
 }
@@ -269,7 +268,7 @@
   border-top:1px dashed var(--line-strong);
   display:flex;
   gap:16px;
-  align-items:center;
+  align-items:flex-start;
 }
 #mmd-confirmation .mmd-verify-qr{
   width:84px;height:84px;
@@ -280,6 +279,31 @@
   display:block;
 }
 #mmd-confirmation .mmd-hash{ font-size:12px; color: var(--muted); }
+#mmd-confirmation .mmd-barcode{
+  margin-top:10px;
+  height:28px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  display:flex;
+  align-items:center;
+  padding:0 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size:12px;
+  color: rgba(255,255,255,.78);
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+/* Map link */
+#mmd-confirmation .mmd-link{
+  color: rgba(255,255,255,.90);
+  text-decoration:none;
+  border-bottom:1px dashed rgba(255,255,255,.20);
+  padding-bottom:2px;
+}
+#mmd-confirmation .mmd-link:hover{ border-bottom-color: rgba(255,255,255,.36); }
 
 /* Actions */
 #mmd-confirmation .mmdc-actions{
@@ -315,15 +339,101 @@
   border-color: var(--accent-line);
   background: radial-gradient(900px 200px at 30% 30%, var(--accent-soft), rgba(255,255,255,.03));
 }
-#mmd-confirmation .mmdc-btn.ghost{
-  background: transparent;
-}
+#mmd-confirmation .mmdc-btn.ghost{ background: transparent; }
 
 /* Page-only */
 #mmd-confirmation [data-only]{ display:none; }
 #mmd-confirmation[data-confirmation-page="payment"] [data-only="payment"]{ display:block; }
 #mmd-confirmation[data-confirmation-page="job"] [data-only="job"]{ display:block; }
 #mmd-confirmation[data-confirmation-page="model"] [data-only="model"]{ display:block; }
+
+/* -------- Expired View -------- */
+#mmd-confirmation[data-expired="1"] .mmd-confirm-wrap{ display:none; }
+
+#mmd-confirmation .mmdc-expired{
+  width:min(760px, 100%);
+  padding: 34px;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  box-shadow: 0 22px 70px rgba(0,0,0,.55);
+  display:none;
+}
+#mmd-confirmation[data-expired="1"] .mmdc-expired{ display:block; }
+
+#mmd-confirmation .mmdc-expired h2{
+  margin:0 0 10px 0;
+  font-family:"Outfit", ui-sans-serif, system-ui;
+  font-size:20px;
+  letter-spacing:.2px;
+}
+#mmd-confirmation .mmdc-expired p{
+  margin:0;
+  color: var(--muted);
+  font-size:14px;
+}
+
+/* -------- Premium Modal (Terms) -------- */
+#mmd-confirmation .mmdc-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding: 18px;
+}
+#mmd-confirmation .mmdc-modal.is-open{ display:flex; }
+
+#mmd-confirmation .mmdc-modal-backdrop{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.62);
+  backdrop-filter: blur(10px);
+}
+#mmd-confirmation .mmdc-modal-box{
+  position:relative;
+  width:min(760px, 100%);
+  border-radius: 22px;
+  border:1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(18,18,22,.92), rgba(10,10,12,.96));
+  box-shadow: 0 30px 120px rgba(0,0,0,.70);
+  padding: 22px;
+}
+#mmd-confirmation .mmdc-modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom: 12px;
+}
+#mmd-confirmation .mmdc-modal-title{
+  font-family:"Outfit", ui-sans-serif, system-ui;
+  font-size:16px;
+  margin:0;
+  color: rgba(255,255,255,.92);
+}
+#mmd-confirmation .mmdc-modal-close{
+  width:38px;height:38px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.88);
+  cursor:pointer;
+}
+#mmd-confirmation .mmdc-modal-close:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.16);
+}
+#mmd-confirmation .mmdc-modal-body{
+  color: var(--muted);
+  font-size:14px;
+  line-height: 1.7;
+}
+#mmd-confirmation .mmdc-modal-body ul{
+  margin: 12px 0 0 18px;
+  padding:0;
+}
+#mmd-confirmation .mmdc-modal-body li{ margin: 6px 0; }
 
 /* Mobile */
 @media(max-width:768px){
@@ -338,6 +448,10 @@
   #mmd-confirmation{ background:#fff!important; }
   #mmd-confirmation .mmdc-shell{ padding:0; }
   #mmd-confirmation .mmdc-hero{ display:none; }
-  #mmd-confirmation .mmd-confirm-wrap{ background:#fff!important; border:none; box-shadow:none; margin:0; padding:0; }
+  #mmd-confirmation .mmdc-actions{ display:none !important; }
+  #mmd-confirmation .mmdc-modal{ display:none !important; }
+  #mmd-confirmation .mmd-confirm-wrap{
+    background:#fff!important; border:none; box-shadow:none; margin:0; padding:0;
+  }
   #mmd-confirmation .mmd-status{ background:none; border:none; color:#111; }
 }
