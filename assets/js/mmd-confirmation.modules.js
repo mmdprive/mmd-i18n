@@ -1,9 +1,10 @@
 /* =========================================
-   MMD PRIVÉ — CONFIRMATION MODULES (v2)
+   MMD PRIVÉ — CONFIRMATION MODULES (v3)
    Pages: payment | job | model
    - PromptPay QR via promptpay.io (phone locked)
    - Shows QR only when status != success AND method=promptpay
    - Deposit/Balance supported for ALL tiers
+   - Points UI block (earned + total/progress)
 ========================================= */
 
 (function () {
@@ -12,7 +13,6 @@
   window.MMD = window.MMD || {};
   const MMD = window.MMD;
 
-  // LOCKED PromptPay phone
   const PROMPTPAY_PHONE = "0829528889";
 
   function row(label, value, mono){
@@ -34,25 +34,19 @@
   function actions(ctx, t){
     const out = [];
 
-    // Primary: Continue (if exists)
+    if (ctx.status === "failed"){
+      out.push(btn(t("confirmation.common.cta.try_again","Try Again"), "", true, "retry"));
+    }
+
     if (ctx.nextUrl){
       out.push(btn(t("confirmation.common.cta.continue","Continue"), ctx.nextUrl, true, "next"));
     }
 
-    // Print always available (premium feel)
     out.push(btn(t("confirmation.common.cta.print","Print / Save PDF"), "", false, "print"));
-
-    // Terms modal if there are terms items (or always, your call)
     out.push(btn(t("confirmation.common.cta.terms","Terms & Conditions"), "", false, "terms"));
 
-    // Support
     if (ctx.supportUrl){
       out.push(btn(t("confirmation.common.cta.support","Support"), ctx.supportUrl, false, "support"));
-    }
-
-    // Failed -> show retry at the front
-    if (ctx.status === "failed"){
-      out.unshift(btn(t("confirmation.common.cta.try_again","Try Again"), "", true, "retry"));
     }
 
     return out.join("");
@@ -91,6 +85,34 @@
     return row(t("confirmation.common.fields.location","Location"), val, false);
   }
 
+  function pointsBlock(ctx, t){
+    if (!ctx.hasPoints) return "";
+
+    const earned = (ctx.pointsEarned != null) ? String(ctx.pointsEarned) : "—";
+    const total = (ctx.pointsTotal != null) ? String(ctx.pointsTotal) : "—";
+    const threshold = (ctx.pointsThreshold != null) ? String(ctx.pointsThreshold) : "120";
+
+    const title = t("confirmation.points.title","Member Points");
+    const earnedLabel = t("confirmation.points.earned","Points earned");
+    const totalLabel = t("confirmation.points.total","Total points");
+    const progressLabel = t("confirmation.points.progress","Progress");
+
+    // minimalist premium block using existing budget box styles (no new CSS required)
+    return `
+      <div class="mmd-budget-box" style="margin-top:14px;">
+        <div class="mmd-budget-label">${title}</div>
+        <div class="mmd-payment-breakdown" style="margin-top:10px;">
+          <div>${earnedLabel}</div><div>${earned}</div>
+          <div>${totalLabel}</div><div>${total}</div>
+          <div>${progressLabel}</div><div>${total} / ${threshold}</div>
+        </div>
+        <div class="mmd-hash" style="margin-top:10px;">
+          ${t("confirmation.points.note","Every 1,000 THB = 1 point. Threshold at 120 points triggers approval.") }
+        </div>
+      </div>
+    `;
+  }
+
   function payment(ctx, { t }){
     const leftHtml = [
       row(t("confirmation.common.fields.reference","Reference"), ctx.refCode || ctx.orderIdMasked, true),
@@ -102,7 +124,6 @@
       row(t("confirmation.common.fields.status","Status"), statusShort(ctx,t))
     ].join("");
 
-    // Payment panel: show amount + deposit/balance if provided
     const breakdownRows = [
       `<div>${t("confirmation.payment.summary.total","Total")}</div><div>${ctx.amountText}</div>`,
       (ctx.deposit != null) ? `<div>${t("confirmation.payment.summary.deposit","Deposit")}</div><div>${ctx.depositText}</div>` : "",
@@ -110,13 +131,16 @@
       `<div>${t("confirmation.payment.summary.method","Method")}</div><div>${methodLabel(ctx,t)}</div>`
     ].filter(Boolean).join("");
 
-    // QR: show only when pending/failed AND method promptpay
     let verifyHtml = "";
     const shouldShowQr = (ctx.status !== "success") && (ctx.method === "promptpay");
     if (shouldShowQr){
       const qrSrc = promptpayQrSrc(ctx.amount);
-      const hashLine = ctx.hash ? `<div class="mmd-hash">${t("confirmation.payment.verify.code","Verification Code")}: <span class="mmd-info-value mono">${ctx.hash}</span></div>` : "";
-      const barcodeLine = ctx.barcode ? `<div class="mmd-barcode" title="${ctx.barcode}">${ctx.barcode}</div>` : "";
+      const hashLine = ctx.hash
+        ? `<div class="mmd-hash">${t("confirmation.payment.verify.code","Verification Code")}: <span class="mmd-info-value mono">${ctx.hash}</span></div>`
+        : "";
+      const barcodeLine = ctx.barcode
+        ? `<div class="mmd-barcode" title="${ctx.barcode}">${ctx.barcode}</div>`
+        : "";
       const adminHint = `<div class="mmd-hash">${t("confirmation.payment.verify.hint","Admin scan to verify payment")}</div>`;
 
       verifyHtml = `
@@ -142,6 +166,9 @@
             ${breakdownRows}
           </div>
         </div>
+
+        ${pointsBlock(ctx,t)}
+
         ${verifyHtml}
       </div>
     `;
@@ -168,6 +195,8 @@
             ${t("confirmation.job.panel.desc","Your booking is recorded. If you need changes, contact support.")}
           </div>
         </div>
+
+        ${pointsBlock(ctx,t)}
       </div>
     `;
 
@@ -193,6 +222,8 @@
             ${t("confirmation.model.panel.desc","This assignment is reserved under this confirmation.")}
           </div>
         </div>
+
+        ${pointsBlock(ctx,t)}
       </div>
     `;
 
