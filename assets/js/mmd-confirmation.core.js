@@ -1,8 +1,12 @@
 /* =========================================
-   MMD PRIVÉ — CONFIRMATION CORE (v2)
+   MMD PRIVÉ — CONFIRMATION CORE (v3)
    - Reads ctx from #mmd-confirmation dataset
    - Expired view support
    - Actions: print | terms | support | next | retry
+   - Points:
+     - pointsEarned, pointsTotal, pointsThreshold
+     - Emits threshold event when crossing threshold
+     - localStorage de-dup per order/ref
    - Exposes: MMD.confirmation.init(root?, overrides?)
 ========================================= */
 
@@ -19,6 +23,8 @@
     tier: new Set(["standard","premium","vip","svip"]),
     status: new Set(["success","pending","failed"]),
   };
+
+  const DEFAULT_POINTS_THRESHOLD = 120;
 
   function safeLower(v){ return (v == null ? "" : String(v)).trim().toLowerCase(); }
   function toUpper(v){ return (v == null ? "" : String(v)).trim().toUpperCase(); }
@@ -49,6 +55,15 @@
     return Number.isFinite(n) ? n : null;
   }
 
+  function intize(v){
+    if (v == null) return null;
+    const s = String(v).replace(/,/g,"").trim();
+    if (!s) return null;
+    const n = Number(s);
+    if (!Number.isFinite(n)) return null;
+    return Math.floor(n);
+  }
+
   function money(n, locale, currency){
     if (n == null) return "—";
     return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(n) + " " + currency;
@@ -58,6 +73,12 @@
     const raw = trim(s);
     if (!raw) return [];
     return raw.split("|").map(x => x.trim()).filter(Boolean);
+  }
+
+  function safeDispatch(name, detail){
+    try{
+      window.dispatchEvent(new CustomEvent(name, { detail }));
+    } catch(e){}
   }
 
   function read(root){
@@ -89,11 +110,23 @@
       hash: trim(d.hash),
       barcode: trim(d.barcode),
 
+      // Points (authoritative values should come from Workers)
+      pointsEarned: intize(d.pointsEarned),
+      pointsTotal: intize(d.pointsTotal),
+      pointsThreshold: intize(d.pointsThreshold) ?? DEFAULT_POINTS_THRESHOLD,
+
+      // Identity / membership mapping (for bot approval flow)
+      memberId: trim(d.memberId),
+      telegramUserId: trim(d.telegramUserId),
+
       termsTitle: trim(d.termsTitle) || t("confirmation.terms.title","Terms & Conditions"),
       termsItems: splitTermsItems(d.termsItems),
 
       nextUrl: trim(d.nextUrl),
       supportUrl: trim(d.supportUrl),
+
+      // Optional: pointsTotalBefore (if Workers sends it; otherwise UI will not infer threshold crossing)
+      pointsTotalBefore: intize(d.pointsTotalBefore),
     };
   }
 
@@ -110,8 +143,13 @@
     out.depositText = money(out.deposit, out.locale, out.currency);
     out.balanceText = money(out.balance, out.locale, out.currency);
 
-    // If deposit/balance missing but amount exists, do not invent numbers.
-    // Keep as "—" to avoid financial mismatch.
+    // Points helpers for UI (no client-side computation to avoid mismatch)
+    out.hasPoints = (out.pointsEarned != null) || (out.pointsTotal != null);
+    out.pointsThreshold = out.pointsThreshold || DEFAULT_POINTS_THRESHOLD;
+    out.pointsProgressText =
+      (out.pointsTotal != null)
+        ? `${out.pointsTotal} / ${out.pointsThreshold}`
+        : `— / ${out.pointsThreshold}`;
 
     return out;
   }
@@ -269,6 +307,52 @@
     try{ document.body.style.overflow = ""; } catch(e){}
   }
 
+  function storageKeyFor(ctx){
+    const id = ctx.orderId || ctx.refCode || "unknown";
+    return `mmd_points_notified_${id}`;
+  }
+
+  function maybeEmitPointsThreshold(ctx){
+    // Emit only when:
+    // - status success (authoritative)
+    // - pointsTotal + threshold exist
+    // - we can prove crossing threshold (pointsTotalBefore provided), OR we allow fallback if pointsTotal >= threshold and not notified before
+    if (ctx.status !== "success") return;
+    if (ctx.pointsTotal == null || ctx.pointsThreshold == null) return;
+
+    const key = storageKeyFor(ctx);
+    const already = (function(){
+      try{ return localStorage.getItem(key) === "1"; } catch(e){ return false; }
+    })();
+    if (already) return;
+
+    const threshold = ctx.pointsThreshold;
+
+    let crossed = false;
+    if (ctx.pointsTotalBefore != null){
+      crossed = (ctx.pointsTotalBefore < threshold) && (ctx.pointsTotal >= threshold);
+    } else {
+      // fallback: if we do not have "before", still notify once when total >= threshold
+      crossed = (ctx.pointsTotal >= threshold);
+    }
+
+    if (!crossed) return;
+
+    try{ localStorage.setItem(key, "1"); } catch(e){}
+
+    safeDispatch("mmd:points:threshold", {
+      orderId: ctx.orderId || null,
+      refCode: ctx.refCode || null,
+      memberId: ctx.memberId || null,
+      telegramUserId: ctx.telegramUserId || null,
+      tier: ctx.tier,
+      pointsTotal: ctx.pointsTotal,
+      pointsThreshold: threshold,
+      pointsEarned: ctx.pointsEarned,
+      page: ctx.page,
+    });
+  }
+
   function bindActions(root, ctx){
     root.addEventListener("click", function(e){
       const el = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
@@ -295,15 +379,13 @@
         return;
       }
 
-      // retry: keep hook for your backend flow
       if (action === "retry"){
         e.preventDefault();
-        try{ window.dispatchEvent(new CustomEvent("mmd:confirmation:retry", { detail: { ctx } })); } catch(err){}
+        safeDispatch("mmd:confirmation:retry", { ctx });
         return;
       }
     }, { passive:false });
 
-    // ESC to close modal
     root.addEventListener("keydown", function(e){
       if (e.key === "Escape") closeTerms(root);
     });
@@ -323,6 +405,12 @@
       root.__mmdConfirmBound = true;
       bindActions(root, ctx);
     }
+
+    // Global ready event (for Workers/UI integrations)
+    safeDispatch("mmd:confirmation:ready", { ctx });
+
+    // Points threshold event (for Telegram approval flow)
+    maybeEmitPointsThreshold(ctx);
   }
 
   MMD.confirmation = MMD.confirmation || {};
