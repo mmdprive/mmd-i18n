@@ -1,6 +1,8 @@
 /* =========================================
-   MMD PRIVÉ — CONFIRMATION CORE
-   - Normalizes ctx from #mmd-confirmation dataset
+   MMD PRIVÉ — CONFIRMATION CORE (v2)
+   - Reads ctx from #mmd-confirmation dataset
+   - Expired view support
+   - Actions: print | terms | support | next | retry
    - Exposes: MMD.confirmation.init(root?, overrides?)
 ========================================= */
 
@@ -20,6 +22,7 @@
 
   function safeLower(v){ return (v == null ? "" : String(v)).trim().toLowerCase(); }
   function toUpper(v){ return (v == null ? "" : String(v)).trim().toUpperCase(); }
+  function trim(v){ return (v == null ? "" : String(v)).trim(); }
 
   function t(key, fallback){
     try{
@@ -51,6 +54,12 @@
     return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(n) + " " + currency;
   }
 
+  function splitTermsItems(s){
+    const raw = trim(s);
+    if (!raw) return [];
+    return raw.split("|").map(x => x.trim()).filter(Boolean);
+  }
+
   function read(root){
     const d = root.dataset || {};
     return {
@@ -59,27 +68,50 @@
       status: safeLower(d.status),
       locale: safeLower(d.locale) || "en",
 
-      orderId: (d.orderId || "").trim(),
-      refCode: (d.refCode || "").trim(),
+      expired: d.expired === "1" || d.expired === "true",
+
+      orderId: trim(d.orderId),
+      refCode: trim(d.refCode),
+
+      service: trim(d.service),
+      modelCode: trim(d.modelCode),
+      date: trim(d.date),
+      time: trim(d.time),
+      locationName: trim(d.locationName),
+      locationUrl: trim(d.locationUrl),
 
       amount: numberize(d.amount),
+      deposit: numberize(d.deposit),
+      balance: numberize(d.balance),
       currency: toUpper(d.currency) || "THB",
-
       method: safeLower(d.paymentMethod) || "credit_card",
 
-      nextUrl: (d.nextUrl || "").trim(),
-      supportUrl: (d.supportUrl || "").trim(),
+      hash: trim(d.hash),
+      barcode: trim(d.barcode),
+
+      termsTitle: trim(d.termsTitle) || t("confirmation.terms.title","Terms & Conditions"),
+      termsItems: splitTermsItems(d.termsItems),
+
+      nextUrl: trim(d.nextUrl),
+      supportUrl: trim(d.supportUrl),
     };
   }
 
   function normalize(ctx){
     const out = Object.assign({}, ctx);
+
     if (!ALLOW.page.has(out.page)) out.page = "payment";
     if (!ALLOW.tier.has(out.tier)) out.tier = "standard";
     if (!ALLOW.status.has(out.status)) out.status = "success";
 
     out.orderIdMasked = maskId(out.orderId);
-    out.amountText = money(out.amount, out.locale, out.currency);
+
+    out.amountText  = money(out.amount, out.locale, out.currency);
+    out.depositText = money(out.deposit, out.locale, out.currency);
+    out.balanceText = money(out.balance, out.locale, out.currency);
+
+    // If deposit/balance missing but amount exists, do not invent numbers.
+    // Keep as "—" to avoid financial mismatch.
 
     return out;
   }
@@ -89,6 +121,7 @@
     root.setAttribute("data-user-tier", ctx.tier);
     root.setAttribute("data-status", ctx.status);
     root.setAttribute("data-locale", ctx.locale);
+    root.setAttribute("data-expired", ctx.expired ? "1" : "0");
   }
 
   function statusCopy(ctx){
@@ -110,13 +143,47 @@
         failed:  { h: t("confirmation.job.status.failed.h","Job Not Completed"), p: t("confirmation.job.status.failed.p","Please contact support to resolve this issue.") },
       },
       model: {
-        success: { h: t("confirmation.model.status.success.h","Model Confirmed"), p: t("confirmation.model.status.success.p","Your selection has been confirmed.") },
-        pending: { h: t("confirmation.model.status.pending.h","Model Pending"), p: t("confirmation.model.status.pending.p","We’re verifying availability.") },
-        failed:  { h: t("confirmation.model.status.failed.h","Model Not Completed"), p: t("confirmation.model.status.failed.p","Please choose another model or contact support.") },
+        success: { h: t("confirmation.model.status.success.h","Assignment Confirmed"), p: t("confirmation.model.status.success.p","Your selection has been confirmed.") },
+        pending: { h: t("confirmation.model.status.pending.h","Assignment Pending"), p: t("confirmation.model.status.pending.p","We’re verifying availability.") },
+        failed:  { h: t("confirmation.model.status.failed.h","Assignment Not Completed"), p: t("confirmation.model.status.failed.p","Please choose another model or contact support.") },
       }
     };
 
     return (byPage[ctx.page] && byPage[ctx.page][ctx.status]) || base[ctx.status] || base.success;
+  }
+
+  function expiredHtml(ctx){
+    return `
+      <div class="mmdc-expired" role="region" aria-label="Expired">
+        <h2>${t("confirmation.expired.title","Link Expired")}</h2>
+        <p>${t("confirmation.expired.desc","This confirmation link is no longer valid. Please contact support if you need assistance.")}</p>
+        <div class="mmdc-actions" style="margin-top:18px;">
+          ${ctx.supportUrl ? `<a class="mmdc-btn primary" href="${ctx.supportUrl}" data-action="support">${t("confirmation.common.cta.support","Support")}</a>` : ""}
+          <button class="mmdc-btn ghost" type="button" data-action="print">${t("confirmation.common.cta.print","Print / Save PDF")}</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function termsModalHtml(ctx){
+    const items = (ctx.termsItems && ctx.termsItems.length)
+      ? `<ul>${ctx.termsItems.map(li => `<li>${li}</li>`).join("")}</ul>`
+      : `<div>${t("confirmation.terms.empty","No terms provided.")}</div>`;
+
+    return `
+      <div class="mmdc-modal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="mmdc-modal-backdrop" data-action="terms-close" aria-hidden="true"></div>
+        <div class="mmdc-modal-box" role="document">
+          <div class="mmdc-modal-head">
+            <h3 class="mmdc-modal-title">${ctx.termsTitle}</h3>
+            <button class="mmdc-modal-close" type="button" aria-label="Close" data-action="terms-close">✕</button>
+          </div>
+          <div class="mmdc-modal-body">
+            ${items}
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   function shellHtml(ctx){
@@ -125,13 +192,12 @@
       <div class="mmdc-shell">
         <div class="mmdc-hero" aria-hidden="true"></div>
 
+        ${expiredHtml(ctx)}
+
         <section class="mmd-confirm-wrap" role="region" aria-label="Confirmation">
           <div class="mmdc-head">
             <div class="mmdc-brand">
-              <div class="mmdc-logo">
-                <!-- optional: inject img via custom code if needed -->
-                <!-- <img src="YOUR_LOGO_URL" alt="MMD Privé"> -->
-              </div>
+              <div class="mmdc-logo"></div>
               <div>
                 <h1 class="mmdc-title">MMD Privé</h1>
                 <p class="mmdc-subtitle">${t("confirmation.common.subtitle","Confirmation")}</p>
@@ -157,6 +223,8 @@
 
           <div class="mmdc-actions" data-slot="actions"></div>
         </section>
+
+        ${termsModalHtml(ctx)}
       </div>
     `;
   }
@@ -164,8 +232,12 @@
   function render(root, ctx){
     root.innerHTML = shellHtml(ctx);
 
-    const wrap = root.querySelector(".mmd-confirm-wrap");
-    if (wrap) requestAnimationFrame(() => wrap.classList.add("is-visible"));
+    if (!ctx.expired){
+      const wrap = root.querySelector(".mmd-confirm-wrap");
+      if (wrap) requestAnimationFrame(() => wrap.classList.add("is-visible"));
+    }
+
+    if (ctx.expired) return;
 
     const left = root.querySelector('[data-slot="left"]');
     const right = root.querySelector('[data-slot="right"]');
@@ -179,8 +251,22 @@
     if (left) left.innerHTML = payload.leftHtml || "";
     if (right) right.innerHTML = payload.rightHtml || "";
     if (actions) actions.innerHTML = payload.actionsHtml || "";
+  }
 
-    try{ window.dispatchEvent(new CustomEvent("mmd:confirmation:ready", { detail: { ctx } })); } catch(e){}
+  function openTerms(root){
+    const modal = root.querySelector(".mmdc-modal");
+    if (!modal) return;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden","false");
+    try{ document.body.style.overflow = "hidden"; } catch(e){}
+  }
+
+  function closeTerms(root){
+    const modal = root.querySelector(".mmdc-modal");
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden","true");
+    try{ document.body.style.overflow = ""; } catch(e){}
   }
 
   function bindActions(root, ctx){
@@ -189,13 +275,38 @@
       if (!el) return;
 
       const action = el.getAttribute("data-action") || "";
-      try{ window.dispatchEvent(new CustomEvent("mmd:confirmation:action", { detail: { action, ctx } })); } catch(err){}
+      if (!action) return;
 
+      if (action === "print"){
+        e.preventDefault();
+        window.print();
+        return;
+      }
+
+      if (action === "terms"){
+        e.preventDefault();
+        openTerms(root);
+        return;
+      }
+
+      if (action === "terms-close"){
+        e.preventDefault();
+        closeTerms(root);
+        return;
+      }
+
+      // retry: keep hook for your backend flow
       if (action === "retry"){
         e.preventDefault();
+        try{ window.dispatchEvent(new CustomEvent("mmd:confirmation:retry", { detail: { ctx } })); } catch(err){}
         return;
       }
     }, { passive:false });
+
+    // ESC to close modal
+    root.addEventListener("keydown", function(e){
+      if (e.key === "Escape") closeTerms(root);
+    });
   }
 
   function init(rootEl, overrides){
