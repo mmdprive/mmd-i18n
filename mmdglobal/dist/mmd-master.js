@@ -1,7 +1,6 @@
 /* ======================================================
    MMD PRIVÉ — MASTER (FINAL)
-   i18n: assets/i18n/i18n.dict.js + assets/i18n/i18n.core.js only
-   Contract: window.MMD_I18N.apply(lang)
+   Works with i18n.core.js v1.6 LOCK (MMD.i18n.*)
    Roles: guest, standard, premium, vip, svip
    Version: 2026-01-02
 ====================================================== */
@@ -16,15 +15,11 @@
     defaultRole: "guest",
     roleAttr: "data-user-role",
 
-    // i18n contract (LOCK)
-    i18nGlobal: "MMD_I18N",
-    i18nApply: "apply",
-
-    // language
+    // language storage keys follow i18n.core.js (reads/writes both)
+    langStorageKeys: ["mmd_lang", "lang"],
     defaultLang: "en",
-    langStorageKey: "mmd_lang",
 
-    // visibility (standard)
+    // visibility standard
     visibleForAttr: "data-visible-for",
   };
 
@@ -34,29 +29,51 @@
     ready: false,
   };
 
-  // ---------- Helpers ----------
+  // ---------- Storage (match core behavior) ----------
+  function safeGetStoredLang() {
+    try {
+      for (const k of CONFIG.langStorageKeys) {
+        const v = localStorage.getItem(k);
+        if (v) return v;
+      }
+    } catch (e) {}
+    return "";
+  }
+
+  function safeSetStoredLang(lang) {
+    try {
+      for (const k of CONFIG.langStorageKeys) localStorage.setItem(k, lang);
+    } catch (e) {}
+  }
+
+  // ---------- Role ----------
   function normalizeRole(role) {
     if (!role) return CONFIG.defaultRole;
     const r = String(role).trim().toLowerCase();
     return CONFIG.roles.includes(r) ? r : CONFIG.defaultRole;
   }
 
-  function getBodyRole() {
+  function detectRoleFromBody() {
     const body = document.body;
-    if (!body) return null;
+    if (!body) return CONFIG.defaultRole;
     return normalizeRole(body.getAttribute(CONFIG.roleAttr) || body.dataset.userRole);
   }
 
-  function applyRole(role) {
+  function applyRoleToDOM(role) {
     const body = document.body;
     if (!body) return;
 
+    // class hook
     CONFIG.roles.forEach((r) => body.classList.remove(`role-${r}`));
     body.classList.add(`role-${role}`);
+
+    // attrs used by i18n core getRole(): body.dataset.userRole
+    body.dataset.userRole = role;
     body.setAttribute(CONFIG.roleAttr, role);
   }
 
-  function applyVisibility() {
+  // ---------- Visibility ----------
+  function applyVisibilityByRole() {
     const role = STATE.role;
     const attr = CONFIG.visibleForAttr;
 
@@ -70,30 +87,36 @@
     });
   }
 
+  // ---------- Language ----------
   function detectLang() {
+    // Prefer i18n core getter if present; else fallback
+    if (window.MMD?.i18n?.getLang) return window.MMD.i18n.getLang();
+
     const htmlLang = document.documentElement?.getAttribute("lang");
-    const saved = localStorage.getItem(CONFIG.langStorageKey);
-    return (htmlLang || saved || CONFIG.defaultLang).trim().toLowerCase();
+    const stored = safeGetStoredLang();
+    return (stored || htmlLang || CONFIG.defaultLang).trim().toLowerCase();
   }
 
-  function getI18n() {
-    return window[CONFIG.i18nGlobal] || null;
-  }
-
-  function applyI18n(lang) {
-    const i18n = getI18n();
-    const fn = i18n && i18n[CONFIG.i18nApply];
-    if (typeof fn === "function") fn.call(i18n, lang);
+  function applyI18nLang(lang, scope) {
+    // Use the ONLY supported engine: MMD.i18n.setLang
+    const i18n = window.MMD && window.MMD.i18n;
+    if (i18n && typeof i18n.setLang === "function") {
+      i18n.setLang(lang, scope);
+      return true;
+    }
+    return false;
   }
 
   function setLang(lang) {
     STATE.lang = String(lang || CONFIG.defaultLang).trim().toLowerCase();
-    localStorage.setItem(CONFIG.langStorageKey, STATE.lang);
 
-    // Apply now if core is ready; if core dispatches ready event later, we'll re-apply then.
-    applyI18n(STATE.lang);
+    // keep storage aligned with i18n core keys
+    safeSetStoredLang(STATE.lang);
 
-    document.dispatchEvent(new CustomEvent("mmd:lang", { detail: { lang: STATE.lang } }));
+    // apply via i18n core (role-aware)
+    applyI18nLang(STATE.lang);
+
+    document.dispatchEvent(new CustomEvent("mmd:master:lang", { detail: { lang: STATE.lang } }));
   }
 
   // ---------- Public API ----------
@@ -102,28 +125,34 @@
 
   window.MMD.setRole = (role) => {
     STATE.role = normalizeRole(role);
-    applyRole(STATE.role);
-    applyVisibility();
-    document.dispatchEvent(new CustomEvent("mmd:role", { detail: { role: STATE.role } }));
+    applyRoleToDOM(STATE.role);
+    applyVisibilityByRole();
+
+    // IMPORTANT: role affects i18n key.{role} -> re-apply current lang
+    applyI18nLang(STATE.lang);
+
+    document.dispatchEvent(new CustomEvent("mmd:master:role", { detail: { role: STATE.role } }));
   };
 
   window.MMD.setLang = (lang) => setLang(lang);
 
-  // Optional hook: if i18n.core.js dispatches this when ready
+  // If you add this event in i18n.core.js, master will sync when core is ready:
   document.addEventListener("mmd:i18n:ready", function () {
-    applyI18n(STATE.lang);
+    // ensure i18n sees correct role before applying
+    applyRoleToDOM(STATE.role);
+    applyI18nLang(STATE.lang);
   });
 
   // ---------- Init ----------
   function init() {
-    STATE.role = getBodyRole() || CONFIG.defaultRole;
-    applyRole(STATE.role);
-    applyVisibility();
+    STATE.role = detectRoleFromBody();
+    applyRoleToDOM(STATE.role);
+    applyVisibilityByRole();
 
     setLang(detectLang());
 
     STATE.ready = true;
-    document.dispatchEvent(new CustomEvent("mmd:ready", { detail: { ...STATE } }));
+    document.dispatchEvent(new CustomEvent("mmd:master:ready", { detail: { ...STATE } }));
   }
 
   if (document.readyState === "loading") {
