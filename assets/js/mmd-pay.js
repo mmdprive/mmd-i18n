@@ -24,6 +24,29 @@
     return t || "standard";
   }
 
+  // ✅ NEW: Member ID resolver (prefer data attribute, then global, then storage)
+  function getMemberId(payRoot){
+    var v = (payRoot && payRoot.getAttribute("data-member-id")) || "";
+    if(v) return v.trim();
+    if(window.MMD_MEMBER_ID) return String(window.MMD_MEMBER_ID).trim();
+    v = localStorage.getItem("mmd_member_id") || "";
+    return String(v||"").trim() || null;
+  }
+
+  // ✅ NEW: optional turnstile token getter (if you render turnstile)
+  function getTurnstileToken(payRoot){
+    // option 1: you set it yourself on payRoot (recommended)
+    var t = (payRoot && payRoot.getAttribute("data-turnstile-token")) || "";
+    if(t) return t.trim();
+
+    // option 2: you expose a function that returns latest token
+    if(typeof window.MMD_GET_TURNSTILE_TOKEN === "function"){
+      try { return String(window.MMD_GET_TURNSTILE_TOKEN() || "").trim() || null; }
+      catch(e){ return null; }
+    }
+    return null;
+  }
+
   function normalizePromptpayId(raw){
     raw = String(raw||"").trim();
     if(!raw) return "";
@@ -108,7 +131,6 @@
     var noteEl = qs("#mmd-qr-note", box);
     if(codeEl) codeEl.innerHTML = "";
 
-    // ใช้ promptpay.io QR image (scan-to-pay แน่นอน)
     var img = document.createElement("img");
     img.alt = "PromptPay QR";
     img.style.display = "block";
@@ -148,7 +170,8 @@
     var paypalUrl = payRoot.getAttribute("data-paypal-url") || "";
     var tier = getTier();
 
-    // Discount rules (สามารถย้ายไป dict/remote later)
+    var memberId = getMemberId(payRoot); // ✅ NEW
+
     var DISCOUNT_CODES = {
       "STD10": { type:"percent", value:10, tiers:["standard"] },
       "PRE15": { type:"percent", value:15, tiers:["premium"] },
@@ -229,40 +252,47 @@
       confirmBtn.addEventListener("click", async function(){
         state.baseTotal = getBaseTotal();
         var a = computeAmounts();
+
         if(!a.total || a.total<=0){
           setHint("Missing total. Set data-total-thb on pay root.");
           return;
         }
 
-        // สร้าง order/ref แบบ client-side (placeholder)
-        // production: refCode ควรมาจาก payment provider หรือ worker-issued token
+        if(!memberId){
+          // ไม่บังคับ hard stop ก็ได้ แต่ production แนะนำให้ require
+          setHint("Missing memberId. Please ensure user is logged in and data-member-id is set.");
+          // return; // ถ้าคุณต้องการบังคับจริง ให้ uncomment
+        }
+
         state.orderId = state.orderId || genId("ORD");
         state.refCode = state.refCode || genId("TXN");
 
         setHint("Confirmed. Generating QR...");
 
-        // QR สำหรับยอดที่จ่าย “ตอนนี้”
         renderPromptPayQR(payRoot, a.paid);
 
-        // Optional: notify worker (ให้ worker lookup/verify ก่อนค่อย award points)
+        // ✅ Optional: notify worker (audit only) — points จะ award จาก Worker ด้วย amount_paid จริง
         if(workerDomain){
           try{
+            var token = getTurnstileToken(payRoot);
             await postJSON(workerDomain.replace(/\/$/,"") + "/api/payment/notify", {
               lock: window.MMD_LOCK,
               page: page,
               plan: a.plan,
               orderId: state.orderId,
               refCode: state.refCode,
+              memberId: memberId || null,          // ✅ NEW
               tierHint: tier,
-              amountPaid: a.paid,
+              amountPaid: a.paid,                  // ✅ policy basis = amount_paid
               amountTotal: a.total,
               discountCode: String(state.discountCode||"").trim().toUpperCase(),
-              discountAmount: state.discountAmount || 0
+              discountAmount: state.discountAmount || 0,
+              turnstile_token: token || null       // ✅ NEW
             });
           }catch(e){}
         }
 
-        // Redirect ไป confirm root เดียว
+        // ✅ Redirect ไป confirm root เดียว + ส่ง memberId ไปด้วย
         var url =
           confirmUrl +
           "?page=" + encodeURIComponent(page) +
@@ -270,14 +300,13 @@
           "&paid=" + encodeURIComponent(String(a.paid)) +
           "&total=" + encodeURIComponent(String(a.total)) +
           "&orderId=" + encodeURIComponent(state.orderId) +
-          "&refCode=" + encodeURIComponent(state.refCode);
+          "&refCode=" + encodeURIComponent(state.refCode) +
+          (memberId ? ("&memberId=" + encodeURIComponent(memberId)) : "");
 
-        // หน่วงสั้น ๆ ให้ user เห็น QR ก่อน (ไม่ทำก็ได้)
         setTimeout(function(){ location.href = url; }, 400);
       });
     }
 
-    // Link PayPal ถ้าคุณมีปุ่มใน DOM เอง
     var paypalLink = qs("#mmd-paypal-link", payRoot) || qs("#mmd-paypal-link");
     if(paypalLink && paypalUrl) paypalLink.href = paypalUrl;
   }
