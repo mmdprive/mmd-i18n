@@ -397,3 +397,34 @@
   else document.addEventListener("DOMContentLoaded", boot, { once:true });
 
 })();
+
+/* =====================================================
+   MMD PAY — LUXURY EXTENSION
+===================================================== */
+(function(){
+  const root = document.getElementById("mmd-pay-course");
+  if(!root) return;
+
+  /* Floating CTA */
+  const btn = document.getElementById("mmd_promptpayBtn");
+  if(btn){
+    const wrap = document.createElement("div");
+    wrap.className = "mmdpay-floating";
+    wrap.appendChild(btn.cloneNode(true));
+    document.body.appendChild(wrap);
+  }
+
+  /* KTB Info */
+  const ktbBtn = document.getElementById("mmd_ktbBtn");
+  if(ktbBtn){
+    ktbBtn.addEventListener("click",()=>{
+      alert(
+`🎗 ธนาคารกรุงไทย (KTB)
+ชื่อบัญชี: ธัชชะ ป.
+เลขบัญชี: 142-0-33589-8
+
+หลังโอน กรุณาเก็บสลิป`
+      );
+    });
+  }
+})();
