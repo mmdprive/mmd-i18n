@@ -1,15 +1,15 @@
 /* =========================================================
-   MMD PAY (GLOBAL) — Course/Travel Controller
-   File: assets/js/mmd-pay.js
-   Version: 2026-01-04 • LOCK-UI
+   MMD PAY (GLOBAL) — Controller
+   FILE: assets/js/mmd-pay.js
+   VERSION: 2026-01-04.2
 ========================================================= */
 
 (() => {
   "use strict";
 
-  // Guard กันรันซ้ำ (Webflow มัก inject ซ้ำ)
-  if (window.__MMD_PAY_LOADED__) return;
-  window.__MMD_PAY_LOADED__ = true;
+  // Guard กันรันซ้ำ (Webflow embed ชอบซ้ำ)
+  if (window.__MMD_PAY_BOOT__) return;
+  window.__MMD_PAY_BOOT__ = true;
 
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
@@ -23,22 +23,61 @@
 
   const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
 
-  const moneyTHB = (n) => {
+  const money = (n) => {
     const x = Math.max(0, Math.round(n));
     return x.toLocaleString("th-TH") + " THB";
   };
 
-  const upper = (s) => String(s || "").trim().toUpperCase();
+  const normalizeCode = (s) => String(s || "").trim().toUpperCase();
 
-  // -------- Promo (live from Worker best-effort) --------
-  async function fetchPromoCodesLive(workerBase){
+  function readConfig() {
+    const cfg = $('[data-mmd-pay-config="course"]') || $('[data-mmd-pay-config]');
+    const data = cfg ? cfg.dataset : {};
+
+    // Required
+    const rootId = data.rootId || "mmd-pay-course";
+
+    // Worker / endpoints
+    const worker = (data.workerDomain || "").replace(/\/$/, "");
+    const promptpayId = (data.promptpayId || "promptpay.io/0829528889").replace(/^https?:\/\//,"").replace(/\/$/,"");
+    const paypalUrl = data.paypalUrl || "";
+
+    // Hero
+    const heroImage = data.heroImage || "";
+
+    // KTB
+    const ktbBankName = data.ktbBankName || "KTB";
+    const ktbAccountName = data.ktbAccountName || "ธัชชะ ป.";
+    const ktbAccountNo = data.ktbAccountNo || "1420335898";
+    const ktbNote = data.ktbNote || "หลังโอน กรุณาเก็บสลิปไว้ และแจ้งทีมงาน";
+
+    return {
+      rootId,
+      worker,
+      promptpayId,
+      paypalUrl,
+      heroImage,
+      ktb: { ktbBankName, ktbAccountName, ktbAccountNo, ktbNote }
+    };
+  }
+
+  /* =========================
+     PROMO (LIVE from Worker)
+     Accepts formats:
+       - {PROMO_CODES_JSON:"{...}"} or {PROMO_CODES_JSON:{...}}
+       - direct: { VIP2025:{label,percent_off|amount_off}, ... }
+       - direct array: [{code,label,percent_off|amount_off}]
+       - {codes:[...]}
+========================= */
+  async function fetchPromoCodesLive(workerBase) {
     if (!workerBase) return null;
 
     const endpoints = [
-      `${workerBase}/promo-codes.json`,
+      `${workerBase}/promo`,
       `${workerBase}/promo-codes`,
+      `${workerBase}/promo-codes.json`,
+      `${workerBase}/config`,
       `${workerBase}/PROMO_CODES_JSON`,
-      `${workerBase}/config`
     ];
 
     for (const url of endpoints) {
@@ -49,7 +88,6 @@
         const data = await r.json().catch(() => null);
         if (!data) continue;
 
-        // Accept: {PROMO_CODES_JSON:"{...}"} or {PROMO_CODES_JSON:{...}} or direct object/array
         if (data.PROMO_CODES_JSON) {
           if (typeof data.PROMO_CODES_JSON === "string") {
             try { return JSON.parse(data.PROMO_CODES_JSON); } catch(_) {}
@@ -64,12 +102,13 @@
     return null;
   }
 
-  function findPromo(promoCodes, code){
-    if (!promoCodes || !code) return null;
-    const key = upper(code);
+  function findPromo(promoCodes, code) {
+    if (!promoCodes) return null;
+    const key = normalizeCode(code);
+    if (!key) return null;
 
     if (Array.isArray(promoCodes)) {
-      return promoCodes.find(x => upper(x.code) === key) || null;
+      return promoCodes.find(x => normalizeCode(x.code) === key) || null;
     }
 
     if (promoCodes[key] && typeof promoCodes[key] === "object") {
@@ -77,354 +116,293 @@
     }
 
     if (Array.isArray(promoCodes.codes)) {
-      return promoCodes.codes.find(x => upper(x.code) === key) || null;
+      return promoCodes.codes.find(x => normalizeCode(x.code) === key) || null;
     }
 
     return null;
   }
 
-  function applyDiscount(baseAmount, promoApplied){
-    // discount applies to baseAmount only (not tips)
+  function applyDiscount(baseAmount, promoApplied) {
+    // discount affects base only (ยอดชำระทั้งหมด), not tips
     if (!promoApplied) return { discounted: baseAmount, discount: 0 };
 
+    const p = promoApplied;
     let discount = 0;
-    if (Number.isFinite(promoApplied.percent_off)) {
-      discount = baseAmount * (promoApplied.percent_off / 100);
-    } else if (Number.isFinite(promoApplied.amount_off)) {
-      discount = promoApplied.amount_off;
+
+    if (Number.isFinite(p.percent_off)) {
+      discount = baseAmount * (p.percent_off / 100);
+    } else if (Number.isFinite(p.amount_off)) {
+      discount = p.amount_off;
     }
+
     discount = clamp(discount, 0, baseAmount);
     return { discounted: baseAmount - discount, discount };
   }
 
-  // -------- PromptPay link builder --------
-  function buildPromptPayLink(promptpayId, amountTHB){
-    // promptpayId can be: "promptpay.io/082..." or "https://promptpay.io/082..."
-    const clean = String(promptpayId || "").trim().replace(/^https?:\/\//, "");
-    const amt = Math.max(0, Math.round(amountTHB));
-    return `https://${clean.replace(/\/+$/,"")}/${amt}`;
-  }
+  /* =========================
+     KTB MODAL
+========================= */
+  function ensureKtbModal(cfg) {
+    if ($("#mmd-ktb-modal")) return;
 
-  // -------- Floating bar control --------
-  function ensureFloating(root, getAmountFn, actions){
-    // actions: { onPromptPay, onKTB, onPayPal }
-    const wrap = document.createElement("div");
-    wrap.className = "mmdpay-float";
-    wrap.innerHTML = `
-      <div class="mmdpay-float-inner">
-        <div class="mmdpay-float-left">
-          <div class="mmdpay-float-title">PAY NOW</div>
-          <div class="mmdpay-float-amount" data-float-amount>—</div>
-        </div>
-        <div class="mmdpay-float-actions">
-          <button type="button" class="mmdpay-btn mmdpay-btn-gold" data-float-pp>PromptPay</button>
-          <button type="button" class="mmdpay-btn" data-float-ktb>KTB</button>
-          <button type="button" class="mmdpay-btn" data-float-paypal>PayPal</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(wrap);
-
-    const amountEl = $('[data-float-amount]', wrap);
-    const btnPP = $('[data-float-pp]', wrap);
-    const btnKTB = $('[data-float-ktb]', wrap);
-    const btnPayPal = $('[data-float-paypal]', wrap);
-
-    btnPP.addEventListener("click", () => actions.onPromptPay());
-    btnKTB.addEventListener("click", () => actions.onKTB());
-    btnPayPal.addEventListener("click", () => actions.onPayPal());
-
-    const tick = () => {
-      try {
-        const amt = getAmountFn();
-        amountEl.textContent = moneyTHB(amt);
-      } catch (_) {}
-    };
-    tick();
-    return { tick };
-  }
-
-  // -------- KTB modal --------
-  function ensureKTBModal(bank){
-    // bank: { bank_name, account_name, account_no, note }
     const modal = document.createElement("div");
     modal.className = "mmdpay-modal";
+    modal.id = "mmd-ktb-modal";
     modal.innerHTML = `
-      <div class="mmdpay-modal-card" role="dialog" aria-modal="true">
+      <div class="mmdpay-modal-backdrop" data-close="1"></div>
+      <div class="mmdpay-modal-card" role="dialog" aria-modal="true" aria-label="KTB Bank Transfer">
         <div class="mmdpay-modal-head">
-          <div class="mmdpay-modal-title">KTB Bank Transfer</div>
-          <button class="mmdpay-x" type="button" aria-label="Close">✕</button>
+          <div class="mmdpay-modal-title">โอนเงินผ่านธนาคาร (${cfg.ktb.ktbBankName})</div>
+          <button class="mmdpay-modal-x" type="button" data-close="1">✕</button>
         </div>
         <div class="mmdpay-modal-body">
-          <div class="mmdpay-bankline"><div class="mmdpay-bankk">Bank</div><div class="mmdpay-bankv">${bank.bank_name || "KTB"}</div></div>
-          <div class="mmdpay-bankline"><div class="mmdpay-bankk">Account name</div><div class="mmdpay-bankv">${bank.account_name || "MMD Privé"}</div></div>
-          <div class="mmdpay-bankline"><div class="mmdpay-bankk">Account no.</div><div class="mmdpay-bankv" data-acct>${bank.account_no || "-"}</div></div>
-          ${bank.note ? `<div class="mmdpay-hint" style="margin-top:10px;">${bank.note}</div>` : ``}
+          <div class="mmdpay-kvblock">
+            <div class="mmdpay-kvrow"><div class="k">ธนาคาร</div><div class="v" id="mmd_ktb_bank">${cfg.ktb.ktbBankName}</div></div>
+            <div class="mmdpay-kvrow"><div class="k">ชื่อบัญชี</div><div class="v" id="mmd_ktb_name">${cfg.ktb.ktbAccountName}</div></div>
+            <div class="mmdpay-kvrow"><div class="k">เลขบัญชี</div><div class="v" id="mmd_ktb_no">${cfg.ktb.ktbAccountNo}</div></div>
+          </div>
+
+          <div class="mmdpay-hint" style="margin-top:12px">${cfg.ktb.ktbNote}</div>
 
           <div class="mmdpay-copy">
-            <button class="mmdpay-btn mmdpay-btn-gold" type="button" data-copy-acct>Copy account</button>
-            <button class="mmdpay-btn" type="button" data-close>Close</button>
+            <button class="mmdpay-btn" type="button" id="mmd_copy_ktb_name">Copy ชื่อบัญชี</button>
+            <button class="mmdpay-btn mmdpay-btn-gold" type="button" id="mmd_copy_ktb_no">Copy เลขบัญชี</button>
           </div>
         </div>
       </div>
     `;
+
     document.body.appendChild(modal);
 
-    const open = () => modal.classList.add("is-open");
     const close = () => modal.classList.remove("is-open");
-
-    $(".mmdpay-x", modal).addEventListener("click", close);
-    $('[data-close]', modal).addEventListener("click", close);
-    modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
-
-    $('[data-copy-acct]', modal).addEventListener("click", async () => {
-      const acct = String(bank.account_no || "").trim();
-      if (!acct) return;
-      try {
-        await navigator.clipboard.writeText(acct);
-      } catch(_) {}
+    modal.addEventListener("click", (e) => {
+      const t = e.target;
+      if (t && t.getAttribute && t.getAttribute("data-close") === "1") close();
     });
 
-    return { open, close };
+    $("#mmd_copy_ktb_name")?.addEventListener("click", async () => {
+      await safeCopy(cfg.ktb.ktbAccountName);
+    });
+    $("#mmd_copy_ktb_no")?.addEventListener("click", async () => {
+      await safeCopy(cfg.ktb.ktbAccountNo);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
   }
 
-  // -------- Controller per page root --------
-  function initCourse(root, cfg){
-    // Elements
-    const elHeroBg = $(".mmdpay-hero-bg", root);
-    if (elHeroBg && cfg.hero_image) elHeroBg.style.backgroundImage = `url("${cfg.hero_image}")`;
+  function openKtbModal() {
+    const modal = $("#mmd-ktb-modal");
+    if (modal) modal.classList.add("is-open");
+  }
 
-    // Inputs
-    const inModel = $("#mmd_model", root);
-    const inTotal = $("#mmd_total", root);
-    const inTips  = $("#mmd_tips", root);
+  async function safeCopy(text) {
+    try {
+      await navigator.clipboard.writeText(String(text || ""));
+    } catch (_) {
+      // fallback
+      const ta = document.createElement("textarea");
+      ta.value = String(text || "");
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch(_) {}
+      ta.remove();
+    }
+  }
 
-    // Summary
-    const outSumTotal = $("#mmd_sumTotal", root);
-    const outSumPct   = $("#mmd_sumPct", root);
-    const outSumPay   = $("#mmd_sumPay", root);
-    const badge = $("#mmd_promoBadge", root);
-    const promoMsg = $("#mmd_promoMsg", root);
+  /* =========================
+     MAIN (COURSE)
+     Due now = (baseAfterDiscount * percent) + tips
+========================= */
+  function bindCourse(cfg, promoCodes) {
+    const root = document.getElementById(cfg.rootId);
+    if (!root) return;
 
-    // Buttons
-    const btnApplyPromo = $("#mmd_applyPromo", root);
-    const inPromo = $("#mmd_promo", root);
-    const btnPayPal = $("#mmd_paypalBtn", root);
+    // inject hero bg
+    const heroBg = $(".mmdpay-hero-bg", root);
+    if (heroBg && cfg.heroImage) {
+      heroBg.style.backgroundImage = `url("${cfg.heroImage}")`;
+    }
+
+    ensureKtbModal(cfg);
+
+    // elements
+    const elModel = $("#mmd_model", root);
+    const elTotal = $("#mmd_total", root);
+    const elTips  = $("#mmd_tips", root);
+
+    const elPromo = $("#mmd_promo", root);
+    const elPromoBtn = $("#mmd_applyPromo", root);
+    const elPromoMsg = $("#mmd_promoMsg", root);
+    const elPromoBadge = $("#mmd_promoBadge", root);
+
+    const elSumTotal = $("#mmd_sumTotal", root);
+    const elSumPct = $("#mmd_sumPct", root);
+    const elSumPay = $("#mmd_sumPay", root);
+
     const btnPromptPay = $("#mmd_promptpayBtn", root);
-    const btnKTB = $("#mmd_ktbBtn", root);
+    const btnPayPal = $("#mmd_paypalBtn", root);
+    const btnKtb = $("#mmd_ktbBtn", root);
 
-    // State
-    let promoCodes = null;
-    let promoApplied = null;
+    // floating
+    const floatAmt = $("#mmd_float_amount");
+    const floatPP  = $("#mmd_float_pp");
+    const floatPY  = $("#mmd_float_py");
+    const floatKB  = $("#mmd_float_kb");
 
-    const getPlan = () => Number($('input[name="mmd_plan"]:checked', root)?.value || 30);
+    let promoApplied = null; // {code,label,percent_off,amount_off}
 
-    const compute = () => {
+    const getPlan = () => {
+      const r = $('input[name="mmd_plan"]:checked', root);
+      return Number(r?.value || 30);
+    };
+
+    const calc = () => {
+      const total = toNumber(elTotal?.value);
+      const tips = toNumber(elTips?.value);
       const plan = getPlan();
 
-      const total = toNumber(inTotal?.value);
-      const tips = toNumber(inTips?.value);
-
-      // discount only base total
       const { discounted, discount } = applyDiscount(total, promoApplied);
+      const due = (discounted * (plan / 100)) + tips;
 
-      const due = (discounted * (plan/100)) + tips;
+      // summary UI
+      if (elSumTotal) elSumTotal.textContent = money(total);
+      if (elSumPct) elSumPct.textContent = `${plan}%`;
+      if (elSumPay) elSumPay.textContent = money(due);
 
-      if (outSumTotal) outSumTotal.textContent = moneyTHB(total);
-      if (outSumPct) outSumPct.textContent = `${plan}%`;
-      if (outSumPay) outSumPay.textContent = moneyTHB(due);
+      // floating
+      if (floatAmt) floatAmt.textContent = money(due);
 
-      if (badge){
-        if (promoApplied){
-          const label = promoApplied.label ? ` · ${promoApplied.label}` : "";
+      // promo badge
+      if (elPromoBadge) {
+        if (promoApplied) {
           const d = Math.round(discount);
-          badge.style.display = "";
-          badge.textContent = `Applied: ${promoApplied.code}${label}${d>0?` (−${moneyTHB(d).replace(" THB","")} THB)`:``}`;
+          const label = promoApplied.label ? ` · ${promoApplied.label}` : "";
+          elPromoBadge.style.display = "";
+          elPromoBadge.textContent = `Applied: ${promoApplied.code}${label}${d > 0 ? ` (−${d.toLocaleString("th-TH")} THB)` : ""}`;
         } else {
-          badge.style.display = "none";
-          badge.textContent = "";
+          elPromoBadge.style.display = "none";
+          elPromoBadge.textContent = "";
         }
       }
 
-      return { plan, total, tips, due };
+      return { total, tips, plan, due };
     };
 
     const openPromptPay = () => {
-      const { due } = compute();
-      const link = buildPromptPayLink(cfg.promptpay_id, due);
-      window.open(link, "_blank", "noopener");
+      const { due } = calc();
+      const amt = Math.max(0, Math.round(due));
+      const url = `https://${cfg.promptpayId}/${amt}`;
+      window.open(url, "_blank", "noopener");
     };
 
     const openPayPal = () => {
-      // Open PayPal base (optionally add context)
-      const { plan, total, tips } = compute();
-      const u = new URL(cfg.paypal_url);
+      if (!cfg.paypalUrl) return;
+      const { total, tips, plan, due } = calc();
+      const u = new URL(cfg.paypalUrl);
+
+      // optional params (ไม่ทำให้ลิงก์หลักพัง)
       u.searchParams.set("plan", String(plan));
       u.searchParams.set("total", String(Math.round(total)));
       u.searchParams.set("tips", String(Math.round(tips)));
-      const code = upper(inPromo?.value);
+      u.searchParams.set("due", String(Math.round(due)));
+
+      const code = normalizeCode(elPromo?.value);
       if (code) u.searchParams.set("promo", code);
-      if (inModel?.value) u.searchParams.set("model", String(inModel.value).trim());
+
+      const model = String(elModel?.value || "").trim();
+      if (model) u.searchParams.set("model", model);
+
       window.open(u.toString(), "_blank", "noopener");
     };
 
-    const ktbModal = ensureKTBModal(cfg.ktb || {
-      bank_name: "KTB",
-      account_name: "MMD Privé",
-      account_no: cfg.ktb_account_no || "",
-      note: cfg.ktb_note || ""
-    });
-
-    const openKTB = () => ktbModal.open();
-
-    // Bind inputs
-    ["input","blur"].forEach(evt => {
-      inTotal?.addEventListener(evt, compute);
-      inTips?.addEventListener(evt, compute);
-      inModel?.addEventListener(evt, () => {}); // keep value
-    });
-    $$('input[name="mmd_plan"]', root).forEach(r => r.addEventListener("change", compute));
-
-    // Promo apply
-    async function doApplyPromo(){
-      const code = upper(inPromo?.value);
+    const applyPromo = async () => {
+      const code = normalizeCode(elPromo?.value);
       promoApplied = null;
 
-      if (!code){
-        if (promoMsg) promoMsg.textContent = "";
-        compute();
+      if (!code) {
+        if (elPromoMsg) elPromoMsg.textContent = "";
+        calc();
         return;
       }
 
+      // 1) local/live list
       const found = findPromo(promoCodes, code);
-      if (found){
+      if (found) {
         promoApplied = {
           code,
           label: found.label || "",
           percent_off: Number.isFinite(found.percent_off) ? Number(found.percent_off) : undefined,
           amount_off: Number.isFinite(found.amount_off) ? Number(found.amount_off) : undefined
         };
-        if (promoMsg) promoMsg.textContent = `Applied: ${promoApplied.code}${promoApplied.label ? " · " + promoApplied.label : ""}`;
-        compute();
+        if (elPromoMsg) elPromoMsg.textContent = `Applied: ${promoApplied.code}${promoApplied.label ? " · " + promoApplied.label : ""}`;
+        calc();
         return;
       }
 
-      // optional validate endpoint (if your worker supports)
-      try {
-        const url = `${cfg.worker_domain}/validate-promo?code=${encodeURIComponent(code)}&context=course`;
-        const r = await fetch(url, { cache:"no-store" });
-        if (r.ok){
-          const data = await r.json().catch(() => null);
-          if (data && data.ok && data.promo){
-            promoApplied = {
-              code: upper(data.promo.code || code),
-              label: data.promo.label || "",
-              percent_off: Number.isFinite(data.promo.percent_off) ? Number(data.promo.percent_off) : undefined,
-              amount_off: Number.isFinite(data.promo.amount_off) ? Number(data.promo.amount_off) : undefined
-            };
-            if (promoMsg) promoMsg.textContent = `Applied: ${promoApplied.code}${promoApplied.label ? " · " + promoApplied.label : ""}`;
-            compute();
-            return;
+      // 2) validate via worker (best effort)
+      if (cfg.worker) {
+        try {
+          const url = `${cfg.worker}/validate-promo?code=${encodeURIComponent(code)}&context=course`;
+          const r = await fetch(url, { cache: "no-store" });
+          if (r.ok) {
+            const data = await r.json().catch(() => null);
+            if (data && data.ok && data.promo) {
+              promoApplied = {
+                code: normalizeCode(data.promo.code || code),
+                label: data.promo.label || "",
+                percent_off: Number.isFinite(data.promo.percent_off) ? Number(data.promo.percent_off) : undefined,
+                amount_off: Number.isFinite(data.promo.amount_off) ? Number(data.promo.amount_off) : undefined
+              };
+              if (elPromoMsg) elPromoMsg.textContent = `Applied: ${promoApplied.code}${promoApplied.label ? " · " + promoApplied.label : ""}`;
+              calc();
+              return;
+            }
           }
-        }
-      } catch(_) {}
+        } catch (_) {}
+      }
 
-      if (promoMsg) promoMsg.textContent = "โค้ดไม่ถูกต้อง";
-      compute();
-    }
+      if (elPromoMsg) elPromoMsg.textContent = "โค้ดไม่ถูกต้อง";
+      calc();
+    };
 
-    btnApplyPromo?.addEventListener("click", doApplyPromo);
-    inPromo?.addEventListener("keydown", (e) => {
-      if (e.key === "Enter"){ e.preventDefault(); doApplyPromo(); }
+    // bind events
+    [elTotal, elTips].forEach(el => {
+      if (!el) return;
+      el.addEventListener("input", calc);
+      el.addEventListener("blur", calc);
     });
 
-    // Payment buttons
+    $$('input[name="mmd_plan"]', root).forEach(r => r.addEventListener("change", calc));
+
+    elPromoBtn?.addEventListener("click", applyPromo);
+    elPromo?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); applyPromo(); }
+    });
+
     btnPromptPay?.addEventListener("click", openPromptPay);
     btnPayPal?.addEventListener("click", openPayPal);
-    btnKTB?.addEventListener("click", openKTB);
+    btnKtb?.addEventListener("click", openKtbModal);
 
-    // Floating bar
-    const floater = ensureFloating(root, () => compute().due, {
-      onPromptPay: openPromptPay,
-      onKTB: openKTB,
-      onPayPal: openPayPal
-    });
+    // floating bind
+    floatPP?.addEventListener("click", openPromptPay);
+    floatPY?.addEventListener("click", openPayPal);
+    floatKB?.addEventListener("click", openKtbModal);
 
-    // Initial + live promo load
-    (async () => {
-      promoCodes = await fetchPromoCodesLive(cfg.worker_domain);
-      compute();
-      floater.tick();
-    })();
-
-    // Keep floater updated on any compute
-    const _compute = compute;
-    const wrapped = () => {
-      const v = _compute();
-      floater.tick();
-      return v;
-    };
-    // Replace compute reference for internal calls
-    // (safe because only used in closures above)
+    // initial calc
+    calc();
   }
 
-  // -------- Boot: detect which page root exists --------
-  function boot(){
-    // Course page root (this answer focuses on /pay/course)
-    const courseRoot = document.getElementById("mmd-pay-course");
-    if (!courseRoot) return;
+  /* =========================
+     INIT
+========================= */
+  document.addEventListener("DOMContentLoaded", async () => {
+    const cfg = readConfig();
+    const promoCodes = await fetchPromoCodesLive(cfg.worker);
 
-    // Config from data-config element (optional)
-    const cfgEl = document.querySelector('[data-mmd-pay-config="course"]');
+    // bind course UI
+    bindCourse(cfg, promoCodes);
+  });
 
-    const cfg = {
-      worker_domain: cfgEl?.getAttribute("data-worker-domain") || "https://telegram.malemodel-bkk.workers.dev",
-      promptpay_id: cfgEl?.getAttribute("data-promptpay-id") || "promptpay.io/0829528889",
-      paypal_url: cfgEl?.getAttribute("data-paypal-url") || "https://www.paypal.com/ncp/payment/996TRGRKP8JJS",
-      hero_image: cfgEl?.getAttribute("data-hero-image") || "",
-      ktb: {
-        bank_name: cfgEl?.getAttribute("data-ktb-bank-name") || "KTB",
-        account_name: cfgEl?.getAttribute("data-ktb-account-name") || "MMD Privé",
-        account_no: cfgEl?.getAttribute("data-ktb-account-no") || "",
-        note: cfgEl?.getAttribute("data-ktb-note") || "หลังโอน กรุณาเก็บสลิปไว้ และแจ้งทีมงาน"
-      }
-    };
-
-    initCourse(courseRoot, cfg);
-  }
-
-  if (document.readyState !== "loading") boot();
-  else document.addEventListener("DOMContentLoaded", boot, { once:true });
-
-})();
-
-/* =====================================================
-   MMD PAY — LUXURY EXTENSION
-===================================================== */
-(function(){
-  const root = document.getElementById("mmd-pay-course");
-  if(!root) return;
-
-  /* Floating CTA */
-  const btn = document.getElementById("mmd_promptpayBtn");
-  if(btn){
-    const wrap = document.createElement("div");
-    wrap.className = "mmdpay-floating";
-    wrap.appendChild(btn.cloneNode(true));
-    document.body.appendChild(wrap);
-  }
-
-  /* KTB Info */
-  const ktbBtn = document.getElementById("mmd_ktbBtn");
-  if(ktbBtn){
-    ktbBtn.addEventListener("click",()=>{
-      alert(
-`🎗 ธนาคารกรุงไทย (KTB)
-ชื่อบัญชี: ธัชชะ ป.
-เลขบัญชี: 142-0-33589-8
-
-หลังโอน กรุณาเก็บสลิป`
-      );
-    });
-  }
 })();
