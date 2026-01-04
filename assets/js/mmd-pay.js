@@ -215,6 +215,41 @@
      MAIN (COURSE)
      Due now = (baseAfterDiscount * percent) + tips
 ========================= */
+function goToConfirmation(method) {
+  const { total, tips, pct, due } = recalc();
+
+  const params = new URLSearchParams({
+    // status
+    status: "success",
+
+    // payment meta
+    payment_method: method,              // promptpay | paypal | ktb
+    amount: Math.round(total),
+    deposit: Math.round(total * (pct / 100)),
+    balance: Math.round(total - (total * (pct / 100))),
+
+    currency: "THB",
+
+    // service
+    service: "COURSE",
+    model_code: elModel?.value || "—",
+
+    // ref (mock now, real later)
+    order_id: `PAY-${Date.now()}`,
+    ref_code: `TXN-${Math.random().toString(36).slice(2,8).toUpperCase()}`,
+
+    // datetime
+    date: new Date().toISOString().slice(0,10),
+
+    // redirect
+    next: "/dashboard"
+  });
+
+  window.location.href =
+    "/confirm/payment-confirmation?" + params.toString();
+}
+
+   
   function bindCourse(cfg, promoCodes) {
     const root = document.getElementById(cfg.rootId);
     if (!root) return;
@@ -406,3 +441,5 @@
   });
 
 })();
+
+
