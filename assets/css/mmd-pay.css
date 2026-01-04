@@ -1,525 +1,78 @@
-/* =========================================================
-   MMD PAY (GLOBAL) — PREMIUM LUXURY / HERO VISIBLE
-   File: assets/css/mmd-pay.css
-   Scope: .mmdpay (safe for Webflow embeds)
-   Version: 2026-01-04 • LOCK-UI
-========================================================= */
+/* =====================================================
+   MMD PAY — LUXURY ULTIMATE OVERRIDE
+   Scope: #mmd-pay-course only
+   STATUS: LOCKED
+===================================================== */
 
-.mmdpay{
+#mmd-pay-course{
+  --gold:#d6b46a;
+  --gold-soft:rgba(214,180,106,.25);
   --bg:#050607;
-  --bg2:#07090c;
-  --card: rgba(10,12,14,.72);
-  --card2: rgba(10,12,14,.56);
-  --stroke: rgba(255,255,255,.10);
-  --stroke2: rgba(255,255,255,.14);
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.70);
-  --muted2: rgba(255,255,255,.56);
-  --gold: #d6b46a;
-  --gold2:#f2da9b;
-  --shadow: 0 30px 90px rgba(0,0,0,.68);
-  --shadow2: 0 18px 60px rgba(0,0,0,.55);
-
-  font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: var(--text);
-  background: radial-gradient(1200px 800px at 20% 0%, rgba(214,180,106,.10), rgba(0,0,0,0) 60%),
-              radial-gradient(900px 650px at 80% 15%, rgba(242,218,155,.06), rgba(0,0,0,0) 55%),
-              linear-gradient(180deg, var(--bg), #000);
-  min-height: 100vh;
 }
 
-.mmdpay *{ box-sizing:border-box; }
-.mmdpay img{ max-width:100%; display:block; }
-.mmdpay a{ color: inherit; }
-
-/* ---------------- HERO (full image visible) ---------------- */
-.mmdpay-hero{
-  position:relative;
-  min-height: 420px;
-  padding: 54px 22px 28px;
-  overflow:hidden;
-  border-bottom: 1px solid rgba(255,255,255,.06);
-  isolation:isolate;
+/* ===== HERO ===== */
+#mmd-pay-course .mmdpay-hero{
+  min-height: 72vh;
+  padding: 96px 24px 56px;
+  border-bottom:none;
 }
 
-.mmdpay-hero-bg{
-  position:absolute; inset:0;
+#mmd-pay-course .mmdpay-hero-bg{
   background-size: cover;
-  background-position: center 18%;
-  transform: scale(1.02);
-  filter: saturate(1.04) contrast(1.04);
+  background-position: center top;
+  filter: saturate(1.05) contrast(1.05);
 }
 
-.mmdpay-hero-overlay{
-  position:absolute; inset:0;
-  /* ลดความทึบเพื่อ “เห็นรูปชัด” แต่ยังอ่านตัวหนังสือได้ */
+#mmd-pay-course .mmdpay-hero-overlay{
   background:
-    radial-gradient(900px 520px at 20% 28%, rgba(214,180,106,.14), rgba(0,0,0,0) 62%),
-    radial-gradient(900px 520px at 85% 18%, rgba(242,218,155,.10), rgba(0,0,0,0) 58%),
-    linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.14) 52%, rgba(0,0,0,.34)),
-    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.62));
-  z-index:1;
+    linear-gradient(180deg,
+      rgba(0,0,0,.15) 0%,
+      rgba(0,0,0,.55) 60%,
+      rgba(0,0,0,.85) 100%);
 }
 
-.mmdpay-hero::after{
-  content:"";
-  position:absolute; inset:0;
-  /* grain film + luxury haze */
-  background-image:
-    radial-gradient(circle at 25% 18%, rgba(214,180,106,.10), rgba(0,0,0,0) 42%),
-    radial-gradient(circle at 75% 22%, rgba(242,218,155,.08), rgba(0,0,0,0) 46%);
-  mix-blend-mode: overlay;
-  opacity:.55;
-  pointer-events:none;
-  z-index:2;
+/* ===== LOGO (NO BOX) ===== */
+#mmd-pay-course .mmdpay-hero-logo{
+  width: 44px;
+  height: 44px;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
 }
 
-.mmdpay-hero-inner{
-  position:relative;
-  max-width: 1120px;
-  margin: 0 auto;
-  z-index:3;
-}
-
-.mmdpay-kicker{
-  color: rgba(214,180,106,.98);
-  letter-spacing:.22em;
-  text-transform: uppercase;
-  font-size: 11px;
-  margin-bottom: 10px;
-}
-
-.mmdpay-hero-toprow{
-  display:flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: flex-end;
-  flex-wrap: wrap;
-}
-
-.mmdpay-title{
-  margin:0;
-  font-size: 56px;
-  line-height: 1.02;
-  letter-spacing: -.02em;
-  text-shadow: 0 28px 80px rgba(0,0,0,.78);
-}
-
-.mmdpay-badges{
-  display:flex; gap:10px;
-  flex-wrap: wrap;
-  align-items:center;
-  justify-content:flex-end;
-}
-
-.mmdpay-badge{
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.18);
-  color: rgba(255,255,255,.82);
-  font-size: 12px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  backdrop-filter: blur(10px);
-}
-
-.mmdpay-badge-gold{
-  border-color: rgba(214,180,106,.48);
-  color: rgba(242,218,155,.98);
-  background: rgba(214,180,106,.12);
-}
-
-.mmdpay-sub{
-  margin: 14px 0 0;
-  max-width: 820px;
-  color: rgba(255,255,255,.78);
-  font-size: 15px;
-  line-height: 1.65;
-  text-shadow: 0 22px 70px rgba(0,0,0,.70);
-}
-
-/* Brand strip (logo only; NO rounded square frame) */
-.mmdpay-hero-brand{
-  display:flex; align-items:center; gap:14px;
-  margin-bottom: 16px;
-}
-
-.mmdpay-hero-logo{
-  width: 40px; height: 40px;
-  object-fit: contain;
-  filter: drop-shadow(0 14px 30px rgba(0,0,0,.55));
-  opacity:.98;
-}
-
-.mmdpay-hero-brandname{
+/* ===== TITLE ===== */
+#mmd-pay-course .mmdpay-title{
+  font-size: clamp(42px,6vw,72px);
+  letter-spacing:-.02em;
   font-weight:900;
-  letter-spacing:.11em;
-  font-size: 13px;
 }
 
-.mmdpay-hero-brandsub{
-  color: rgba(255,255,255,.60);
-  font-size: 12px;
-  margin-top: 2px;
+/* ===== CARD ===== */
+#mmd-pay-course .mmdpay-card{
+  margin-top:-140px;
+  border-radius:28px;
+  backdrop-filter: blur(18px);
 }
 
-/* ---------------- MAIN CARD ---------------- */
-.mmdpay-main{
-  padding: 26px 18px 110px; /* leave space for floating bar */
+/* ===== BUTTON GOLD ===== */
+#mmd-pay-course .mmdpay-btn-gold{
+  background: linear-gradient(180deg,#f2da9b,#d6b46a);
+  color:#1a1a1a;
+  border:none;
+  font-weight:800;
 }
 
-.mmdpay-card{
-  max-width: 1120px;
-  margin: 0 auto;
-  background: var(--card);
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: 22px;
-  box-shadow: var(--shadow);
-  overflow:hidden;
-  backdrop-filter: blur(16px);
-}
-
-.mmdpay-card-head{
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 18px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-
-.mmdpay-brand{
-  display:flex; align-items:center; gap:12px;
-}
-
-/* remove frame */
-.mmdpay-brandmark{
-  width:auto; height:auto;
-  border:0;
-  background: transparent;
-  display:flex; align-items:center; justify-content:center;
-}
-
-.mmdpay-logo{
-  width: 34px; height: 34px;
-  object-fit: contain;
-  opacity: .98;
-  filter: drop-shadow(0 10px 22px rgba(0,0,0,.50));
-}
-
-.mmdpay-brandname{
-  font-weight: 900;
-  letter-spacing: .12em;
-  font-size: 13px;
-}
-
-.mmdpay-brandsub{
-  margin-top: 2px;
-  color: rgba(255,255,255,.58);
-  font-size: 12px;
-}
-
-/* hide any role/locked chips if present */
-.mmdpay-role,
-.mmdpay-lock,
-.mmdpay-rolechip,
-.mmdpay-lockchip{
-  display:none !important;
-}
-
-.mmdpay-grid{
-  display:grid;
-  grid-template-columns: 1.05fr .95fr;
-  gap: 18px;
-  padding: 18px;
-}
-
-.mmdpay-col{ display:flex; flex-direction:column; gap: 14px; }
-
-.mmdpay-section{
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(0,0,0,.18);
-  border-radius: 18px;
-  padding: 16px;
-  box-shadow: var(--shadow2);
-}
-
-.mmdpay-section-title{
-  font-weight: 850;
-  font-size: 16px;
-  margin-bottom: 12px;
-  letter-spacing: .01em;
-}
-
-.mmdpay-row{ margin-bottom: 12px; }
-.mmdpay-row:last-child{ margin-bottom: 0; }
-
-.mmdpay-label{
-  display:block;
-  color: rgba(255,255,255,.76);
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
-.mmdpay-input{
-  width: 100%;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.26);
-  color: rgba(255,255,255,.92);
-  padding: 14px 14px;
-  outline: none;
-  transition: border-color .15s ease, box-shadow .15s ease, transform .12s ease;
-}
-
-.mmdpay-input:focus{
-  border-color: rgba(214,180,106,.58);
-  box-shadow: 0 0 0 3px rgba(214,180,106,.14);
+#mmd-pay-course .mmdpay-btn-gold:hover{
   transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
-.mmdpay-hint{
-  margin-top: 8px;
-  color: rgba(255,255,255,.58);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.mmdpay-inline{
-  display:flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.mmdpay-inline .mmdpay-input{ flex: 1; }
-
-.mmdpay-choice{
-  display:flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.mmdpay-pill{
-  display:flex;
-  align-items:center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  cursor: pointer;
-  user-select:none;
-}
-
-.mmdpay-pill input{ accent-color: var(--gold); }
-
-.mmdpay-btn{
-  width: 100%;
-  border-radius: 14px;
-  padding: 13px 14px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.18);
-  color: rgba(255,255,255,.90);
-  font-weight: 750;
-  cursor: pointer;
-  transition: transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
-}
-
-.mmdpay-btn:hover{
-  transform: translateY(-1px);
-  border-color: rgba(255,255,255,.22);
-  box-shadow: 0 16px 38px rgba(0,0,0,.35);
-}
-
-.mmdpay-btn:active{ transform: translateY(0px); }
-
-.mmdpay-btn-gold{
-  border-color: rgba(214,180,106,.55);
-  background: linear-gradient(180deg, rgba(214,180,106,.22), rgba(214,180,106,.10));
-  color: rgba(245,232,196,.98);
-}
-
-.mmdpay-msg{
-  margin-top: 8px;
-  font-size: 12px;
-  color: rgba(255,255,255,.76);
-}
-
-.mmdpay-summary .mmdpay-kv{
-  display:flex;
-  justify-content: space-between;
-  align-items:center;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-
-.mmdpay-summary .mmdpay-kv:last-of-type{ border-bottom: none; }
-
-.mmdpay-k{ color: rgba(255,255,255,.70); font-size: 13px; }
-.mmdpay-v{ font-weight: 900; letter-spacing: .02em; }
-
-.mmdpay-kv-total .mmdpay-v{
-  color: rgba(242,218,155,.98);
-  font-size: 22px;
-}
-
-.mmdpay-divider{
-  height: 1px;
-  background: rgba(255,255,255,.08);
-  margin: 14px 0;
-}
-
-.mmdpay-promobadge{
-  margin-top: 12px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(214,180,106,.34);
-  background: rgba(214,180,106,.10);
-  color: rgba(245,232,196,.95);
-  font-size: 12px;
-}
-
-.mmdpay-foot{
-  display:flex;
-  justify-content: space-between;
-  padding: 14px 18px;
-  border-top: 1px solid rgba(255,255,255,.08);
-  color: rgba(255,255,255,.56);
-  font-size: 12px;
-}
-
-/* ---------------- Floating bar (premium) ---------------- */
-.mmdpay-float{
-  position: fixed;
-  left: 0; right: 0; bottom: 14px;
-  z-index: 9999;
-  display:flex;
-  justify-content:center;
-  padding: 0 14px;
-  pointer-events:none;
-}
-
-.mmdpay-float-inner{
-  pointer-events:auto;
-  width: min(1120px, 100%);
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(10,12,14,.62);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 22px 70px rgba(0,0,0,.55);
-  display:flex;
-  gap: 10px;
-  align-items:center;
-  justify-content: space-between;
-  padding: 10px 10px;
-}
-
-.mmdpay-float-left{
-  display:flex;
-  flex-direction:column;
-  gap: 2px;
-  padding-left: 6px;
-}
-
-.mmdpay-float-title{
-  font-weight: 900;
-  letter-spacing: .06em;
-  font-size: 12px;
-  color: rgba(255,255,255,.86);
-  text-transform: uppercase;
-}
-
-.mmdpay-float-amount{
-  font-weight: 950;
-  font-size: 16px;
-  color: rgba(242,218,155,.98);
-}
-
-.mmdpay-float-actions{
-  display:flex;
-  gap: 10px;
-}
-
-.mmdpay-float-actions .mmdpay-btn{
-  width:auto;
-  padding: 11px 12px;
-  border-radius: 14px;
-  white-space: nowrap;
-}
-
-/* ---------------- Modal (KTB info) ---------------- */
-.mmdpay-modal{
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding: 18px;
-  background: rgba(0,0,0,.62);
-  backdrop-filter: blur(10px);
-}
-
-.mmdpay-modal.is-open{ display:flex; }
-
-.mmdpay-modal-card{
-  width: min(560px, 100%);
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(10,12,14,.84);
-  box-shadow: 0 30px 90px rgba(0,0,0,.70);
-  overflow:hidden;
-}
-
-.mmdpay-modal-head{
-  padding: 16px 16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-
-.mmdpay-modal-title{
-  font-weight: 900;
-  letter-spacing:.06em;
-}
-
-.mmdpay-x{
-  width: 40px; height: 40px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.22);
-  color: rgba(255,255,255,.86);
-  cursor:pointer;
-}
-
-.mmdpay-modal-body{
-  padding: 16px 16px 18px;
-}
-
-.mmdpay-bankline{
-  display:flex;
-  justify-content:space-between;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-
-.mmdpay-bankline:last-child{ border-bottom:none; }
-
-.mmdpay-bankk{ color: rgba(255,255,255,.70); font-size: 13px; }
-.mmdpay-bankv{ font-weight: 900; }
-
-.mmdpay-copy{
-  margin-top: 12px;
-  display:flex;
-  gap: 10px;
-}
-
-/* Responsive */
-@media (max-width: 980px){
-  .mmdpay-title{ font-size: 42px; }
-  .mmdpay-grid{ grid-template-columns: 1fr; }
-  .mmdpay-hero{ min-height: 380px; }
-  .mmdpay-float-actions .mmdpay-btn{ padding: 10px 10px; }
+/* ===== FLOATING PAY CTA ===== */
+#mmd-pay-course .mmdpay-floating{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  z-index:50;
+  width:min(92%,420px);
 }
