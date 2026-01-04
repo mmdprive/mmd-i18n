@@ -1,316 +1,399 @@
-/* =========================
-  MMD • PAY MODULE (PAY PAGES ONLY)
-  STATUS: LOCKED
-  VERSION: 2025-LOCK-01
-========================= */
-(function(){
+/* =========================================================
+   MMD PAY (GLOBAL) — Course/Travel Controller
+   File: assets/js/mmd-pay.js
+   Version: 2026-01-04 • LOCK-UI
+========================================================= */
+
+(() => {
   "use strict";
 
-  if (window.MMD_LOCK !== "2025-LOCK-01") return;
+  // Guard กันรันซ้ำ (Webflow มัก inject ซ้ำ)
+  if (window.__MMD_PAY_LOADED__) return;
+  window.__MMD_PAY_LOADED__ = true;
 
-  function qs(sel, root){ return (root||document).querySelector(sel); }
-  function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-  function thb(n){
-    try { return new Intl.NumberFormat("th-TH",{style:"currency",currency:"THB"}).format(n); }
-    catch(e){ return (Math.round(n*100)/100).toFixed(2) + " THB"; }
-  }
+  const toNumber = (v) => {
+    if (v == null) return 0;
+    const s = String(v).replace(/,/g, "").trim();
+    const n = parseFloat(s);
+    return Number.isFinite(n) ? n : 0;
+  };
 
-  function getTier(){
-    var b=document.body;
-    var t=(b.getAttribute("data-tier")||"").toLowerCase().trim();
-    if(!t) t=(b.getAttribute("data-user-role")||"").toLowerCase().trim();
-    if(!t) t=(localStorage.getItem("mmd_tier")||"").toLowerCase().trim();
-    return t || "standard";
-  }
+  const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
 
-  // ✅ NEW: Member ID resolver (prefer data attribute, then global, then storage)
-  function getMemberId(payRoot){
-    var v = (payRoot && payRoot.getAttribute("data-member-id")) || "";
-    if(v) return v.trim();
-    if(window.MMD_MEMBER_ID) return String(window.MMD_MEMBER_ID).trim();
-    v = localStorage.getItem("mmd_member_id") || "";
-    return String(v||"").trim() || null;
-  }
+  const moneyTHB = (n) => {
+    const x = Math.max(0, Math.round(n));
+    return x.toLocaleString("th-TH") + " THB";
+  };
 
-  // ✅ NEW: optional turnstile token getter (if you render turnstile)
-  function getTurnstileToken(payRoot){
-    // option 1: you set it yourself on payRoot (recommended)
-    var t = (payRoot && payRoot.getAttribute("data-turnstile-token")) || "";
-    if(t) return t.trim();
+  const upper = (s) => String(s || "").trim().toUpperCase();
 
-    // option 2: you expose a function that returns latest token
-    if(typeof window.MMD_GET_TURNSTILE_TOKEN === "function"){
-      try { return String(window.MMD_GET_TURNSTILE_TOKEN() || "").trim() || null; }
-      catch(e){ return null; }
+  // -------- Promo (live from Worker best-effort) --------
+  async function fetchPromoCodesLive(workerBase){
+    if (!workerBase) return null;
+
+    const endpoints = [
+      `${workerBase}/promo-codes.json`,
+      `${workerBase}/promo-codes`,
+      `${workerBase}/PROMO_CODES_JSON`,
+      `${workerBase}/config`
+    ];
+
+    for (const url of endpoints) {
+      try {
+        const r = await fetch(url, { cache: "no-store" });
+        if (!r.ok) continue;
+
+        const data = await r.json().catch(() => null);
+        if (!data) continue;
+
+        // Accept: {PROMO_CODES_JSON:"{...}"} or {PROMO_CODES_JSON:{...}} or direct object/array
+        if (data.PROMO_CODES_JSON) {
+          if (typeof data.PROMO_CODES_JSON === "string") {
+            try { return JSON.parse(data.PROMO_CODES_JSON); } catch(_) {}
+          } else if (typeof data.PROMO_CODES_JSON === "object") {
+            return data.PROMO_CODES_JSON;
+          }
+        }
+
+        if (typeof data === "object") return data;
+      } catch (_) {}
     }
     return null;
   }
 
-  function normalizePromptpayId(raw){
-    raw = String(raw||"").trim();
-    if(!raw) return "";
-    if(raw.indexOf("promptpay.io") !== -1){
-      try{
-        var u = new URL(raw);
-        var parts = u.pathname.split("/").filter(Boolean);
-        return parts[0] || "";
-      }catch(e){
-        return raw.replace(/^.*promptpay\.io\//, "").replace(/\/.*$/, "");
-      }
+  function findPromo(promoCodes, code){
+    if (!promoCodes || !code) return null;
+    const key = upper(code);
+
+    if (Array.isArray(promoCodes)) {
+      return promoCodes.find(x => upper(x.code) === key) || null;
     }
-    return raw;
-  }
 
-  function applyDiscount(code, tier, amount, rules){
-    code = String(code||"").trim().toUpperCase();
-    var rule = (rules||{})[code];
-    if(!rule) return {ok:false, amount:amount, discount:0, reason:"invalid_code"};
-    if(rule.tiers && rule.tiers.length && rule.tiers.indexOf(tier)===-1){
-      return {ok:false, amount:amount, discount:0, reason:"tier_not_allowed"};
+    if (promoCodes[key] && typeof promoCodes[key] === "object") {
+      return { code: key, ...promoCodes[key] };
     }
-    var discount = 0;
-    if(rule.type==="percent") discount = amount * (rule.value/100);
-    if(rule.type==="fixed") discount = rule.value;
-    discount = Math.max(0, Math.min(discount, amount));
-    return {ok:true, amount:amount-discount, discount:discount, code:code};
+
+    if (Array.isArray(promoCodes.codes)) {
+      return promoCodes.codes.find(x => upper(x.code) === key) || null;
+    }
+
+    return null;
   }
 
-  function ensureControls(payRoot){
-    if(qs("[data-mmd-pay-controls='true']", payRoot)) return;
+  function applyDiscount(baseAmount, promoApplied){
+    // discount applies to baseAmount only (not tips)
+    if (!promoApplied) return { discounted: baseAmount, discount: 0 };
 
-    var box = document.createElement("div");
-    box.className = "mmd-pay-box";
-    box.setAttribute("data-mmd-pay-controls","true");
-    box.innerHTML = [
-      "<div class='mmd-pay-row'>",
-        "<div style='flex:1;min-width:240px'>",
-          "<div class='mmd-pay-label'>Payment Option</div>",
-          "<div class='mmd-pay-row' style='margin-top:8px'>",
-            "<button type='button' class='mmd-pay-btn' data-plan='30_70'>30% Deposit / 70% Before Work</button>",
-            "<button type='button' class='mmd-pay-btn' data-plan='100'>Pay 100%</button>",
-          "</div>",
-          "<div class='mmd-pay-note' style='margin-top:8px'>Points accrue through verified payments. (1 point per 1,000 THB)</div>",
-        "</div>",
-        "<div style='flex:1;min-width:240px'>",
-          "<div class='mmd-pay-label'>Discount Code (Membership)</div>",
-          "<input class='mmd-pay-input' placeholder='Enter code' data-discount-code='true' />",
-          "<div class='mmd-pay-row' style='margin-top:10px'>",
-            "<button type='button' class='mmd-pay-btn' data-apply-discount='true'>Apply</button>",
-            "<button type='button' class='mmd-pay-btn primary' data-confirm-pay='true'>Confirm & Generate</button>",
-          "</div>",
-          "<div class='mmd-pay-note' data-discount-hint='true' style='margin-top:8px'></div>",
-        "</div>",
-      "</div>"
-    ].join("");
-    payRoot.prepend(box);
+    let discount = 0;
+    if (Number.isFinite(promoApplied.percent_off)) {
+      discount = baseAmount * (promoApplied.percent_off / 100);
+    } else if (Number.isFinite(promoApplied.amount_off)) {
+      discount = promoApplied.amount_off;
+    }
+    discount = clamp(discount, 0, baseAmount);
+    return { discounted: baseAmount - discount, discount };
   }
 
-  function ensureQrBox(payRoot){
-    var el = qs("#mmd-qr", payRoot);
-    if(el) return el;
-    el = document.createElement("div");
-    el.id = "mmd-qr";
-    el.className = "mmd-pay-box";
-    el.style.marginTop = "16px";
-    el.innerHTML =
-      "<div class='mmd-pay-label'>PromptPay QR</div>" +
-      "<div id='mmd-qr-code' style='margin-top:10px'></div>" +
-      "<div class='mmd-pay-note' id='mmd-qr-note' style='margin-top:10px'></div>";
-    payRoot.appendChild(el);
-    return el;
+  // -------- PromptPay link builder --------
+  function buildPromptPayLink(promptpayId, amountTHB){
+    // promptpayId can be: "promptpay.io/082..." or "https://promptpay.io/082..."
+    const clean = String(promptpayId || "").trim().replace(/^https?:\/\//, "");
+    const amt = Math.max(0, Math.round(amountTHB));
+    return `https://${clean.replace(/\/+$/,"")}/${amt}`;
   }
 
-  function renderPromptPayQR(payRoot, amountTHB){
-    var raw = payRoot.getAttribute("data-promptpay-id") || "";
-    var id = normalizePromptpayId(raw);
-    if(!id) return {ok:false, reason:"missing_promptpay_id"};
+  // -------- Floating bar control --------
+  function ensureFloating(root, getAmountFn, actions){
+    // actions: { onPromptPay, onKTB, onPayPal }
+    const wrap = document.createElement("div");
+    wrap.className = "mmdpay-float";
+    wrap.innerHTML = `
+      <div class="mmdpay-float-inner">
+        <div class="mmdpay-float-left">
+          <div class="mmdpay-float-title">PAY NOW</div>
+          <div class="mmdpay-float-amount" data-float-amount>—</div>
+        </div>
+        <div class="mmdpay-float-actions">
+          <button type="button" class="mmdpay-btn mmdpay-btn-gold" data-float-pp>PromptPay</button>
+          <button type="button" class="mmdpay-btn" data-float-ktb>KTB</button>
+          <button type="button" class="mmdpay-btn" data-float-paypal>PayPal</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(wrap);
 
-    var box = ensureQrBox(payRoot);
-    var codeEl = qs("#mmd-qr-code", box);
-    var noteEl = qs("#mmd-qr-note", box);
-    if(codeEl) codeEl.innerHTML = "";
+    const amountEl = $('[data-float-amount]', wrap);
+    const btnPP = $('[data-float-pp]', wrap);
+    const btnKTB = $('[data-float-ktb]', wrap);
+    const btnPayPal = $('[data-float-paypal]', wrap);
 
-    var img = document.createElement("img");
-    img.alt = "PromptPay QR";
-    img.style.display = "block";
-    img.style.maxWidth = "220px";
-    img.style.borderRadius = "14px";
-    img.style.border = "1px solid rgba(203,166,90,.18)";
-    img.src = "https://promptpay.io/" + encodeURIComponent(id) + "/" + encodeURIComponent(String(amountTHB||0)) + ".png";
-    codeEl.appendChild(img);
+    btnPP.addEventListener("click", () => actions.onPromptPay());
+    btnKTB.addEventListener("click", () => actions.onKTB());
+    btnPayPal.addEventListener("click", () => actions.onPayPal());
 
-    if(noteEl) noteEl.textContent = "Amount: " + thb(amountTHB) + " | Tier: " + getTier().toUpperCase();
-    return {ok:true};
-  }
-
-  function genId(prefix){
-    return (prefix||"ORD") + "-" + Date.now().toString(36).toUpperCase();
-  }
-
-  async function postJSON(url, body){
-    var res = await fetch(url, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify(body),
-      credentials:"omit"
-    });
-    return res;
-  }
-
-  function init(){
-    var payRoot = qs("[data-mmd-payments='true']");
-    if(!payRoot) return;
-
-    ensureControls(payRoot);
-
-    var page = payRoot.getAttribute("data-page") || "course";
-    var confirmUrl = payRoot.getAttribute("data-confirm-url") || "/confirm/payment-confirmation";
-    var workerDomain = payRoot.getAttribute("data-worker-domain") || "";
-    var paypalUrl = payRoot.getAttribute("data-paypal-url") || "";
-    var tier = getTier();
-
-    var memberId = getMemberId(payRoot); // ✅ NEW
-
-    var DISCOUNT_CODES = {
-      "STD10": { type:"percent", value:10, tiers:["standard"] },
-      "PRE15": { type:"percent", value:15, tiers:["premium"] },
-      "VIP20": { type:"percent", value:20, tiers:["vip"] },
-      "SVIP25": { type:"percent", value:25, tiers:["svip","blackcard"] }
+    const tick = () => {
+      try {
+        const amt = getAmountFn();
+        amountEl.textContent = moneyTHB(amt);
+      } catch (_) {}
     };
+    tick();
+    return { tick };
+  }
 
-    function getBaseTotal(){
-      var v = payRoot.getAttribute("data-total-thb");
-      return v ? Number(v) : 0;
-    }
+  // -------- KTB modal --------
+  function ensureKTBModal(bank){
+    // bank: { bank_name, account_name, account_no, note }
+    const modal = document.createElement("div");
+    modal.className = "mmdpay-modal";
+    modal.innerHTML = `
+      <div class="mmdpay-modal-card" role="dialog" aria-modal="true">
+        <div class="mmdpay-modal-head">
+          <div class="mmdpay-modal-title">KTB Bank Transfer</div>
+          <button class="mmdpay-x" type="button" aria-label="Close">✕</button>
+        </div>
+        <div class="mmdpay-modal-body">
+          <div class="mmdpay-bankline"><div class="mmdpay-bankk">Bank</div><div class="mmdpay-bankv">${bank.bank_name || "KTB"}</div></div>
+          <div class="mmdpay-bankline"><div class="mmdpay-bankk">Account name</div><div class="mmdpay-bankv">${bank.account_name || "MMD Privé"}</div></div>
+          <div class="mmdpay-bankline"><div class="mmdpay-bankk">Account no.</div><div class="mmdpay-bankv" data-acct>${bank.account_no || "-"}</div></div>
+          ${bank.note ? `<div class="mmdpay-hint" style="margin-top:10px;">${bank.note}</div>` : ``}
 
-    var state = {
-      plan:"100",
-      baseTotal:getBaseTotal(),
-      discountedTotal:null,
-      discountCode:"",
-      discountAmount:0,
-      orderId: null,
-      refCode: null
-    };
+          <div class="mmdpay-copy">
+            <button class="mmdpay-btn mmdpay-btn-gold" type="button" data-copy-acct>Copy account</button>
+            <button class="mmdpay-btn" type="button" data-close>Close</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
 
-    var hint = qs("[data-discount-hint='true']", payRoot);
-    var codeInput = qs("[data-discount-code='true']", payRoot);
-    var planBtns = qsa("[data-plan]", payRoot);
-    var applyBtn = qs("[data-apply-discount='true']", payRoot);
-    var confirmBtn = qs("[data-confirm-pay='true']", payRoot);
+    const open = () => modal.classList.add("is-open");
+    const close = () => modal.classList.remove("is-open");
 
-    function setHint(msg){ if(hint) hint.textContent = msg || ""; }
+    $(".mmdpay-x", modal).addEventListener("click", close);
+    $('[data-close]', modal).addEventListener("click", close);
+    modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
 
-    function setPlan(plan){
-      state.plan = plan;
-      planBtns.forEach(function(b){
-        b.classList.toggle("primary", b.getAttribute("data-plan")===plan);
-      });
-    }
-    setPlan("100");
-
-    planBtns.forEach(function(b){
-      b.addEventListener("click", function(){ setPlan(b.getAttribute("data-plan")); });
+    $('[data-copy-acct]', modal).addEventListener("click", async () => {
+      const acct = String(bank.account_no || "").trim();
+      if (!acct) return;
+      try {
+        await navigator.clipboard.writeText(acct);
+      } catch(_) {}
     });
 
-    if(applyBtn){
-      applyBtn.addEventListener("click", function(){
-        state.baseTotal = getBaseTotal();
-        var base = state.baseTotal;
-        if(!base || base<=0){
-          setHint("Missing total. Set data-total-thb on pay root.");
-          return;
-        }
-        var code = (codeInput && codeInput.value) ? codeInput.value : "";
-        state.discountCode = code;
-
-        var res = applyDiscount(code, tier, base, DISCOUNT_CODES);
-        if(!res.ok){
-          setHint(res.reason==="tier_not_allowed" ? "Code not eligible for your tier." : "Invalid code.");
-          state.discountedTotal = null;
-          state.discountAmount = 0;
-          return;
-        }
-        state.discountedTotal = res.amount;
-        state.discountAmount = res.discount;
-        setHint("Applied " + res.code + " — Discount " + thb(res.discount) + " → New total " + thb(res.amount));
-      });
-    }
-
-    function computeAmounts(){
-      var base = state.discountedTotal!=null ? state.discountedTotal : state.baseTotal;
-      base = Number(base||0);
-      if(state.plan==="30_70"){
-        var deposit = Math.round(base * 0.30);
-        return { total: base, paid: deposit, remaining: base - deposit, plan:"30_70" };
-      }
-      return { total: base, paid: base, remaining: 0, plan:"100" };
-    }
-
-    if(confirmBtn){
-      confirmBtn.addEventListener("click", async function(){
-        state.baseTotal = getBaseTotal();
-        var a = computeAmounts();
-
-        if(!a.total || a.total<=0){
-          setHint("Missing total. Set data-total-thb on pay root.");
-          return;
-        }
-
-        if(!memberId){
-          // ไม่บังคับ hard stop ก็ได้ แต่ production แนะนำให้ require
-          setHint("Missing memberId. Please ensure user is logged in and data-member-id is set.");
-          // return; // ถ้าคุณต้องการบังคับจริง ให้ uncomment
-        }
-
-        state.orderId = state.orderId || genId("ORD");
-        state.refCode = state.refCode || genId("TXN");
-
-        setHint("Confirmed. Generating QR...");
-
-        renderPromptPayQR(payRoot, a.paid);
-
-        // ✅ Optional: notify worker (audit only) — points จะ award จาก Worker ด้วย amount_paid จริง
-        if(workerDomain){
-          try{
-            var token = getTurnstileToken(payRoot);
-            await postJSON(workerDomain.replace(/\/$/,"") + "/api/payment/notify", {
-              lock: window.MMD_LOCK,
-              page: page,
-              plan: a.plan,
-              orderId: state.orderId,
-              refCode: state.refCode,
-              memberId: memberId || null,          // ✅ NEW
-              tierHint: tier,
-              amountPaid: a.paid,                  // ✅ policy basis = amount_paid
-              amountTotal: a.total,
-              discountCode: String(state.discountCode||"").trim().toUpperCase(),
-              discountAmount: state.discountAmount || 0,
-              turnstile_token: token || null       // ✅ NEW
-            });
-          }catch(e){}
-        }
-
-        // ✅ Redirect ไป confirm root เดียว + ส่ง memberId ไปด้วย
-        var url =
-          confirmUrl +
-          "?page=" + encodeURIComponent(page) +
-          "&plan=" + encodeURIComponent(a.plan) +
-          "&paid=" + encodeURIComponent(String(a.paid)) +
-          "&total=" + encodeURIComponent(String(a.total)) +
-          "&orderId=" + encodeURIComponent(state.orderId) +
-          "&refCode=" + encodeURIComponent(state.refCode) +
-          (memberId ? ("&memberId=" + encodeURIComponent(memberId)) : "");
-
-        setTimeout(function(){ location.href = url; }, 400);
-      });
-    }
-
-    var paypalLink = qs("#mmd-paypal-link", payRoot) || qs("#mmd-paypal-link");
-    if(paypalLink && paypalUrl) paypalLink.href = paypalUrl;
+    return { open, close };
   }
 
-  if(document.readyState!=="loading") init();
-  else document.addEventListener("DOMContentLoaded", init);
+  // -------- Controller per page root --------
+  function initCourse(root, cfg){
+    // Elements
+    const elHeroBg = $(".mmdpay-hero-bg", root);
+    if (elHeroBg && cfg.hero_image) elHeroBg.style.backgroundImage = `url("${cfg.hero_image}")`;
+
+    // Inputs
+    const inModel = $("#mmd_model", root);
+    const inTotal = $("#mmd_total", root);
+    const inTips  = $("#mmd_tips", root);
+
+    // Summary
+    const outSumTotal = $("#mmd_sumTotal", root);
+    const outSumPct   = $("#mmd_sumPct", root);
+    const outSumPay   = $("#mmd_sumPay", root);
+    const badge = $("#mmd_promoBadge", root);
+    const promoMsg = $("#mmd_promoMsg", root);
+
+    // Buttons
+    const btnApplyPromo = $("#mmd_applyPromo", root);
+    const inPromo = $("#mmd_promo", root);
+    const btnPayPal = $("#mmd_paypalBtn", root);
+    const btnPromptPay = $("#mmd_promptpayBtn", root);
+    const btnKTB = $("#mmd_ktbBtn", root);
+
+    // State
+    let promoCodes = null;
+    let promoApplied = null;
+
+    const getPlan = () => Number($('input[name="mmd_plan"]:checked', root)?.value || 30);
+
+    const compute = () => {
+      const plan = getPlan();
+
+      const total = toNumber(inTotal?.value);
+      const tips = toNumber(inTips?.value);
+
+      // discount only base total
+      const { discounted, discount } = applyDiscount(total, promoApplied);
+
+      const due = (discounted * (plan/100)) + tips;
+
+      if (outSumTotal) outSumTotal.textContent = moneyTHB(total);
+      if (outSumPct) outSumPct.textContent = `${plan}%`;
+      if (outSumPay) outSumPay.textContent = moneyTHB(due);
+
+      if (badge){
+        if (promoApplied){
+          const label = promoApplied.label ? ` · ${promoApplied.label}` : "";
+          const d = Math.round(discount);
+          badge.style.display = "";
+          badge.textContent = `Applied: ${promoApplied.code}${label}${d>0?` (−${moneyTHB(d).replace(" THB","")} THB)`:``}`;
+        } else {
+          badge.style.display = "none";
+          badge.textContent = "";
+        }
+      }
+
+      return { plan, total, tips, due };
+    };
+
+    const openPromptPay = () => {
+      const { due } = compute();
+      const link = buildPromptPayLink(cfg.promptpay_id, due);
+      window.open(link, "_blank", "noopener");
+    };
+
+    const openPayPal = () => {
+      // Open PayPal base (optionally add context)
+      const { plan, total, tips } = compute();
+      const u = new URL(cfg.paypal_url);
+      u.searchParams.set("plan", String(plan));
+      u.searchParams.set("total", String(Math.round(total)));
+      u.searchParams.set("tips", String(Math.round(tips)));
+      const code = upper(inPromo?.value);
+      if (code) u.searchParams.set("promo", code);
+      if (inModel?.value) u.searchParams.set("model", String(inModel.value).trim());
+      window.open(u.toString(), "_blank", "noopener");
+    };
+
+    const ktbModal = ensureKTBModal(cfg.ktb || {
+      bank_name: "KTB",
+      account_name: "MMD Privé",
+      account_no: cfg.ktb_account_no || "",
+      note: cfg.ktb_note || ""
+    });
+
+    const openKTB = () => ktbModal.open();
+
+    // Bind inputs
+    ["input","blur"].forEach(evt => {
+      inTotal?.addEventListener(evt, compute);
+      inTips?.addEventListener(evt, compute);
+      inModel?.addEventListener(evt, () => {}); // keep value
+    });
+    $$('input[name="mmd_plan"]', root).forEach(r => r.addEventListener("change", compute));
+
+    // Promo apply
+    async function doApplyPromo(){
+      const code = upper(inPromo?.value);
+      promoApplied = null;
+
+      if (!code){
+        if (promoMsg) promoMsg.textContent = "";
+        compute();
+        return;
+      }
+
+      const found = findPromo(promoCodes, code);
+      if (found){
+        promoApplied = {
+          code,
+          label: found.label || "",
+          percent_off: Number.isFinite(found.percent_off) ? Number(found.percent_off) : undefined,
+          amount_off: Number.isFinite(found.amount_off) ? Number(found.amount_off) : undefined
+        };
+        if (promoMsg) promoMsg.textContent = `Applied: ${promoApplied.code}${promoApplied.label ? " · " + promoApplied.label : ""}`;
+        compute();
+        return;
+      }
+
+      // optional validate endpoint (if your worker supports)
+      try {
+        const url = `${cfg.worker_domain}/validate-promo?code=${encodeURIComponent(code)}&context=course`;
+        const r = await fetch(url, { cache:"no-store" });
+        if (r.ok){
+          const data = await r.json().catch(() => null);
+          if (data && data.ok && data.promo){
+            promoApplied = {
+              code: upper(data.promo.code || code),
+              label: data.promo.label || "",
+              percent_off: Number.isFinite(data.promo.percent_off) ? Number(data.promo.percent_off) : undefined,
+              amount_off: Number.isFinite(data.promo.amount_off) ? Number(data.promo.amount_off) : undefined
+            };
+            if (promoMsg) promoMsg.textContent = `Applied: ${promoApplied.code}${promoApplied.label ? " · " + promoApplied.label : ""}`;
+            compute();
+            return;
+          }
+        }
+      } catch(_) {}
+
+      if (promoMsg) promoMsg.textContent = "โค้ดไม่ถูกต้อง";
+      compute();
+    }
+
+    btnApplyPromo?.addEventListener("click", doApplyPromo);
+    inPromo?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter"){ e.preventDefault(); doApplyPromo(); }
+    });
+
+    // Payment buttons
+    btnPromptPay?.addEventListener("click", openPromptPay);
+    btnPayPal?.addEventListener("click", openPayPal);
+    btnKTB?.addEventListener("click", openKTB);
+
+    // Floating bar
+    const floater = ensureFloating(root, () => compute().due, {
+      onPromptPay: openPromptPay,
+      onKTB: openKTB,
+      onPayPal: openPayPal
+    });
+
+    // Initial + live promo load
+    (async () => {
+      promoCodes = await fetchPromoCodesLive(cfg.worker_domain);
+      compute();
+      floater.tick();
+    })();
+
+    // Keep floater updated on any compute
+    const _compute = compute;
+    const wrapped = () => {
+      const v = _compute();
+      floater.tick();
+      return v;
+    };
+    // Replace compute reference for internal calls
+    // (safe because only used in closures above)
+  }
+
+  // -------- Boot: detect which page root exists --------
+  function boot(){
+    // Course page root (this answer focuses on /pay/course)
+    const courseRoot = document.getElementById("mmd-pay-course");
+    if (!courseRoot) return;
+
+    // Config from data-config element (optional)
+    const cfgEl = document.querySelector('[data-mmd-pay-config="course"]');
+
+    const cfg = {
+      worker_domain: cfgEl?.getAttribute("data-worker-domain") || "https://telegram.malemodel-bkk.workers.dev",
+      promptpay_id: cfgEl?.getAttribute("data-promptpay-id") || "promptpay.io/0829528889",
+      paypal_url: cfgEl?.getAttribute("data-paypal-url") || "https://www.paypal.com/ncp/payment/996TRGRKP8JJS",
+      hero_image: cfgEl?.getAttribute("data-hero-image") || "",
+      ktb: {
+        bank_name: cfgEl?.getAttribute("data-ktb-bank-name") || "KTB",
+        account_name: cfgEl?.getAttribute("data-ktb-account-name") || "MMD Privé",
+        account_no: cfgEl?.getAttribute("data-ktb-account-no") || "",
+        note: cfgEl?.getAttribute("data-ktb-note") || "หลังโอน กรุณาเก็บสลิปไว้ และแจ้งทีมงาน"
+      }
+    };
+
+    initCourse(courseRoot, cfg);
+  }
+
+  if (document.readyState !== "loading") boot();
+  else document.addEventListener("DOMContentLoaded", boot, { once:true });
+
 })();
