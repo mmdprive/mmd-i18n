@@ -1,10 +1,12 @@
 /* =========================================
-   MMD PRIVÉ — PAY / MEMBERSHIP (LOCK)
-   - tier selector
+   MMD PRIVÉ — PAY / MEMBERSHIP (v2025-LOCK-01)
+   - tier selector (.mmd-tier[data-pkg])
    - deposit/full calculation
    - promo validate via Worker endpoint (optional)
    - payload -> sessionStorage for /confirm/*
-   - + intent handler (query ?intent=... or localStorage mmd_intent)
+   - intent handler:
+       ?intent=... OR localStorage mmd_intent
+       join_standard/join_premium/join_vip/join_blackcard -> tier
    ========================================= */
 
 (function () {
@@ -69,7 +71,7 @@
   bindPromo();
   render();
 
-  // INTENT BOOT (after bindings so it can click)
+  // Intent handler (runs after bindings)
   bootIntent();
 
   /* -----------------------------
@@ -348,11 +350,8 @@
   }
 
   /* =========================================
-     INTENT HANDLER (LOCK)
-     - reads ?intent=... OR localStorage mmd_intent
-     - maps to package tier buttons (.mmd-tier[data-pkg])
-     - scrolls to tier block
-     ========================================= */
+     INTENT HANDLER (added per request)
+  ========================================= */
 
   function getIntent() {
     const qs = new URLSearchParams(location.search);
@@ -369,8 +368,8 @@
   function applyIntent(intent) {
     if (!intent) return;
 
-    // intent -> pkg mapping (aligned with this page)
-    // NOTE: join_blackcard maps to svip by default (you can switch to "black" later)
+    // Map intents -> package on this page
+    // join_blackcard defaults to svip (change later if you add dedicated blackcard tier here)
     const map = {
       join_standard: "standard",
       join_premium: "premium",
@@ -382,15 +381,10 @@
     const pkg = map[intent] || "";
     if (!pkg) return;
 
-    // click the tier card in THIS page
     const btn = root.querySelector('.mmd-tier[data-pkg="' + pkg + '"]');
     if (btn) btn.click();
 
-    // scroll to tier area
-    const sec =
-      root.querySelector(".mmd-tier-grid") ||
-      root.querySelector("[data-section='tier']") ||
-      root.querySelector("#tier");
+    const sec = root.querySelector(".mmd-tier-grid") || root.querySelector("#tier") || root.querySelector("[data-section='tier']");
     if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
