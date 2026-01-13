@@ -1,5 +1,5 @@
 /* =========================================
-   i18n Core Engine — MMD Privé (v1.7 LOCK • 2026-01-14)
+   i18n Core Engine — MMD Privé (v1.7.1 LOCK • 2026-01-14)
    - no-blank overwrite (uses data-fallback / keep existing)
    - reads/writes BOTH: mmd_lang + lang
    - supports role suffix: key.{role}
@@ -9,6 +9,12 @@
        B) I18N_DICT[key][lang] (compat)
    - role normalize 1:1 (canonical):
        guest | standard | premium | vip | blackcard | 7days
+   - role source priority:
+       1) root data-user-role
+       2) root role="standard" (MMD tokens only)
+       3) body data-user-role
+       4) body role="standard" (MMD tokens only)
+       5) localStorage mmd_role / role
    - bindings (NO-BLANK overwrite rules apply to ALL):
        [data-i18n="key"]                      -> innerHTML
        [data-i18n-text="key"]                 -> textContent
@@ -20,7 +26,8 @@
        [data-i18n-attr="attr:key;attr2:key2"] -> setAttribute(attr, value)
    - fallback attributes (optional):
        data-fallback (generic)
-       data-fallback-text / -html / -placeholder / -title / -aria-label / -value / -attr-<attr>
+       data-fallback-text / -html / -placeholder / -title / -aria-label / -value
+       data-fallback-attr-<attr>
 ========================================= */
 
 (function () {
@@ -30,7 +37,7 @@
   var D = document;
 
   // ---------- Config ----------
-  var LOCK_VERSION = "v1.7 LOCK";
+  var LOCK_VERSION = "v1.7.1 LOCK";
   var DEFAULT_LANG = "th";
   var STORAGE_KEYS = ["mmd_lang", "lang"];
 
@@ -79,7 +86,7 @@
       "blackcard": "blackcard",
       "black-card": "blackcard",
       "black": "blackcard",
-      "svip": "blackcard",      // SVIP สิทธิ์เท่า Black Card (canonical: blackcard)
+      "svip": "blackcard",     // SVIP สิทธิ์เท่า Black Card (canonical: blackcard)
       "s-vip": "blackcard",
 
       "7days": "7days",
@@ -92,17 +99,40 @@
     return map[r] || "guest";
   }
 
+  // Allow role="standard" but ONLY if it is an MMD role token (avoid ARIA role collisions)
+  function isMmdRoleToken(v) {
+    v = (v || "").toString().trim().toLowerCase();
+    return /^(guest|standard|std|premium|pre|vip|blackcard|black-card|black|svip|7days|7-day|7-days)$/.test(v);
+  }
+
   function getCurrentRole(root) {
-    // priority: root -> body -> localStorage -> guest
-    var fromRoot = root && root.getAttribute && (root.getAttribute("data-user-role") || root.dataset && root.dataset.userRole);
+    // priority: root data-user-role -> root role -> body data-user-role -> body role -> localStorage -> guest
+
+    // 1) root data-user-role
+    var fromRoot = root && root.getAttribute && (
+      root.getAttribute("data-user-role") ||
+      (root.dataset && root.dataset.userRole)
+    );
     if (fromRoot) return normalizeRole(fromRoot);
 
+    // 2) root role="standard" (MMD-only tokens)
+    if (root && root.getAttribute) {
+      var rootRoleAttr = root.getAttribute("role");
+      if (isMmdRoleToken(rootRoleAttr)) return normalizeRole(rootRoleAttr);
+    }
+
+    // 3) body data-user-role
     var body = D.body;
     if (body) {
       var fromBody = body.getAttribute("data-user-role") || (body.dataset ? body.dataset.userRole : "");
       if (fromBody) return normalizeRole(fromBody);
+
+      // 4) body role="standard" (MMD-only tokens)
+      var bodyRoleAttr = body.getAttribute("role");
+      if (isMmdRoleToken(bodyRoleAttr)) return normalizeRole(bodyRoleAttr);
     }
 
+    // 5) localStorage
     var cached = safeGetLS("mmd_role") || safeGetLS("role") || "";
     if (cached) return normalizeRole(cached);
 
@@ -245,7 +275,6 @@
       return;
     }
     if (kind === "value") {
-      // for inputs/selects/textareas
       try { el.value = v; } catch (_) { el.setAttribute("value", v); }
       return;
     }
@@ -412,7 +441,6 @@
           applyToRoot(opts.applyRoot || D, { lang: lang });
           refreshActive(lang);
 
-          // optional hook
           if (typeof opts.onChange === "function") {
             try { opts.onChange(lang); } catch (_) {}
           }
@@ -445,7 +473,6 @@
           for (var i = 0; i < mutations.length; i++) {
             var m = mutations[i];
             if (!m.addedNodes || !m.addedNodes.length) continue;
-            // apply only for new nodes subtree
             for (var j = 0; j < m.addedNodes.length; j++) {
               var n = m.addedNodes[j];
               if (!n || n.nodeType !== 1) continue;
