@@ -1,22 +1,57 @@
 /* =========================================
    MMD PRIVÉ — Global Bootstrap (mmd.global.js)
-   v2026-LOCK-01
-   - role resolve: body[data-user-role] -> localStorage -> Memberstack (best-effort)
-   - role lock: data-mmd-min-role / data-mmd-show / data-mmd-hide
-   - lang bootstrap: reads/writes BOTH mmd_lang + lang
-   - intent capture: ?intent= -> localStorage.mmd_intent
-   ========================================= */
+   v2026-LOCK-03 (FULL)
+
+   DATA MODEL (locked spec)
+   - base  : standard | premium | blackcard | guest | 7days
+   - role  : guest | standard | premium | vip | blackcard
+   - badge : guest | standard | premium | vip | svip | blackcard
+
+   Memberstack (custom fields suggested)
+   - tier         (badge): standard|premium|vip|svip|blackcard
+   - base_tier    (optional): standard|premium|blackcard|7days|guest
+   - vip_approved (optional): true/1/yes/on
+   - svip_approved(optional): true/1/yes/on
+   - status       (optional): active/expired
+   - expire_at / Expire At   (optional): date/time
+
+   DOM outputs
+   - data-user-role="..."
+   - data-user-badge="..."
+   - data-user-base="..."
+   - classes:
+       mmd-role-*
+       mmd-badge-*
+       mmd-base-*
+
+   Role Locks
+   - data-mmd-min-role="premium"
+   - data-mmd-show="premium,vip,blackcard"
+   - data-mmd-hide="guest"
+
+   Badge Locks (UI text / CTA variants)
+   - data-mmd-show-badge="svip"
+   - data-mmd-hide-badge="blackcard"
+
+   Back-compat aliases
+   - data-mmd-show-tier / data-mmd-hide-tier  => treated as badge list
+========================================= */
 
 (function (window, document) {
   "use strict";
 
-  var VERSION = "v2026-LOCK-01";
+  var VERSION = "v2026-LOCK-03";
 
   var DEFAULTS = {
     debug: false,
 
+    // optional for reference
+    memberstackAppId: "",
+
     // storage keys
     roleStorageKey: "mmd_user_role",
+    badgeStorageKey: "mmd_user_badge",
+    baseStorageKey: "mmd_user_base",
     intentStorageKey: "mmd_intent",
     langKeys: ["mmd_lang", "lang"],
 
@@ -34,24 +69,43 @@
       svip: 4 // alias
     },
 
-    // memberstack polling
+    // badge -> role mapping
+    badgeToRoleMap: {
+      guest: "guest",
+      standard: "standard",
+      premium: "premium",
+      vip: "vip",
+      svip: "blackcard",
+      blackcard: "blackcard"
+    },
+
+    // base -> role mapping
+    baseToRoleMap: {
+      guest: "guest",
+      "7days": "guest",
+      standard: "standard",
+      premium: "premium",
+      blackcard: "blackcard"
+    },
+
+    // Memberstack polling
     memberstack: {
-      timeoutMs: 4500,
+      timeoutMs: 6000,
       pollMs: 250
     },
 
-    // DOM lock behavior
+    // Lock selectors
     lock: {
-      selector: "[data-mmd-min-role],[data-mmd-show],[data-mmd-hide]",
-      attrMin: "data-mmd-min-role",
-      attrShow: "data-mmd-show",
-      attrHide: "data-mmd-hide",
-      hiddenStyle: "display:none !important;"
+      selector:
+        "[data-mmd-min-role],[data-mmd-show],[data-mmd-hide]," +
+        "[data-mmd-show-badge],[data-mmd-hide-badge]," +
+        "[data-mmd-show-base],[data-mmd-hide-base]," +
+        "[data-mmd-show-tier],[data-mmd-hide-tier]" // aliases
     }
   };
 
   // ----------------------------
-  // small helpers
+  // helpers
   // ----------------------------
   function now() { return Date.now ? Date.now() : +new Date(); }
 
@@ -59,91 +113,9 @@
     try { return JSON.parse(s); } catch (_) { return null; }
   }
 
-  function qs() {
-    try { return new URLSearchParams(window.location.search || ""); }
-    catch (_) {
-      // very old fallback
-      var out = {};
-      var q = (window.location.search || "").replace(/^\?/, "");
-      if (!q) return {
-        get: function (k) { return out[k] || null; }
-      };
-      q.split("&").forEach(function (p) {
-        var a = p.split("=");
-        out[decodeURIComponent(a[0] || "")] = decodeURIComponent(a[1] || "");
-      });
-      return { get: function (k) { return out[k] || null; } };
-    }
+  function isPlainObject(x) {
+    return !!x && typeof x === "object" && Object.prototype.toString.call(x) === "[object Object]";
   }
-
-  function log() {
-    if (!MMD.config.debug) return;
-    try {
-      var args = Array.prototype.slice.call(arguments);
-      args.unshift("[MMD.global " + VERSION + "]");
-      console.log.apply(console, args);
-    } catch (_) {}
-  }
-
-  function isSupportedLang(lang) {
-    return !!lang && MMD.config.supportedLangs.indexOf(lang) >= 0;
-  }
-
-  function normalizeRole(role) {
-    role = (role || "").toString().trim().toLowerCase();
-    if (role === "svip") role = "blackcard";
-    if (!role) return "guest";
-    if (!MMD.config.roleRank.hasOwnProperty(role)) return "guest";
-    return role;
-  }
-
-  function roleRank(role) {
-    role = normalizeRole(role);
-    return MMD.config.roleRank[role] || 0;
-  }
-
-  function setDatasetRole(role) {
-    var r = normalizeRole(role);
-
-    // set on <html> + <body> for CSS/JS usage
-    try {
-      document.documentElement.setAttribute("data-user-role", r);
-      document.documentElement.classList.add("mmd-role-" + r);
-    } catch (_) {}
-
-    try {
-      if (document.body) {
-        document.body.setAttribute("data-user-role", r);
-        document.body.classList.add("mmd-role-" + r);
-      }
-    } catch (_) {}
-  }
-
-  // ----------------------------
-  // public API namespace
-  // ----------------------------
-  var MMD = window.MMD = window.MMD || {};
-  MMD.global = MMD.global || {};
-  MMD.global.version = VERSION;
-
-  // config merge (optional)
-  var cfg = DEFAULTS;
-  try {
-    // allow window.MMD_CONFIG to override
-    if (window.MMD_CONFIG && typeof window.MMD_CONFIG === "object") {
-      cfg = shallowMerge(cfg, window.MMD_CONFIG);
-    }
-    // allow html[data-mmd-config='json']
-    var htmlCfg = document.documentElement.getAttribute("data-mmd-config");
-    if (htmlCfg) {
-      var parsed = safeJsonParse(htmlCfg);
-      if (parsed && typeof parsed === "object") {
-        cfg = shallowMerge(cfg, parsed);
-      }
-    }
-  } catch (_) {}
-
-  MMD.config = cfg;
 
   function shallowMerge(a, b) {
     var out = {};
@@ -156,29 +128,107 @@
     return out;
   }
 
-  function isPlainObject(x) {
-    return !!x && typeof x === "object" && Object.prototype.toString.call(x) === "[object Object]";
+  function qs() {
+    try { return new URLSearchParams(window.location.search || ""); }
+    catch (_) {
+      var out = {};
+      var q = (window.location.search || "").replace(/^\?/, "");
+      if (!q) return { get: function (k) { return out[k] || null; } };
+      q.split("&").forEach(function (p) {
+        var a = p.split("=");
+        out[decodeURIComponent(a[0] || "")] = decodeURIComponent(a[1] || "");
+      });
+      return { get: function (k) { return out[k] || null; } };
+    }
+  }
+
+  function safeToken(s) {
+    // allow a-z 0-9 _ -
+    s = (s || "").toString().trim().toLowerCase();
+    if (!s) return "";
+    s = s.replace(/\s+/g, "");
+    if (!/^[a-z0-9_-]+$/.test(s)) return "";
+    return s;
+  }
+
+  function truthy(v) {
+    if (v === true) return true;
+    if (v === false) return false;
+    v = (v ?? "").toString().trim().toLowerCase();
+    return (v === "1" || v === "true" || v === "yes" || v === "y" || v === "on");
+  }
+
+  function toEpochMaybe(v) {
+    // supports: ISO date, timestamp seconds/ms, or empty
+    if (v === null || v === undefined) return 0;
+    if (typeof v === "number") {
+      // assume ms if > 1e12
+      return (v > 1e12) ? v : (v * 1000);
+    }
+    var s = (v || "").toString().trim();
+    if (!s) return 0;
+
+    // numeric string
+    if (/^\d+$/.test(s)) {
+      var n = parseInt(s, 10);
+      if (!isFinite(n)) return 0;
+      return (n > 1e12) ? n : (n * 1000);
+    }
+
+    var t = Date.parse(s);
+    if (!isFinite(t)) return 0;
+    return t;
+  }
+
+  // ----------------------------
+  // public namespace
+  // ----------------------------
+  var MMD = window.MMD = window.MMD || {};
+  MMD.global = MMD.global || {};
+  MMD.global.version = VERSION;
+
+  // config merge
+  var cfg = DEFAULTS;
+  try {
+    if (window.MMD_CONFIG && typeof window.MMD_CONFIG === "object") {
+      cfg = shallowMerge(cfg, window.MMD_CONFIG);
+    }
+    var htmlCfg = document.documentElement.getAttribute("data-mmd-config");
+    if (htmlCfg) {
+      var parsed = safeJsonParse(htmlCfg);
+      if (parsed && typeof parsed === "object") cfg = shallowMerge(cfg, parsed);
+    }
+  } catch (_) {}
+  MMD.config = cfg;
+
+  function log() {
+    if (!MMD.config.debug) return;
+    try {
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift("[MMD.global " + VERSION + "]");
+      console.log.apply(console, args);
+    } catch (_) {}
   }
 
   // ----------------------------
   // language
   // ----------------------------
+  function isSupportedLang(lang) {
+    return !!lang && MMD.config.supportedLangs.indexOf(lang) >= 0;
+  }
+
   function getLang() {
-    // URL override: ?lang=
     var p = qs();
     var qLang = (p.get && p.get("lang")) ? (p.get("lang") || "").toString().trim().toLowerCase() : "";
     if (isSupportedLang(qLang)) return qLang;
 
-    // storage
-    var i;
-    for (i = 0; i < MMD.config.langKeys.length; i++) {
+    for (var i = 0; i < MMD.config.langKeys.length; i++) {
       try {
         var v = (window.localStorage.getItem(MMD.config.langKeys[i]) || "").toString().trim().toLowerCase();
         if (isSupportedLang(v)) return v;
       } catch (_) {}
     }
 
-    // navigator hint
     try {
       var n = (navigator.language || navigator.userLanguage || "").toLowerCase();
       if (n.indexOf("th") === 0) return "th";
@@ -195,16 +245,13 @@
     lang = (lang || "").toString().trim().toLowerCase();
     if (!isSupportedLang(lang)) lang = MMD.config.defaultLang;
 
-    // persist both keys
     if (opts.persist !== false) {
       try { window.localStorage.setItem("mmd_lang", lang); } catch (_) {}
       try { window.localStorage.setItem("lang", lang); } catch (_) {}
     }
 
-    // set html lang attribute
     try { document.documentElement.setAttribute("lang", lang); } catch (_) {}
 
-    // notify i18n core if present (best-effort)
     try {
       if (window.MMD_I18N) {
         if (typeof window.MMD_I18N.setLang === "function") window.MMD_I18N.setLang(lang);
@@ -214,22 +261,14 @@
       }
     } catch (_) {}
 
-    // broadcast
-    try {
-      window.dispatchEvent(new CustomEvent("mmd:lang", { detail: { lang: lang } }));
-    } catch (_) {}
-
+    try { window.dispatchEvent(new CustomEvent("mmd:lang", { detail: { lang: lang } })); } catch (_) {}
     return lang;
   }
 
   function bindLangButtons() {
-    // compatible with your existing pattern:
-    // 1) .mmd-lang-btn[data-set-lang="th"]
-    // 2) any element [data-set-lang="en"]
     var btns;
     try { btns = document.querySelectorAll("[data-set-lang],.mmd-lang-btn[data-set-lang]"); }
     catch (_) { return; }
-
     if (!btns || !btns.length) return;
 
     var activate = function (lang) {
@@ -244,26 +283,22 @@
 
     Array.prototype.forEach.call(btns, function (b) {
       b.addEventListener("click", function () {
-        var lang = (b.getAttribute("data-set-lang") || "").toLowerCase();
-        var applied = setLang(lang);
-        activate(applied);
+        var l = (b.getAttribute("data-set-lang") || "").toLowerCase();
+        activate(setLang(l));
       });
     });
 
-    // initial active state
     activate(getLang());
   }
 
   // ----------------------------
-  // intent capture
+  // intent
   // ----------------------------
   function captureIntentFromUrl() {
     var p = qs();
     if (!p || typeof p.get !== "function") return;
-
     var intent = (p.get("intent") || "").toString().trim();
     if (!intent) return;
-
     try { window.localStorage.setItem(MMD.config.intentStorageKey, intent); } catch (_) {}
     log("intent captured:", intent);
   }
@@ -278,207 +313,112 @@
   }
 
   // ----------------------------
-  // role resolve (best-effort)
+  // normalize role/base/badge
   // ----------------------------
-  var _role = "guest";
-
-  function getRole() { return normalizeRole(_role); }
-
-  function setRole(role, opts) {
-    opts = opts || {};
-    role = normalizeRole(role);
-    _role = role;
-
-    // persist
-    if (opts.persist !== false) {
-      try { window.localStorage.setItem(MMD.config.roleStorageKey, role); } catch (_) {}
-    }
-
-    setDatasetRole(role);
-    applyLocks(); // immediately apply
-
-    // broadcast
-    try {
-      window.dispatchEvent(new CustomEvent("mmd:role", { detail: { role: role } }));
-    } catch (_) {}
-
-    // re-apply i18n if it depends on role suffix (key.{role})
-    try {
-      if (window.MMD_I18N && typeof window.MMD_I18N.apply === "function") {
-        window.MMD_I18N.apply(getLang());
-      }
-    } catch (_) {}
-
-    log("role set:", role);
+  function normalizeRole(role) {
+    role = safeToken(role);
+    if (role === "svip") role = "blackcard";
+    if (!role) return "guest";
+    if (!MMD.config.roleRank.hasOwnProperty(role)) return "guest";
     return role;
   }
 
-  function roleFromBody() {
+  function roleRank(role) {
+    role = normalizeRole(role);
+    return MMD.config.roleRank[role] || 0;
+  }
+
+  function normalizeBase(base) {
+    base = safeToken(base);
+    if (base === "svip") base = "blackcard";
+    if (!base) return "guest";
+    // allow 7days as base
+    if (base === "7days") return "7days";
+    if (base === "blackcard" || base === "premium" || base === "standard" || base === "guest") return base;
+    return "guest";
+  }
+
+  function normalizeBadge(badge) {
+    badge = safeToken(badge);
+    if (badge === "svip") return "svip";
+    if (badge === "blackcard" || badge === "vip" || badge === "premium" || badge === "standard" || badge === "guest") return badge;
+    // sometimes someone might store "black_card"
+    if (badge === "blackcardmembership" || badge === "black_card") return "blackcard";
+    return "";
+  }
+
+  function baseToRole(base) {
+    base = normalizeBase(base);
+    return normalizeRole(MMD.config.baseToRoleMap[base] || "guest");
+  }
+
+  function badgeToRole(badge) {
+    badge = normalizeBadge(badge);
+    return normalizeRole(MMD.config.badgeToRoleMap[badge] || "guest");
+  }
+
+  // ----------------------------
+  // DOM datasets / classes
+  // ----------------------------
+  function removePrefixedClasses(el, prefix) {
+    if (!el || !el.classList) return;
     try {
-      var b = document.body;
-      if (!b) return "";
-      var r = (b.getAttribute("data-user-role") || "").toString().trim().toLowerCase();
-      return normalizeRole(r);
-    } catch (_) { return ""; }
-  }
-
-  function roleFromStorage() {
-    try {
-      var r = (window.localStorage.getItem(MMD.config.roleStorageKey) || "").toString().trim().toLowerCase();
-      return normalizeRole(r);
-    } catch (_) { return ""; }
-  }
-
-  function chooseHigherRole(a, b) {
-    a = normalizeRole(a);
-    b = normalizeRole(b);
-    return roleRank(a) >= roleRank(b) ? a : b;
-  }
-
-  function roleFromMemberObject(member) {
-    if (!member || typeof member !== "object") return "";
-
-    // direct custom role hints
-    var direct =
-      (member.role || member.tier || (member.customFields && (member.customFields.role || member.customFields.tier))) || "";
-    direct = (direct || "").toString().toLowerCase();
-    if (direct) {
-      if (direct.indexOf("black") >= 0 || direct.indexOf("svip") >= 0) return "blackcard";
-      if (direct.indexOf("vip") >= 0) return "vip";
-      if (direct.indexOf("premium") >= 0) return "premium";
-      if (direct.indexOf("standard") >= 0) return "standard";
-    }
-
-    // plan lists (Memberstack schema varies by version)
-    var names = [];
-
-    function pushName(x) {
-      if (!x) return;
-      var s = (x.name || x.planName || x.title || x).toString();
-      if (s) names.push(s);
-    }
-
-    // common candidates
-    if (Array.isArray(member.planConnections)) {
-      member.planConnections.forEach(function (pc) {
-        pushName(pc && (pc.planName || (pc.plan && pc.plan.name) || pc.plan));
+      Array.prototype.slice.call(el.classList).forEach(function (c) {
+        if (c.indexOf(prefix) === 0) el.classList.remove(c);
       });
-    }
-    if (Array.isArray(member.plans)) member.plans.forEach(pushName);
-    if (Array.isArray(member.subscriptions)) member.subscriptions.forEach(pushName);
-    if (member.plan) pushName(member.plan);
-    if (member.subscription) pushName(member.subscription);
-
-    // choose highest by name matching
-    var best = "guest";
-    names.forEach(function (n) {
-      var s = (n || "").toString().toLowerCase();
-      if (!s) return;
-
-      if (s.indexOf("black") >= 0 || s.indexOf("svip") >= 0) best = chooseHigherRole(best, "blackcard");
-      else if (s.indexOf("vip") >= 0) best = chooseHigherRole(best, "vip");
-      else if (s.indexOf("premium") >= 0) best = chooseHigherRole(best, "premium");
-      else if (s.indexOf("standard") >= 0) best = chooseHigherRole(best, "standard");
-    });
-
-    return best;
+    } catch (_) {}
   }
 
-  function resolveRoleSync() {
-    var r = "guest";
-    r = chooseHigherRole(r, roleFromBody());
-    r = chooseHigherRole(r, roleFromStorage());
-    return normalizeRole(r);
-  }
+  function setDatasetTriplet(role, badge, base) {
+    role = normalizeRole(role);
+    badge = normalizeBadge(badge) || "guest";
+    base = normalizeBase(base);
 
-  function getMemberstackInstance() {
-    return window.memberstack || window.MemberStack || window.$memberstack || null;
-  }
-
-  function tryResolveRoleFromMemberstack(done) {
-    var ms = getMemberstackInstance();
-    var start = now();
-    var timeoutAt = start + MMD.config.memberstack.timeoutMs;
-
-    function finish(role) {
-      if (typeof done === "function") done(normalizeRole(role || "guest"));
-    }
-
-    function extractFromMs(msObj) {
-      // best-effort: support multiple method names
-      if (!msObj) return null;
-
-      // Promise-based methods
-      if (typeof msObj.getMemberJSON === "function") return msObj.getMemberJSON();
-      if (typeof msObj.getCurrentMember === "function") return msObj.getCurrentMember();
-      if (typeof msObj.getMember === "function") return msObj.getMember();
-
-      // sometimes Memberstack exposes current member object directly
-      if (msObj.member && typeof msObj.member === "object") return Promise.resolve(msObj.member);
-
-      return null;
-    }
-
-    function poll() {
-      ms = getMemberstackInstance();
-      var p;
-
-      try { p = extractFromMs(ms); } catch (_) { p = null; }
-
-      if (p && typeof p.then === "function") {
-        p.then(function (member) {
-          var role = roleFromMemberObject(member);
-
-          // if member exists but no plan found, still treat as at least standard? no.
-          // keep guest unless explicit evidence.
-          finish(role || "guest");
-        }).catch(function () {
-          finish("guest");
-        });
-        return;
-      }
-
-      if (now() >= timeoutAt) {
-        finish("guest");
-        return;
-      }
-
-      setTimeout(poll, MMD.config.memberstack.pollMs);
-    }
-
-    // if ms has onReady, prefer it (but still guard timeout)
+    // html
     try {
-      if (ms && typeof ms.onReady === "function") {
-        var doneOnce = false;
+      var html = document.documentElement;
+      if (html) {
+        html.setAttribute("data-user-role", role);
+        html.setAttribute("data-user-badge", badge);
+        html.setAttribute("data-user-base", base);
 
-        var t = setTimeout(function () {
-          if (doneOnce) return;
-          doneOnce = true;
-          finish("guest");
-        }, MMD.config.memberstack.timeoutMs);
+        removePrefixedClasses(html, "mmd-role-");
+        removePrefixedClasses(html, "mmd-badge-");
+        removePrefixedClasses(html, "mmd-base-");
 
-        ms.onReady(function () {
-          if (doneOnce) return;
-          doneOnce = true;
-          clearTimeout(t);
-          poll();
-        });
-        return;
+        html.classList.add("mmd-role-" + role);
+        html.classList.add("mmd-badge-" + badge);
+        html.classList.add("mmd-base-" + base);
       }
     } catch (_) {}
 
-    // fallback poll
-    poll();
+    // body
+    try {
+      var body = document.body;
+      if (body) {
+        body.setAttribute("data-user-role", role);
+        body.setAttribute("data-user-badge", badge);
+        body.setAttribute("data-user-base", base);
+
+        removePrefixedClasses(body, "mmd-role-");
+        removePrefixedClasses(body, "mmd-badge-");
+        removePrefixedClasses(body, "mmd-base-");
+
+        body.classList.add("mmd-role-" + role);
+        body.classList.add("mmd-badge-" + badge);
+        body.classList.add("mmd-base-" + base);
+      }
+    } catch (_) {}
   }
 
   // ----------------------------
-  // role lock / visibility
+  // lock engine
   // ----------------------------
-  function parseRoleList(s) {
+  function parseList(s) {
     return (s || "")
       .toString()
       .split(",")
-      .map(function (x) { return normalizeRole(x); })
+      .map(function (x) { return safeToken(x); })
       .filter(function (x) { return !!x; });
   }
 
@@ -504,9 +444,12 @@
 
   function applyLocks(root) {
     root = root || document;
-    var role = getRole();
-    var nodes;
 
+    var role = getRole();
+    var badge = getBadge();
+    var base = getBase();
+
+    var nodes;
     try { nodes = root.querySelectorAll(MMD.config.lock.selector); }
     catch (_) { return; }
 
@@ -514,33 +457,70 @@
 
     Array.prototype.forEach.call(nodes, function (el) {
       try {
-        var minRole = normalizeRole(el.getAttribute(MMD.config.lock.attrMin) || "");
-        var showList = parseRoleList(el.getAttribute(MMD.config.lock.attrShow) || "");
-        var hideList = parseRoleList(el.getAttribute(MMD.config.lock.attrHide) || "");
-
-        // precedence: min-role > show/hide
+        // 1) min-role (strongest)
+        var minRole = normalizeRole(el.getAttribute("data-mmd-min-role") || "");
         if (minRole && minRole !== "guest") {
           if (roleRank(role) >= roleRank(minRole)) showEl(el);
           else hideEl(el);
           return;
         }
 
-        if (showList.length) {
-          if (showList.indexOf(role) >= 0) showEl(el);
+        // 2) show/hide by role
+        var showRoles = parseList(el.getAttribute("data-mmd-show") || "");
+        if (showRoles.length) {
+          if (showRoles.indexOf(role) >= 0) showEl(el);
           else hideEl(el);
           return;
         }
 
-        if (hideList.length) {
-          if (hideList.indexOf(role) >= 0) hideEl(el);
+        var hideRoles = parseList(el.getAttribute("data-mmd-hide") || "");
+        if (hideRoles.length) {
+          if (hideRoles.indexOf(role) >= 0) hideEl(el);
           else showEl(el);
           return;
         }
+
+        // 3) show/hide by badge
+        var showBadges = parseList(el.getAttribute("data-mmd-show-badge") || "");
+        // back-compat alias: show-tier treated as badge
+        var showTierAlias = parseList(el.getAttribute("data-mmd-show-tier") || "");
+        if (showTierAlias.length) showBadges = showBadges.concat(showTierAlias);
+
+        if (showBadges.length) {
+          if (showBadges.indexOf(badge) >= 0) showEl(el);
+          else hideEl(el);
+          return;
+        }
+
+        var hideBadges = parseList(el.getAttribute("data-mmd-hide-badge") || "");
+        var hideTierAlias = parseList(el.getAttribute("data-mmd-hide-tier") || "");
+        if (hideTierAlias.length) hideBadges = hideBadges.concat(hideTierAlias);
+
+        if (hideBadges.length) {
+          if (hideBadges.indexOf(badge) >= 0) hideEl(el);
+          else showEl(el);
+          return;
+        }
+
+        // 4) show/hide by base
+        var showBase = parseList(el.getAttribute("data-mmd-show-base") || "");
+        if (showBase.length) {
+          if (showBase.indexOf(base) >= 0) showEl(el);
+          else hideEl(el);
+          return;
+        }
+
+        var hideBase = parseList(el.getAttribute("data-mmd-hide-base") || "");
+        if (hideBase.length) {
+          if (hideBase.indexOf(base) >= 0) hideEl(el);
+          else showEl(el);
+          return;
+        }
+
       } catch (_) {}
     });
   }
 
-  // keep locks applied for newly injected elements (Webflow/Memberstack often updates DOM)
   function observeLocks() {
     if (!("MutationObserver" in window)) return;
     try {
@@ -555,16 +535,317 @@
           }
         }
       });
-
       obs.observe(document.documentElement, { childList: true, subtree: true });
     } catch (_) {}
+  }
+
+  // ----------------------------
+  // state + API
+  // ----------------------------
+  var _role = "guest";
+  var _badge = "guest";
+  var _base = "guest";
+
+  function getRole() { return normalizeRole(_role); }
+  function getBadge() { return normalizeBadge(_badge) || "guest"; }
+  function getBase() { return normalizeBase(_base); }
+
+  function persistTriplet(role, badge, base) {
+    try { window.localStorage.setItem(MMD.config.roleStorageKey, normalizeRole(role)); } catch (_) {}
+    try { window.localStorage.setItem(MMD.config.badgeStorageKey, normalizeBadge(badge) || "guest"); } catch (_) {}
+    try { window.localStorage.setItem(MMD.config.baseStorageKey, normalizeBase(base)); } catch (_) {}
+  }
+
+  function applyTriplet(role, badge, base, opts) {
+    opts = opts || {};
+    role = normalizeRole(role);
+    badge = normalizeBadge(badge) || "guest";
+    base = normalizeBase(base);
+
+    _role = role;
+    _badge = badge;
+    _base = base;
+
+    if (opts.persist !== false) persistTriplet(role, badge, base);
+
+    setDatasetTriplet(role, badge, base);
+    applyLocks();
+
+    // role suffix i18n (key.{role}) and other dynamic copy
+    try {
+      if (window.MMD_I18N && typeof window.MMD_I18N.apply === "function") {
+        window.MMD_I18N.apply(getLang());
+      }
+    } catch (_) {}
+
+    try {
+      window.dispatchEvent(new CustomEvent("mmd:entitlement", {
+        detail: { role: role, badge: badge, base: base, version: VERSION }
+      }));
+    } catch (_) {}
+
+    log("entitlement set:", { role: role, badge: badge, base: base });
+    return { role: role, badge: badge, base: base };
+  }
+
+  // expose public API
+  MMD.global.getLang = getLang;
+  MMD.global.setLang = setLang;
+  MMD.global.getIntent = getIntent;
+  MMD.global.clearIntent = clearIntent;
+
+  MMD.global.getRole = getRole;
+  MMD.global.getBadge = getBadge;
+  MMD.global.getBase = getBase;
+
+  MMD.global.applyLocks = applyLocks;
+
+  // manual override helpers (rarely needed)
+  MMD.global.setEntitlement = function (role, badge, base) {
+    return applyTriplet(role, badge, base, { persist: true });
+  };
+
+  // ----------------------------
+  // sources: body/storage/memberstack
+  // ----------------------------
+  function fromBody() {
+    var out = { role: "", badge: "", base: "" };
+    try {
+      var b = document.body;
+      if (!b) return out;
+      out.role = normalizeRole(b.getAttribute("data-user-role") || "");
+      out.badge = normalizeBadge(b.getAttribute("data-user-badge") || "");
+      out.base = normalizeBase(b.getAttribute("data-user-base") || "");
+      // allow legacy:
+      if (!out.badge) out.badge = normalizeBadge(b.getAttribute("data-user-tier") || "");
+    } catch (_) {}
+    return out;
+  }
+
+  function fromStorage() {
+    var out = { role: "", badge: "", base: "" };
+    try { out.role = normalizeRole(window.localStorage.getItem(MMD.config.roleStorageKey) || ""); } catch (_) {}
+    try { out.badge = normalizeBadge(window.localStorage.getItem(MMD.config.badgeStorageKey) || ""); } catch (_) {}
+    try { out.base = normalizeBase(window.localStorage.getItem(MMD.config.baseStorageKey) || ""); } catch (_) {}
+    return out;
+  }
+
+  function getMemberstackInstance() {
+    return window.memberstack || window.MemberStack || window.$memberstack || null;
+  }
+
+  function extractMemberPromise(msObj) {
+    if (!msObj) return null;
+    // Promise-based methods across versions
+    if (typeof msObj.getMemberJSON === "function") return msObj.getMemberJSON();
+    if (typeof msObj.getCurrentMember === "function") return msObj.getCurrentMember();
+    if (typeof msObj.getMember === "function") return msObj.getMember();
+    if (msObj.member && typeof msObj.member === "object") return Promise.resolve(msObj.member);
+    return null;
+  }
+
+  function getCustomField(member, keyList) {
+    if (!member || typeof member !== "object") return null;
+
+    var keys = (Array.isArray(keyList) ? keyList : [keyList])
+      .map(function (k) { return (k || "").toString(); })
+      .filter(Boolean);
+
+    // common: member.customFields as object
+    var cf = member.customFields;
+    if (cf && typeof cf === "object" && !Array.isArray(cf)) {
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        if (cf.hasOwnProperty(k)) return cf[k];
+        // try tokenized keys
+        var tk = safeToken(k);
+        if (tk && cf.hasOwnProperty(tk)) return cf[tk];
+      }
+    }
+
+    // sometimes customFields is an array of { key, value } or { slug, value }
+    if (Array.isArray(cf)) {
+      for (var j = 0; j < cf.length; j++) {
+        var row = cf[j] || {};
+        var k2 = row.key || row.slug || row.name;
+        if (!k2) continue;
+        var k2t = safeToken(k2);
+        for (var x = 0; x < keys.length; x++) {
+          if (k2 === keys[x] || k2t === safeToken(keys[x])) return row.value;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function inferFromPlanNames(member) {
+    // returns { base, badgeCandidate }
+    var names = [];
+
+    function pushName(x) {
+      if (!x) return;
+      var s = (x.name || x.planName || x.title || x).toString();
+      if (s) names.push(s);
+    }
+
+    try {
+      if (Array.isArray(member.planConnections)) {
+        member.planConnections.forEach(function (pc) {
+          pushName(pc && (pc.planName || (pc.plan && pc.plan.name) || pc.plan));
+        });
+      }
+      if (Array.isArray(member.plans)) member.plans.forEach(pushName);
+      if (Array.isArray(member.subscriptions)) member.subscriptions.forEach(pushName);
+      if (member.plan) pushName(member.plan);
+      if (member.subscription) pushName(member.subscription);
+    } catch (_) {}
+
+    var base = "";
+    var badgeCandidate = "";
+
+    names.forEach(function (n) {
+      var s = (n || "").toString().toLowerCase();
+
+      if (s.indexOf("black") >= 0 || s.indexOf("svip") >= 0) {
+        base = "blackcard";
+        badgeCandidate = badgeCandidate || "blackcard";
+        return;
+      }
+      if (s.indexOf("premium") >= 0) {
+        base = base || "premium";
+        badgeCandidate = badgeCandidate || "premium";
+        return;
+      }
+      if (s.indexOf("standard") >= 0) {
+        base = base || "standard";
+        badgeCandidate = badgeCandidate || "standard";
+        return;
+      }
+      if (s.indexOf("7") >= 0 && s.indexOf("day") >= 0) {
+        base = base || "7days";
+        badgeCandidate = badgeCandidate || "guest";
+        return;
+      }
+    });
+
+    return { base: base, badgeCandidate: badgeCandidate };
+  }
+
+  function computeEntitlementFromMember(member) {
+    // read custom fields
+    var cfTier = normalizeBadge(getCustomField(member, ["tier", "Tier"]) || "");
+    var cfBase = normalizeBase(getCustomField(member, ["base_tier", "baseTier", "base", "package", "plan_code"]) || "");
+    var vipApproved = truthy(getCustomField(member, ["vip_approved", "vipApproved", "vip"]) || "");
+    var svipApproved = truthy(getCustomField(member, ["svip_approved", "svipApproved", "svip"]) || "");
+
+    // status/expire gates
+    var status = (getCustomField(member, ["status", "Status"]) || "").toString().trim().toLowerCase();
+    var expireAt = getCustomField(member, ["expire_at", "Expire At", "ExpireAt"]) || "";
+    var expireEpoch = toEpochMaybe(expireAt);
+    var expiredByDate = (expireEpoch > 0 && expireEpoch < now());
+    var expiredByStatus = (status === "expired" || status === "inactive");
+
+    // plan infer as fallback
+    var inferred = inferFromPlanNames(member);
+
+    var base = cfBase || inferred.base || "";
+    base = normalizeBase(base);
+
+    // If no base but tier is standard/premium/blackcard, treat as base for safety
+    if ((!base || base === "guest") && (cfTier === "standard" || cfTier === "premium" || cfTier === "blackcard")) {
+      base = normalizeBase(cfTier);
+    }
+
+    // handle expired
+    if (expiredByDate || expiredByStatus) {
+      return { role: "guest", badge: "guest", base: "guest", expired: true };
+    }
+
+    // badge decision (locked precedence)
+    // 0) if cfTier explicitly set -> respect it
+    // 1) else if base is blackcard -> badge blackcard (paid 25,000)
+    // 2) else if svipApproved -> badge svip (selected)
+    // 3) else if vipApproved -> badge vip
+    // 4) else badge = base (standard/premium) or inferred badgeCandidate
+    var badge = cfTier || "";
+    if (!badge) {
+      if (base === "blackcard") badge = "blackcard";
+      else if (svipApproved) badge = "svip";
+      else if (vipApproved) badge = "vip";
+      else badge = normalizeBadge(inferred.badgeCandidate) || normalizeBadge(base) || "guest";
+    }
+
+    // role decision
+    var role = "guest";
+    // any SVIP/Blackcard-equivalent -> role blackcard
+    if (badge === "svip" || badge === "blackcard" || base === "blackcard" || svipApproved) role = "blackcard";
+    else if (badge === "vip" || vipApproved) role = "vip";
+    else role = baseToRole(base);
+
+    return { role: role, badge: badge, base: base, expired: false };
+  }
+
+  function resolveMemberstack(done) {
+    var ms = getMemberstackInstance();
+    var start = now();
+    var timeoutAt = start + MMD.config.memberstack.timeoutMs;
+
+    function finish(ent) {
+      try { done && done(ent); } catch (_) {}
+    }
+
+    function poll() {
+      ms = getMemberstackInstance();
+      var p = null;
+      try { p = extractMemberPromise(ms); } catch (_) { p = null; }
+
+      if (p && typeof p.then === "function") {
+        p.then(function (member) {
+          var ent = computeEntitlementFromMember(member || {});
+          finish(ent);
+        }).catch(function () {
+          finish(null);
+        });
+        return;
+      }
+
+      if (now() >= timeoutAt) {
+        finish(null);
+        return;
+      }
+
+      setTimeout(poll, MMD.config.memberstack.pollMs);
+    }
+
+    // prefer onReady if exists
+    try {
+      if (ms && typeof ms.onReady === "function") {
+        var doneOnce = false;
+        var t = setTimeout(function () {
+          if (doneOnce) return;
+          doneOnce = true;
+          finish(null);
+        }, MMD.config.memberstack.timeoutMs);
+
+        ms.onReady(function () {
+          if (doneOnce) return;
+          doneOnce = true;
+          clearTimeout(t);
+          poll();
+        });
+        return;
+      }
+    } catch (_) {}
+
+    poll();
   }
 
   // ----------------------------
   // bootstrap
   // ----------------------------
   function bootstrap() {
-    // debug flag: ?debug=1
+    // debug: ?debug=1
     try {
       var p = qs();
       var dbg = (p.get && p.get("debug")) ? p.get("debug") : "";
@@ -573,56 +854,53 @@
 
     log("boot start");
 
-    // intent
     captureIntentFromUrl();
 
     // lang
     var lang = setLang(getLang(), { persist: true });
-
-    // bind language buttons (optional)
     bindLangButtons();
 
-    // role sync first (immediate)
-    setRole(resolveRoleSync(), { persist: true });
+    // initial from body + storage (sync)
+    var b = fromBody();
+    var s = fromStorage();
 
-    // apply locks immediately
-    applyLocks();
+    // initial merge priority: body > storage > defaults
+    var initBase = b.base || s.base || "guest";
+    var initBadge = b.badge || s.badge || "";
+    var initRole = b.role || s.role || "";
 
-    // observe DOM changes for lock application
+    initBase = normalizeBase(initBase);
+
+    // if badge missing, infer from base
+    initBadge = normalizeBadge(initBadge) || normalizeBadge(initBase) || "guest";
+
+    // if role missing, infer from badge/base
+    initRole = normalizeRole(initRole) || badgeToRole(initBadge) || baseToRole(initBase);
+
+    applyTriplet(initRole, initBadge, initBase, { persist: true });
+
+    // observe for dynamic DOM
     observeLocks();
 
-    // async memberstack role (upgrade only if higher)
-    tryResolveRoleFromMemberstack(function (msRole) {
-      msRole = normalizeRole(msRole);
-      var current = getRole();
-      var chosen = chooseHigherRole(current, msRole);
-
-      // if Memberstack says guest but we already have something higher, keep ours
-      // if Memberstack finds higher tier, upgrade
-      if (chosen !== current) setRole(chosen, { persist: true });
-      else log("role unchanged after memberstack:", current);
+    // resolve from Memberstack (authoritative if present)
+    resolveMemberstack(function (ent) {
+      if (ent && ent.role && ent.badge && ent.base) {
+        applyTriplet(ent.role, ent.badge, ent.base, { persist: true });
+      } else {
+        log("memberstack not available; kept local entitlement");
+      }
 
       // ready event
       try {
         window.dispatchEvent(new CustomEvent("mmd:ready", {
-          detail: { role: getRole(), lang: lang, version: VERSION }
+          detail: { role: getRole(), badge: getBadge(), base: getBase(), lang: lang, version: VERSION }
         }));
       } catch (_) {}
-    });
 
-    log("boot done");
+      log("boot done");
+    });
   }
 
-  // expose minimal API
-  MMD.global.getLang = getLang;
-  MMD.global.setLang = setLang;
-  MMD.global.getRole = getRole;
-  MMD.global.setRole = setRole;
-  MMD.global.applyLocks = applyLocks;
-  MMD.global.getIntent = getIntent;
-  MMD.global.clearIntent = clearIntent;
-
-  // start after DOM is available (but do not wait for images)
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", bootstrap);
   } else {
