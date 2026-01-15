@@ -1,187 +1,185 @@
 /* =========================================================
-   MMD Privé — Internal Admin CSS (LOCK v2026-01-15)
-   Scope: #mmd-admin only (avoid global bleed into Webflow)
+   MMD Privé — Internal Admin JS (LOCK v2026-01-15)
+   - Calls Worker admin endpoints:
+     GET  /v1/admin/config
+     GET  /v1/admin/metrics
+     GET  /v1/admin/member?email=...
+     POST /v1/admin/telegram/invite
+   - Auth: Memberstack access token -> Authorization: Bearer <token>
+   - Server verifies token + permissions (recommended by Memberstack)
 ========================================================= */
 
-#mmd-admin{
-  --bg: #070707;
-  --panel: rgba(255,255,255,.06);
-  --panel2: rgba(255,255,255,.04);
-  --stroke: rgba(255,255,255,.12);
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.60);
-  --gold: #D4AF37;
-  --gold2:#B8891B;
-  --danger:#ff4d4d;
-  --ok:#35d07f;
-  --radius: 16px;
-  --radius2: 22px;
-  --shadow: 0 16px 40px rgba(0,0,0,.45);
+(function () {
+  "use strict";
 
-  color: var(--text);
-  font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-}
+  const root = document.getElementById("mmd-admin");
+  if (!root) return;
+  if (window.__MMD_ADMIN_LOCKED__) return;
+  window.__MMD_ADMIN_LOCKED__ = true;
 
-#mmd-admin *{ box-sizing: border-box; }
+  const LS_API_BASE = "mmd_admin_api_base";
 
-#mmd-admin .wrap{
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 18px 16px 28px;
-}
+  const $ = (id) => document.getElementById(id);
 
-#mmd-admin .topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding: 14px 14px;
-  border:1px solid var(--stroke);
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  border-radius: var(--radius2);
-  box-shadow: var(--shadow);
-}
+  const elAuthState = $("mmd-auth-state");
+  const elPermState = $("mmd-perm-state");
+  const elApiBaseText = $("mmd-api-base-text");
 
-#mmd-admin .brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width: 260px;
-}
+  const kpiMembers = $("kpi-members");
+  const kpiPayments = $("kpi-payments");
+  const kpiLedger = $("kpi-ledger");
+  const dashStatus = $("dash-status");
 
-#mmd-admin .logo{
-  width:44px; height:44px;
-  border-radius: 14px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.35);
-  object-fit: contain;
-}
+  const memEmail = $("mem-email");
+  const memStatus = $("mem-status");
+  const memResult = $("mem-result");
 
-#mmd-admin .brand h1{
-  margin:0;
-  font-size: 14px;
-  letter-spacing:.4px;
-  font-weight: 800;
-}
-#mmd-admin .brand p{
-  margin: 2px 0 0;
-  font-size: 12px;
-  color: var(--muted);
-}
+  const tgUserId = $("tg-user-id");
+  const tgTier = $("tg-tier");
+  const tgNote = $("tg-note");
+  const tgStatus = $("tg-status");
 
-#mmd-admin .right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap: wrap;
-  justify-content:flex-end;
-}
+  const btnRefresh = $("mmd-btn-refresh");
+  const btnSignout = $("mmd-btn-signout");
+  const btnMemLookup = $("btn-mem-lookup");
+  const btnTgInvite = $("btn-tg-invite");
 
-#mmd-admin .pill{
-  display:flex;
-  align-items:baseline;
-  gap:8px;
-  padding: 8px 10px;
-  border:1px solid var(--stroke);
-  background: rgba(0,0,0,.22);
-  border-radius: 999px;
-}
-#mmd-admin .pill .k{ font-size:11px; color: var(--muted); }
-#mmd-admin .pill .v{ font-size:12px; font-weight:800; }
+  // ---------------------------
+  // API Base (override-able)
+  // ---------------------------
+  function getApiBase() {
+    const fromData = String(root.getAttribute("data-api-base") || "").trim();
+    let base = fromData || "https://telegram.malemodel-bkk.workers.dev";
+    try {
+      const ov = String(localStorage.getItem(LS_API_BASE) || "").trim();
+      if (ov) base = ov;
+    } catch (_) {}
+    return base.replace(/\/+$/, "");
+  }
 
-#mmd-admin .btn{
-  appearance:none;
-  border:1px solid var(--stroke);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  padding: 10px 12px;
-  border-radius: 999px;
-  font-weight: 800;
-  font-size: 12px;
-  cursor:pointer;
-}
-#mmd-admin .btn:hover{ background: rgba(255,255,255,.10); }
+  function setStatus(el, msg, kind) {
+    if (!el) return;
+    el.textContent = String(msg || "—");
+    el.classList.remove("ok", "bad");
+    if (kind) el.classList.add(kind);
+  }
 
-#mmd-admin .btn.gold{
-  border-color: rgba(212,175,55,.55);
-  background: linear-gradient(180deg, rgba(212,175,55,.22), rgba(184,137,27,.12));
-}
-#mmd-admin .btn.gold:hover{
-  background: linear-gradient(180deg, rgba(212,175,55,.28), rgba(184,137,27,.18));
-}
+  // ---------------------------
+  // Memberstack token retrieval
+  // (best-effort; supports cookie mode + localStorage)
+  // ---------------------------
+  function readCookie(name) {
+    const all = document.cookie || "";
+    const m = all.match(new RegExp("(^|;\\s*)" + name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "=([^;]+)"));
+    return m ? decodeURIComponent(m[2]) : "";
+  }
 
-#mmd-admin .btn.danger{
-  border-color: rgba(255,77,77,.55);
-  background: rgba(255,77,77,.12);
-}
+  function looksLikeJwt(s) {
+    const v = String(s || "").trim();
+    const parts = v.split(".");
+    return parts.length === 3 && parts[0].length > 10 && parts[1].length > 10;
+  }
 
-#mmd-admin .grid{
-  display:grid;
-  grid-template-columns: 260px 1fr;
-  gap: 14px;
-  margin-top: 14px;
-}
+  function tryLocalStorageToken() {
+    try {
+      const keys = [
+        "_ms-mid",
+        "ms-mid",
+        "ms_mid",
+        "memberstack:token",
+        "memberstack_token",
+        "accessToken",
+      ];
+      for (const k of keys) {
+        const v = localStorage.getItem(k);
+        if (looksLikeJwt(v)) return v;
+      }
 
-#mmd-admin .nav{
-  border:1px solid var(--stroke);
-  background: rgba(255,255,255,.04);
-  border-radius: var(--radius2);
-  padding: 10px;
-  box-shadow: var(--shadow);
-}
+      // fallback: scan all keys for a JWT-like value
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        const v = localStorage.getItem(k);
+        if (looksLikeJwt(v)) return v;
+      }
+    } catch (_) {}
+    return "";
+  }
 
-#mmd-admin .nav .navbtn{
-  width:100%;
-  text-align:left;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  border-radius: 16px;
-  padding: 12px 12px;
-  cursor:pointer;
-  margin-bottom: 10px;
-}
-#mmd-admin .nav .navbtn.active{
-  border-color: rgba(212,175,55,.55);
-  background: rgba(212,175,55,.10);
-}
-#mmd-admin .nav .navbtn .en{
-  display:block;
-  font-weight: 900;
-  font-size: 12px;
-  letter-spacing:.3px;
-}
-#mmd-admin .nav .navbtn .th{
-  display:block;
-  margin-top: 2px;
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing:.2px;
-}
+  async function getMemberstackToken() {
+    // 1) cookie mode (_ms-mid)
+    const c = readCookie("_ms-mid");
+    if (looksLikeJwt(c)) return c;
 
-#mmd-admin .main{
-  border:1px solid var(--stroke);
-  background: rgba(255,255,255,.04);
-  border-radius: var(--radius2);
-  padding: 14px;
-  box-shadow: var(--shadow);
-  min-height: 520px;
-}
+    // 2) Memberstack DOM helper (if available; may return cookie string/object depending on version)
+    try {
+      const ms = window.$memberstackDom;
+      if (ms && typeof ms.getMemberCookie === "function") {
+        const out = await ms.getMemberCookie();
+        if (typeof out === "string") {
+          // sometimes returns cookie header-like string
+          const m = String(out).match(/_ms-mid=([^;]+)/);
+          if (m && looksLikeJwt(m[1])) return m[1];
+          if (looksLikeJwt(out)) return out;
+        } else if (out && typeof out === "object") {
+          // best-effort: some builds may expose { token } or { accessToken }
+          if (looksLikeJwt(out.token)) return out.token;
+          if (looksLikeJwt(out.accessToken)) return out.accessToken;
+        }
+      }
+    } catch (_) {}
 
-#mmd-admin .hero{
-  border:1px solid rgba(255,255,255,.10);
-  background: radial-gradient(1200px 400px at 20% 20%, rgba(212,175,55,.14), transparent 55%),
-              radial-gradient(900px 420px at 80% 0%, rgba(255,255,255,.10), transparent 55%),
-              rgba(0,0,0,.24);
-  border-radius: var(--radius2);
-  padding: 14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-}
+    // 3) localStorage mode
+    const ls = tryLocalStorageToken();
+    if (looksLikeJwt(ls)) return ls;
 
-#mmd-admin .hero .title{
-  font-size: 14px;
-  font-weight: 950;
-  letter
+    return "";
+  }
+
+  // ---------------------------
+  // Memberstack member + permission display (client-side hint only)
+  // (server still enforces permissions)
+  // ---------------------------
+  async function getCurrentMemberSafe() {
+    const ms = window.$memberstackDom;
+    if (!ms || typeof ms.getCurrentMember !== "function") return null;
+    try {
+      return await ms.getCurrentMember();
+    } catch {
+      return null;
+    }
+  }
+
+  function extractPermissions(member) {
+    // Memberstack often returns { data: { permissions: [] } }
+    const perms =
+      member?.data?.permissions ||
+      member?.permissions ||
+      [];
+    return Array.isArray(perms) ? perms.map(String) : [];
+  }
+
+  // ---------------------------
+  // API wrapper
+  // ---------------------------
+  async function apiFetch(path, opts) {
+    const base = getApiBase();
+    const token = await getMemberstackToken();
+    if (!token) throw new Error("Missing Memberstack token (enable cookie mode or ensure auth is loaded)");
+
+    const url = base + path;
+    const headers = Object.assign(
+      {
+        "content-type": "application/json",
+        "authorization": "Bearer " + token,
+      },
+      (opts && opts.headers) || {}
+    );
+
+    const res = await fetch(url, Object.assign({}, opts || {}, { headers }));
+    const ct = res.headers.get("content-type") || "";
+    const payload = ct.includes("application/json")
+      ? await res.json().catch(() => null)
+      : await res.text().catch(() => "");
+
+    if (!res.ok) {
+      const msg = typeof payload === "string"
