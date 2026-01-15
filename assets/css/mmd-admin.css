@@ -1,395 +1,152 @@
-/* =========================================
-   MMD Privé — Internal Admin CSS (v2026-LOCK-01)
-   Theme: Black × Gold • Luxury Internal
-========================================= */
+/* =========================================================
+   MMD Privé — Internal Admin CSS (LOCK v2026-01-15b)
+   Scope: #mmd-admin only
+   Updates:
+   - Hero background "Hiro" shows FULL image (contain, no crop)
+========================================================= */
 
-:root{
-  --mmd-bg: #070708;
-  --mmd-panel: rgba(255,255,255,.06);
-  --mmd-panel2: rgba(255,255,255,.08);
-  --mmd-line: rgba(255,255,255,.10);
-  --mmd-text: rgba(255,255,255,.92);
-  --mmd-muted: rgba(255,255,255,.62);
-  --mmd-dim: rgba(255,255,255,.45);
-  --mmd-gold: #D7B56D;
-  --mmd-gold2:#B9933C;
-  --mmd-bad: #ff5a6a;
-  --mmd-ok: #6ef3b5;
-
-  --mmd-radius-xl: 20px;
-  --mmd-radius-lg: 16px;
-  --mmd-radius-md: 12px;
-
-  --mmd-shadow: 0 14px 48px rgba(0,0,0,.55);
-  --mmd-shadow2: 0 10px 28px rgba(0,0,0,.45);
-
-  --mmd-font: "Outfit", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-}
-
-#mmd-admin, #mmd-admin * { box-sizing: border-box; }
 #mmd-admin{
-  font-family: var(--mmd-font);
-  color: var(--mmd-text);
-  background: radial-gradient(1200px 700px at 18% 10%, rgba(215,181,109,.18), transparent 55%),
-              radial-gradient(900px 520px at 82% 18%, rgba(185,147,60,.12), transparent 55%),
-              linear-gradient(180deg, #050506 0%, #0a0a0d 40%, #050506 100%);
-  min-height: 100vh;
-  padding: 22px;
+  --bg: #070707;
+  --panel: rgba(255,255,255,.06);
+  --panel2: rgba(255,255,255,.04);
+  --stroke: rgba(255,255,255,.12);
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.60);
+  --gold: #D4AF37;
+  --gold2:#B8891B;
+  --danger:#ff4d4d;
+  --ok:#35d07f;
+  --radius: 16px;
+  --radius2: 22px;
+  --shadow: 0 16px 40px rgba(0,0,0,.45);
+
+  color: var(--text);
+  font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 20% 10%, rgba(212,175,55,.10), transparent 60%),
+    radial-gradient(900px 480px at 85% 0%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(180deg, #050506, #070707 35%, #050506);
 }
+
+#mmd-admin *{ box-sizing: border-box; }
 
 #mmd-admin .wrap{
   max-width: 1280px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 18px;
+  padding: 18px 16px 28px;
 }
 
-/* Panels */
-#mmd-admin .panel{
-  background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.05));
-  border: 1px solid var(--mmd-line);
-  border-radius: var(--mmd-radius-xl);
-  box-shadow: var(--mmd-shadow2);
-  overflow: hidden;
-}
-
-#mmd-admin .panel .inner{ padding: 16px; }
-#mmd-admin .panel .inner.tight{ padding: 12px; }
-
+/* ============== TOPBAR ============== */
 #mmd-admin .topbar{
-  display:flex; align-items:center; justify-content:space-between;
-  gap: 12px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--mmd-line);
-  background: rgba(0,0,0,.18);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 14px 14px;
+  border:1px solid var(--stroke);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border-radius: var(--radius2);
+  box-shadow: var(--shadow);
 }
 
 #mmd-admin .brand{
-  display:flex; align-items:center; gap: 10px;
-  min-width: 0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width: 260px;
 }
 #mmd-admin .logo{
-  width: 40px; height: 40px;
-  border-radius: 12px;
-  border: 1px solid rgba(215,181,109,.40);
-  background: radial-gradient(circle at 30% 25%, rgba(215,181,109,.35), transparent 55%),
-              linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  display:flex; align-items:center; justify-content:center;
-  box-shadow: 0 10px 24px rgba(0,0,0,.45);
-  overflow:hidden;
-}
-#mmd-admin .logo img{ width:100%; height:100%; object-fit:cover; display:block; }
-#mmd-admin .brand h1{
-  font-size: 15px;
-  line-height: 1.1;
-  margin: 0;
-  letter-spacing: .2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-#mmd-admin .brand small{
-  display:block;
-  margin-top: 2px;
-  color: var(--mmd-muted);
-  font-size: 12px;
-  letter-spacing: .2px;
-}
-
-/* Pills */
-#mmd-admin .pillrow{ display:flex; align-items:center; gap: 8px; flex-wrap: wrap; }
-#mmd-admin .pill{
-  display:inline-flex; align-items:center; gap: 6px;
-  padding: 7px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--mmd-line);
-  background: rgba(255,255,255,.05);
-  font-size: 12px;
-  color: var(--mmd-muted);
-}
-#mmd-admin .pill b{ color: var(--mmd-text); font-weight: 700; }
-#mmd-admin .pill .dot{
-  width: 8px; height: 8px; border-radius: 99px;
-  background: rgba(255,255,255,.30);
-}
-#mmd-admin .pill.ok .dot{ background: var(--mmd-ok); }
-#mmd-admin .pill.bad .dot{ background: var(--mmd-bad); }
-
-/* Buttons */
-#mmd-admin .btnrow{ display:flex; align-items:center; gap: 10px; flex-wrap: wrap; }
-#mmd-admin button.btn{
-  appearance: none;
-  border: 1px solid var(--mmd-line);
-  background: rgba(255,255,255,.05);
-  color: var(--mmd-text);
+  width:44px; height:44px;
   border-radius: 14px;
-  padding: 10px 12px;
-  font-weight: 700;
-  font-size: 12px;
-  cursor: pointer;
-  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.35);
+  object-fit: contain;
 }
-#mmd-admin button.btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
-#mmd-admin button.btn:active{ transform: translateY(0px); }
-
-#mmd-admin button.btn.gold{
-  border-color: rgba(215,181,109,.55);
-  background: linear-gradient(180deg, rgba(215,181,109,.26), rgba(215,181,109,.14));
-  box-shadow: 0 10px 24px rgba(0,0,0,.35);
-}
-#mmd-admin button.btn.ghost{
-  background: transparent;
-}
-#mmd-admin button.btn.danger{
-  border-color: rgba(255,90,106,.45);
-  background: linear-gradient(180deg, rgba(255,90,106,.18), rgba(255,90,106,.08));
-}
-
-/* Dual label (EN top, TH bottom) */
-#mmd-admin .dual-label{
-  display:flex;
-  flex-direction: column;
-  line-height: 1.05;
-  gap: 4px;
-  text-align: left;
-}
-#mmd-admin .dual-label .en{
-  font-size: 11px;
-  letter-spacing: .6px;
-  text-transform: uppercase;
-  color: rgba(215,181,109,.95);
-  font-weight: 800;
-}
-#mmd-admin .dual-label .th{
-  font-size: 13px;
-  color: var(--mmd-text);
-  font-weight: 800;
-}
-#mmd-admin .dual-label .sub{
-  font-size: 11px;
-  color: var(--mmd-muted);
-  font-weight: 600;
-}
-
-/* Sidebar */
-#mmd-admin .sidebar{
-  display:flex;
-  flex-direction: column;
-  gap: 14px;
-}
-#mmd-admin .hero{
-  position: relative;
-  padding: 16px;
-  border-bottom: 1px solid var(--mmd-line);
-  background:
-    radial-gradient(700px 340px at 20% 18%, rgba(215,181,109,.18), transparent 60%),
-    radial-gradient(600px 280px at 80% 10%, rgba(185,147,60,.12), transparent 60%),
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-}
-#mmd-admin .hero h2{
-  margin: 0 0 6px 0;
-  font-size: 14px;
-  letter-spacing: .3px;
-}
-#mmd-admin .hero p{
-  margin: 0 0 12px 0;
-  color: var(--mmd-muted);
-  font-size: 12px;
-}
-#mmd-admin .faces{
-  display:grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-#mmd-admin .face{
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.10);
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(215,181,109,.22), transparent 55%),
-    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  box-shadow: 0 12px 26px rgba(0,0,0,.45);
-  position: relative;
-}
-#mmd-admin .face img{
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display:block;
-  filter: contrast(1.02) saturate(1.03);
-}
-#mmd-admin .face .tag{
-  position:absolute;
-  left: 8px; bottom: 8px;
-  padding: 6px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.38);
-  font-size: 11px;
-  color: rgba(255,255,255,.85);
-  backdrop-filter: blur(6px);
-}
-
-/* Nav */
-#mmd-admin .nav{
-  padding: 12px;
-  display:flex;
-  flex-direction: column;
-  gap: 10px;
-}
-#mmd-admin .nav button.navbtn{
-  width: 100%;
-  text-align: left;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  padding: 12px 12px;
-  cursor: pointer;
-  transition: transform .12s ease, background .12s ease, border-color .12s ease;
-}
-#mmd-admin .nav button.navbtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); }
-#mmd-admin .nav button.navbtn.active{
-  border-color: rgba(215,181,109,.45);
-  background: linear-gradient(180deg, rgba(215,181,109,.14), rgba(255,255,255,.04));
-}
-
-#mmd-admin .nav .hint{
-  color: var(--mmd-dim);
-  font-size: 11px;
-  padding: 0 4px;
-}
-
-/* Main area */
-#mmd-admin .main{
-  min-width: 0;
-  display:flex;
-  flex-direction: column;
-  gap: 18px;
-}
-#mmd-admin .main .headerline{
-  display:flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--mmd-line);
-  background: rgba(0,0,0,.18);
-}
-#mmd-admin .titleblock{ min-width:0; }
-#mmd-admin .titleblock h3{
+#mmd-admin .brand h1{
   margin:0;
   font-size: 14px;
-  letter-spacing: .2px;
-}
-#mmd-admin .titleblock p{
-  margin:4px 0 0 0;
-  color: var(--mmd-muted);
-  font-size: 12px;
-  white-space: nowrap;
-  overflow:hidden;
-  text-overflow: ellipsis;
-}
-
-/* Content */
-#mmd-admin .content{ padding: 16px; }
-#mmd-admin .grid-kpi{
-  display:grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-#mmd-admin .kpi{
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: 16px;
-  background: rgba(255,255,255,.05);
-  padding: 14px;
-}
-#mmd-admin .kpi .k{
-  color: var(--mmd-muted);
-  font-size: 11px;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-  font-weight: 800;
-}
-#mmd-admin .kpi .v{
-  margin-top: 8px;
-  font-size: 22px;
+  letter-spacing:.4px;
   font-weight: 900;
 }
-#mmd-admin .kpi .s{
-  margin-top: 6px;
+#mmd-admin .brand p{
+  margin: 2px 0 0;
   font-size: 12px;
-  color: var(--mmd-muted);
+  color: var(--muted);
 }
 
-/* Forms */
-#mmd-admin .row{
+#mmd-admin .right{
   display:flex;
-  gap: 10px;
+  align-items:center;
+  gap:10px;
   flex-wrap: wrap;
-  align-items: center;
+  justify-content:flex-end;
 }
-#mmd-admin input.input, #mmd-admin select.select, #mmd-admin textarea.textarea{
-  width: 100%;
-  max-width: 520px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
+
+#mmd-admin .pill{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  padding: 8px 10px;
+  border:1px solid var(--stroke);
   background: rgba(0,0,0,.22);
-  color: var(--mmd-text);
+  border-radius: 999px;
+}
+#mmd-admin .pill .k{ font-size:11px; color: var(--muted); }
+#mmd-admin .pill .v{ font-size:12px; font-weight:900; }
+
+#mmd-admin .btn{
+  appearance:none;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
   padding: 10px 12px;
-  outline: none;
-  font-size: 13px;
-}
-#mmd-admin input.input::placeholder{ color: rgba(255,255,255,.35); }
-
-/* Table */
-#mmd-admin .table{
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 16px;
-  overflow:hidden;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.04);
-}
-#mmd-admin .table th, #mmd-admin .table td{
-  padding: 12px 12px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  vertical-align: top;
-  font-size: 12px;
-}
-#mmd-admin .table th{
-  color: rgba(215,181,109,.95);
-  text-transform: uppercase;
-  letter-spacing: .5px;
+  border-radius: 999px;
   font-weight: 900;
-  font-size: 11px;
+  font-size: 12px;
+  cursor:pointer;
+}
+#mmd-admin .btn:hover{ background: rgba(255,255,255,.10); }
+
+#mmd-admin .btn.gold{
+  border-color: rgba(212,175,55,.55);
+  background: linear-gradient(180deg, rgba(212,175,55,.22), rgba(184,137,27,.12));
+}
+#mmd-admin .btn.gold:hover{
+  background: linear-gradient(180deg, rgba(212,175,55,.28), rgba(184,137,27,.18));
+}
+
+#mmd-admin .btn.danger{
+  border-color: rgba(255,77,77,.55);
+  background: rgba(255,77,77,.12);
+}
+
+/* ============== LAYOUT ============== */
+#mmd-admin .grid{
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+/* ============== NAV ============== */
+#mmd-admin .nav{
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.04);
+  border-radius: var(--radius2);
+  padding: 10px;
+  box-shadow: var(--shadow);
+}
+
+#mmd-admin .nav .navbtn{
+  width:100%;
+  text-align:left;
+  border:1px solid rgba(255,255,255,.10);
   background: rgba(0,0,0,.18);
-}
-#mmd-admin .table tr:last-child td{ border-bottom: none; }
-
-#mmd-admin .muted{ color: var(--mmd-muted); }
-#mmd-admin .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
-
-/* Messages */
-#mmd-admin .msg{
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.12);
   padding: 12px 12px;
-  background: rgba(0,0,0,.20);
+  cursor:pointer;
+  margin-bottom: 10px;
 }
-#mmd-admin .msg.bad{ border-color: rgba(255,90,106,.45); background: rgba(255,90,106,.08); }
-#mmd-admin .msg.ok{ border-color: rgba(110,243,181,.35); background: rgba(110,243,181,.06); }
-#mmd-admin .msg .h{ font-weight: 900; margin-bottom: 6px; }
-#mmd-admin .msg .b{ color: var(--mmd-muted); font-size: 12px; }
-
-/* Responsive */
-@media (max-width: 980px){
-  #mmd-admin .wrap{ grid-template-columns: 1fr; }
-  #mmd-admin .grid-kpi{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-}
-@media (max-width: 520px){
-  #mmd-admin{ padding: 14px; }
-  #mmd-admin .grid-kpi{ grid-template-columns: 1fr; }
-  #mmd-admin .faces{ grid-template-columns: repeat(2, 1fr); }
-}
+#mmd-admin .nav .navbtn.active{
+  border-color: rgba(212,175,55,.55);
+  background: rgba(212,175,55,.10);
