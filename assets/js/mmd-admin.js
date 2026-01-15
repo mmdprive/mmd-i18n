@@ -229,7 +229,7 @@
       }
     });
   }
-
+   
   function bindSettingsInit(){
     const elApiBase = $("#api-base");
     const elHeroSrc = $("#hero-src");
