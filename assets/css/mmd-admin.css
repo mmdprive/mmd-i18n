@@ -1,461 +1,103 @@
-/* =========================================
-   MMD • INTERNAL ADMIN — CSS (LOCK 2026-01-15)
-   Scope: #mmd-admin only
-   Hero: Luxury Glass + Soft Shadow
-========================================= */
-
 #mmd-admin{
   --bg:#070707;
-  --panel:#0d0d0f;
-  --panel2:#111114;
-  --line:rgba(255,255,255,.10);
-  --text:rgba(255,255,255,.92);
-  --muted:rgba(255,255,255,.64);
-
-  --gold1:#f6d365;
-  --gold2:#fda085;
-
-  --good:#35d07f;
-  --bad:#ff5a6a;
-
-  --r1:14px;
-  --r2:18px;
-  --r3:24px;
-
-  font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --panel:rgba(20,20,20,.6);
+  --glass:rgba(255,255,255,.08);
+  --line:rgba(255,255,255,.12);
+  --text:#fff;
+  --gold:#f6d365;
   color:var(--text);
+  font-family:Outfit,system-ui;
 }
 
-#mmd-admin *{ box-sizing:border-box; }
-#mmd-admin .muted{ color:var(--muted); }
-#mmd-admin .en{ display:block; }
-#mmd-admin .th{ display:block; }
-
-#mmd-admin .wrap{
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 18px 18px 42px;
-}
-
-/* TOPBAR */
-#mmd-admin .topbar{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:16px;
+.admin-top{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:20px;
   border:1px solid var(--line);
-  border-radius: var(--r2);
-  padding: 14px 14px;
-  background:
-    radial-gradient(1200px 420px at 20% 0%, rgba(246,211,101,.18), transparent 60%),
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-}
-
-#mmd-admin .brand{
-  display:flex;
-  align-items:flex-start;
-  gap:12px;
-  min-width: 260px;
-}
-
-#mmd-admin .brand-logo{
-  width:44px;
-  height:auto;
-  display:block;
-  background:transparent !important;
-  border:0 !important;
-  box-shadow:none !important;
-  outline:none !important;
-}
-
-#mmd-admin .brand-title{
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: .2px;
-  line-height: 1.15;
-  margin: 0;
-}
-
-#mmd-admin .brand-title .en{
-  background: linear-gradient(180deg, var(--gold1), var(--gold2));
-  -webkit-background-clip:text;
-  background-clip:text;
-  color: transparent;
-}
-
-#mmd-admin .brand-title .th{
-  margin-top: 3px;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: rgba(255,255,255,.86);
-}
-
-#mmd-admin .brand-sub{
-  margin-top: 7px;
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-#mmd-admin .meta{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-#mmd-admin .pill{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border:1px solid var(--line);
-  background: rgba(0,0,0,.25);
-  font-size: 12px;
-  white-space:nowrap;
-}
-
-#mmd-admin .dot{
-  width:8px; height:8px; border-radius:999px;
-  background: rgba(255,255,255,.35);
-}
-#mmd-admin .pill.good .dot{ background: var(--good); }
-#mmd-admin .pill.bad  .dot{ background: var(--bad); }
-
-#mmd-admin .actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-/* BUTTONS */
-#mmd-admin .btn{
-  appearance:none;
-  border:1px solid var(--line);
-  background: rgba(0,0,0,.25);
-  color: var(--text);
-  padding: 10px 12px;
-  border-radius: 12px;
-  cursor:pointer;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing:.15px;
-}
-#mmd-admin .btn:hover{ border-color: rgba(255,255,255,.18); }
-#mmd-admin .btn:disabled{ opacity:.55; cursor:not-allowed; }
-
-#mmd-admin .btn.gold{
-  border-color: rgba(246,211,101,.55);
-  background: linear-gradient(180deg, rgba(246,211,101,.20), rgba(253,160,133,.12));
-}
-#mmd-admin .btn.ghost{
-  background: rgba(255,255,255,.03);
-}
-
-/* HERO (Luxury Glass + Soft Shadow) */
-#mmd-admin .hero{
-  margin-top: 14px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius: var(--r3);
-  overflow:hidden;
-  background:
-    radial-gradient(900px 360px at 10% 0%, rgba(246,211,101,.16), transparent 55%),
-    radial-gradient(900px 360px at 90% 30%, rgba(253,160,133,.10), transparent 55%),
-    rgba(255,255,255,.02);
-}
-
-#mmd-admin .hero-glass{
-  position:relative;
-}
-#mmd-admin .hero-glass::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(0,0,0,.30));
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  opacity:.65;
-  pointer-events:none;
-}
-#mmd-admin .hero-glass::after{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius: var(--r3);
-  pointer-events:none;
-  background: linear-gradient(135deg,
-    rgba(246,211,101,.28),
-    rgba(255,255,255,.10),
-    rgba(253,160,133,.18)
-  );
-  opacity:.35;
-  filter: blur(12px);
-}
-
-#mmd-admin .hero-inner{
-  position:relative;
-  display:flex;
-  align-items:stretch;
-  justify-content:space-between;
-  gap:16px;
-  padding: 18px;
-}
-
-#mmd-admin .hero-copy{
-  flex: 1 1 520px;
-  min-width: 280px;
-}
-
-#mmd-admin .hero-title{
-  margin: 0 0 8px;
-  font-size: 40px;
-  font-weight: 950;
-  letter-spacing: .2px;
-  line-height: 1.06;
-}
-#mmd-admin .hero-title .en{
-  background: linear-gradient(180deg, var(--gold1), var(--gold2));
-  -webkit-background-clip:text;
-  background-clip:text;
-  color: transparent;
-}
-#mmd-admin .hero-title .th{
-  margin-top: 6px;
-  font-size: 18px;
-  font-weight: 800;
-  color: rgba(255,255,255,.90);
-}
-
-#mmd-admin .hero-sub{
-  margin: 0 0 12px;
-  color: rgba(255,255,255,.84);
-  font-family: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  line-height: 1.5;
-  font-size: 14px;
-}
-#mmd-admin .hero-sub .th{ margin-top: 4px; color: rgba(255,255,255,.72); }
-
-#mmd-admin .hero-kpis{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top: 12px;
-}
-#mmd-admin .kpi{
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.22);
-  border-radius: 14px;
-  padding: 10px 12px;
-  min-width: 170px;
-}
-#mmd-admin .kpi b{
-  display:block;
-  margin-top: 4px;
-  font-size: 18px;
-  font-weight: 900;
-}
-#mmd-admin .hero-note{
-  margin-top: 12px;
-  font-size: 12px;
-}
-
-/* HERO FRAME */
-#mmd-admin .hero-media{
-  flex: 0 0 420px;
-  max-width: 480px;
-  width: 100%;
-  display:flex;
-  align-items:stretch;
-}
-
-#mmd-admin .hero-frame{
-  width:100%;
-  border-radius: 22px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.24);
-  overflow:hidden;
-
-  /* Soft cinematic shadow */
-  box-shadow:
-    0 26px 80px rgba(0,0,0,.68),
-    0 10px 30px rgba(0,0,0,.40),
-    inset 0 0 0 1px rgba(255,255,255,.06);
-  padding: 12px;
-
-  /* subtle glass */
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
-#mmd-admin .hero-img{
-  display:block;
-  width:100%;
-  height: 360px;
+.brand{display:flex;gap:14px;align-items:center}
+.brand .logo{height:42px}
+.brand-text small{opacity:.7}
 
-  /* IMPORTANT per request */
-  object-fit: contain;
-  object-position: center;
-
-  border-radius: 14px;
-  background: rgba(0,0,0,.25);
-}
-
-/* GRID */
-#mmd-admin .grid{
-  display:grid;
-  grid-template-columns: 280px 1fr;
-  gap: 14px;
-  margin-top: 14px;
-}
-
-/* SIDEBAR */
-#mmd-admin .sidebar{
+.pill{
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(0,0,0,.4);
   border:1px solid var(--line);
-  border-radius: var(--r2);
-  background: rgba(255,255,255,.03);
+}
+
+.btn.gold{
+  background:linear-gradient(180deg,#f6d365,#fda085);
+  color:#000;
+  border:none;
+  border-radius:999px;
+  padding:8px 16px;
+  font-weight:700;
+}
+
+.hero-glass{
+  margin-top:18px;
+  padding:22px;
+  border-radius:26px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 40px 80px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+.hero-frame{
+  border-radius:20px;
   overflow:hidden;
 }
-#mmd-admin .sidehead{
-  padding: 14px 14px;
-  border-bottom:1px solid var(--line);
-  background: rgba(0,0,0,.22);
-}
-#mmd-admin .sidehead b{
+
+.hero-img{
+  width:100%;
+  height:420px;
+  object-fit:contain;
+  object-position:center;
   display:block;
-  font-size: 13px;
-  font-weight: 900;
+  background:rgba(0,0,0,.4);
 }
-#mmd-admin .nav{
+
+.admin-layout{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:240px 1fr;
+  gap:14px;
+}
+
+.sidebar{
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.35);
+  padding:12px;
   display:flex;
   flex-direction:column;
-  padding: 10px;
-  gap: 8px;
+  gap:8px;
 }
-#mmd-admin .nav-btn{
-  width:100%;
-  text-align:left;
-  padding: 12px 12px;
-  border-radius: 14px;
+
+.nav-btn{
+  background:transparent;
   border:1px solid transparent;
-  background: rgba(0,0,0,.18);
+  color:#fff;
+  padding:10px 12px;
+  border-radius:12px;
   cursor:pointer;
-  color:var(--text);
-  display:flex;
-  flex-direction:column;
-  gap:4px;
 }
-#mmd-admin .nav-btn small{ color:var(--muted); font-size: 12px; }
-#mmd-admin .nav-btn:hover{ border-color: rgba(255,255,255,.12); }
-#mmd-admin .nav-btn.active{
-  border-color: rgba(246,211,101,.55);
-  background: linear-gradient(180deg, rgba(246,211,101,.12), rgba(0,0,0,.18));
+.nav-btn.active{
+  border-color:var(--gold);
+  background:rgba(246,211,101,.15);
 }
 
-/* MAIN */
-#mmd-admin .main{
+.content{
+  border-radius:18px;
   border:1px solid var(--line);
-  border-radius: var(--r2);
-  background: rgba(255,255,255,.03);
-  overflow:hidden;
-}
-#mmd-admin .view{
-  padding: 16px 16px 18px;
-  display:none;
-}
-#mmd-admin .view.active{ display:block; }
-
-#mmd-admin .card{
-  border:1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(0,0,0,.22);
-  padding: 14px;
-}
-#mmd-admin .card-head h2{
-  margin: 0 0 6px;
-  font-size: 16px;
-  font-weight: 900;
-}
-#mmd-admin .card-head p{ margin:0; }
-
-/* PANELS + FORM */
-#mmd-admin .grid-2{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 12px;
-}
-#mmd-admin .panel{
-  border:1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(0,0,0,.22);
-  padding: 12px;
-}
-#mmd-admin .panel-title{
-  display:block;
-  font-size: 13px;
-  font-weight: 900;
-  margin-bottom: 8px;
-}
-#mmd-admin .panel-body{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-#mmd-admin .input{
-  width:100%;
-  border:1px solid var(--line);
-  background: rgba(0,0,0,.25);
-  color: var(--text);
-  padding: 11px 12px;
-  border-radius: 12px;
-  outline: none;
-  font-size: 13px;
-}
-#mmd-admin .input:focus{
-  border-color: rgba(246,211,101,.55);
-  box-shadow: 0 0 0 3px rgba(246,211,101,.10);
-}
-#mmd-admin .row{
-  display:grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items:center;
-  margin-top: 12px;
-}
-#mmd-admin pre.codebox{
-  margin: 10px 0 0;
-  border:1px solid var(--line);
-  border-radius: 12px;
-  background: rgba(0,0,0,.28);
-  padding: 10px 12px;
-  color: rgba(255,255,255,.86);
-  font-size: 12px;
-  line-height: 1.45;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-#mmd-admin .settings-grid{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 12px;
-}
-#mmd-admin .actions-row{ display:flex; justify-content:flex-end; }
-
-/* Responsive */
-@media (max-width: 980px){
-  #mmd-admin .topbar{ flex-direction:column; }
-  #mmd-admin .meta{ justify-content:flex-start; }
-  #mmd-admin .hero-inner{ flex-direction:column; }
-  #mmd-admin .hero-media{ max-width: 100%; }
-  #mmd-admin .hero-img{ height: 320px; }
-  #mmd-admin .grid{ grid-template-columns: 1fr; }
-  #mmd-admin .grid-2{ grid-template-columns: 1fr; }
-}
-@media (max-width: 520px){
-  #mmd-admin .hero-title{ font-size: 32px; }
-  #mmd-admin .kpi{ min-width: 140px; }
+  background:rgba(0,0,0,.35);
+  padding:18px;
 }
