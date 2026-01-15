@@ -1,8 +1,7 @@
 /* =========================================================
-   MMD Privé — Internal Admin CSS (LOCK v2026-01-15b)
+   MMD Privé — Internal Admin CSS (LOCK v2026-01-15c)
    Scope: #mmd-admin only
-   Updates:
-   - Hero background "Hiro" shows FULL image (contain, no crop)
+   Key: Hiro is shown as FULL image (contain, no crop)
 ========================================================= */
 
 #mmd-admin{
@@ -29,32 +28,18 @@
 }
 
 #mmd-admin *{ box-sizing: border-box; }
+#mmd-admin .wrap{ max-width: 1280px; margin: 0 auto; padding: 18px 16px 28px; }
 
-#mmd-admin .wrap{
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 18px 16px 28px;
-}
-
-/* ============== TOPBAR ============== */
+/* TOPBAR */
 #mmd-admin .topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
   padding: 14px 14px;
   border:1px solid var(--stroke);
   background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
   border-radius: var(--radius2);
   box-shadow: var(--shadow);
 }
-
-#mmd-admin .brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width: 260px;
-}
+#mmd-admin .brand{ display:flex; align-items:center; gap:12px; min-width: 260px; }
 #mmd-admin .logo{
   width:44px; height:44px;
   border-radius: 14px;
@@ -62,37 +47,20 @@
   background: rgba(0,0,0,.35);
   object-fit: contain;
 }
-#mmd-admin .brand h1{
-  margin:0;
-  font-size: 14px;
-  letter-spacing:.4px;
-  font-weight: 900;
-}
-#mmd-admin .brand p{
-  margin: 2px 0 0;
-  font-size: 12px;
-  color: var(--muted);
-}
+#mmd-admin .brand h1{ margin:0; font-size: 14px; letter-spacing:.4px; font-weight: 950; }
+#mmd-admin .brand p{ margin: 2px 0 0; font-size: 12px; color: var(--muted); }
 
-#mmd-admin .right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap: wrap;
-  justify-content:flex-end;
-}
+#mmd-admin .right{ display:flex; align-items:center; gap:10px; flex-wrap: wrap; justify-content:flex-end; }
 
 #mmd-admin .pill{
-  display:flex;
-  align-items:baseline;
-  gap:8px;
+  display:flex; align-items:baseline; gap:8px;
   padding: 8px 10px;
   border:1px solid var(--stroke);
   background: rgba(0,0,0,.22);
   border-radius: 999px;
 }
 #mmd-admin .pill .k{ font-size:11px; color: var(--muted); }
-#mmd-admin .pill .v{ font-size:12px; font-weight:900; }
+#mmd-admin .pill .v{ font-size:12px; font-weight:950; }
 
 #mmd-admin .btn{
   appearance:none;
@@ -101,12 +69,11 @@
   color: var(--text);
   padding: 10px 12px;
   border-radius: 999px;
-  font-weight: 900;
+  font-weight: 950;
   font-size: 12px;
   cursor:pointer;
 }
 #mmd-admin .btn:hover{ background: rgba(255,255,255,.10); }
-
 #mmd-admin .btn.gold{
   border-color: rgba(212,175,55,.55);
   background: linear-gradient(180deg, rgba(212,175,55,.22), rgba(184,137,27,.12));
@@ -114,13 +81,12 @@
 #mmd-admin .btn.gold:hover{
   background: linear-gradient(180deg, rgba(212,175,55,.28), rgba(184,137,27,.18));
 }
-
 #mmd-admin .btn.danger{
   border-color: rgba(255,77,77,.55);
   background: rgba(255,77,77,.12);
 }
 
-/* ============== LAYOUT ============== */
+/* LAYOUT */
 #mmd-admin .grid{
   display:grid;
   grid-template-columns: 260px 1fr;
@@ -128,7 +94,7 @@
   margin-top: 14px;
 }
 
-/* ============== NAV ============== */
+/* NAV */
 #mmd-admin .nav{
   border:1px solid var(--stroke);
   background: rgba(255,255,255,.04);
@@ -136,7 +102,6 @@
   padding: 10px;
   box-shadow: var(--shadow);
 }
-
 #mmd-admin .nav .navbtn{
   width:100%;
   text-align:left;
@@ -150,3 +115,178 @@
 #mmd-admin .nav .navbtn.active{
   border-color: rgba(212,175,55,.55);
   background: rgba(212,175,55,.10);
+}
+#mmd-admin .nav .navbtn .en{
+  display:block;
+  font-weight: 950;
+  font-size: 12px;
+  letter-spacing:.3px;
+  color: rgba(212,175,55,.95);
+  text-transform: uppercase;
+}
+#mmd-admin .nav .navbtn .th{
+  display:block;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--text);
+  letter-spacing:.2px;
+  font-weight: 950;
+}
+#mmd-admin .nav .hint{
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+/* MAIN */
+#mmd-admin .main{
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.04);
+  border-radius: var(--radius2);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  min-height: 520px;
+}
+
+/* HERO */
+#mmd-admin .hero{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius: var(--radius2);
+  overflow: hidden;
+  background: rgba(0,0,0,.18);
+  margin-bottom: 14px;
+}
+#mmd-admin .hero .hero-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  min-height: 260px;
+  background:
+    radial-gradient(1200px 520px at 20% 10%, rgba(212,175,55,.16), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.35));
+}
+
+#mmd-admin .hero .hero-copy{
+  flex: 1 1 460px;
+  min-width: 260px;
+}
+#mmd-admin .hero .title{
+  font-size: 14px;
+  font-weight: 950;
+  letter-spacing:.3px;
+  margin:0;
+}
+#mmd-admin .hero .sub{
+  margin: 6px 0 0;
+  color: rgba(255,255,255,.80);
+  font-size: 12px;
+  line-height: 1.5;
+}
+#mmd-admin .hero .meta{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+#mmd-admin .hero .badge{
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.30);
+  border-radius: 999px;
+  padding: 9px 10px;
+}
+#mmd-admin .hero .badge .k{ font-size: 11px; color: rgba(255,255,255,.72); }
+#mmd-admin .hero .badge .v{ font-size: 12px; font-weight: 950; }
+
+/* HIRO FULL IMAGE (NOT CROP) */
+#mmd-admin .hiro-figure{
+  margin: 0;
+  flex: 0 0 380px;
+  max-width: 520px;
+  width: 100%;
+  border-radius: var(--radius2);
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.30);
+  box-shadow: 0 18px 44px rgba(0,0,0,.45);
+  overflow: hidden;
+}
+#mmd-admin .hiro-img{
+  display: block;
+  width: 100%;
+  height: 320px;           /* ปรับความสูงได้เพื่อ “เห็นเต็ม” */
+  object-fit: contain;     /* สำคัญ: รูปเต็ม ไม่ครอป */
+  object-position: center;
+  background: rgba(0,0,0,.55);
+}
+#mmd-admin .hiro-cap{
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .2px;
+  color: rgba(255,255,255,.78);
+  border-top: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.28);
+}
+
+/* CONTENT */
+#mmd-admin .cards{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+#mmd-admin .card{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+#mmd-admin .card .k{ color: var(--muted); font-size: 11px; }
+#mmd-admin .card .v{ font-size: 20px; font-weight: 950; margin-top: 6px; }
+
+#mmd-admin .row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top: 12px;
+}
+#mmd-admin .input, #mmd-admin select, #mmd-admin textarea{
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.25);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 12px;
+  outline:none;
+}
+#mmd-admin textarea{ min-height: 90px; width:100%; resize: vertical; }
+
+#mmd-admin .hint{
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+#mmd-admin .status{
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+#mmd-admin .status.ok{ color: rgba(53,208,127,.92); }
+#mmd-admin .status.bad{ color: rgba(255,77,77,.92); }
+
+#mmd-admin .view{ display:none; }
+#mmd-admin .view.active{ display:block; }
+
+@media (max-width: 980px){
+  #mmd-admin .grid{ grid-template-columns: 1fr; }
+  #mmd-admin .cards{ grid-template-columns: 1fr; }
+  #mmd-admin .hero .hero-inner{ flex-direction: column; align-items: stretch; }
+  #mmd-admin .hiro-figure{ flex: none; max-width: 100%; }
+  #mmd-admin .hiro-img{ height: 360px; }
+}
