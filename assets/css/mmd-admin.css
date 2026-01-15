@@ -1,292 +1,451 @@
-/* =========================================================
-   MMD Privé — Internal Admin CSS (LOCK v2026-01-15c)
-   Scope: #mmd-admin only
-   Key: Hiro is shown as FULL image (contain, no crop)
-========================================================= */
+/* =========================================
+   MMD • INTERNAL ADMIN — CSS (LOCK v2026-01-15)
+   - Clean layout, readable, luxury dark
+   - EN top / TH bottom supported via .en .th
+========================================= */
 
 #mmd-admin{
-  --bg: #070707;
-  --panel: rgba(255,255,255,.06);
-  --panel2: rgba(255,255,255,.04);
-  --stroke: rgba(255,255,255,.12);
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.60);
-  --gold: #D4AF37;
-  --gold2:#B8891B;
-  --danger:#ff4d4d;
-  --ok:#35d07f;
-  --radius: 16px;
-  --radius2: 22px;
-  --shadow: 0 16px 40px rgba(0,0,0,.45);
+  --bg:#070707;
+  --panel:#0d0d0f;
+  --panel2:#111114;
+  --line:rgba(255,255,255,.10);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.64);
 
-  color: var(--text);
-  font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background:
-    radial-gradient(1200px 600px at 20% 10%, rgba(212,175,55,.10), transparent 60%),
-    radial-gradient(900px 480px at 85% 0%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(180deg, #050506, #070707 35%, #050506);
+  --gold1:#f6d365;
+  --gold2:#fda085;
+
+  --good:#35d07f;
+  --bad:#ff5a6a;
+
+  --r1:14px;
+  --r2:18px;
+
+  font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
 }
 
-#mmd-admin *{ box-sizing: border-box; }
-#mmd-admin .wrap{ max-width: 1280px; margin: 0 auto; padding: 18px 16px 28px; }
+#mmd-admin *{ box-sizing:border-box; }
+
+#mmd-admin .muted{ color:var(--muted); }
+
+#mmd-admin .wrap{
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 18px 18px 42px;
+}
 
 /* TOPBAR */
 #mmd-admin .topbar{
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(1200px 380px at 20% 0%, rgba(246,211,101,.18), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border-radius: var(--r2);
   padding: 14px 14px;
-  border:1px solid var(--stroke);
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  border-radius: var(--radius2);
-  box-shadow: var(--shadow);
 }
-#mmd-admin .brand{ display:flex; align-items:center; gap:12px; min-width: 260px; }
-#mmd-admin .logo{
-  width:44px; height:44px;
-  border-radius: 14px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.35);
-  object-fit: contain;
-}
-#mmd-admin .brand h1{ margin:0; font-size: 14px; letter-spacing:.4px; font-weight: 950; }
-#mmd-admin .brand p{ margin: 2px 0 0; font-size: 12px; color: var(--muted); }
 
-#mmd-admin .right{ display:flex; align-items:center; gap:10px; flex-wrap: wrap; justify-content:flex-end; }
+#mmd-admin .brand{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  min-width: 260px;
+}
+
+#mmd-admin .brand-logo{
+  width:44px;
+  height:auto;
+  display:block;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  outline:none !important;
+}
+
+#mmd-admin .brand-title .line{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+#mmd-admin .brand-title b{
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: .2px;
+}
+
+#mmd-admin .brand-title .en{
+  background: linear-gradient(180deg, var(--gold1), var(--gold2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+}
+
+#mmd-admin .brand-title .th{
+  color: rgba(255,255,255,.85);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+#mmd-admin .brand-title .subline{
+  margin-top: 6px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+#mmd-admin .topbar-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+#mmd-admin .pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
 
 #mmd-admin .pill{
-  display:flex; align-items:baseline; gap:8px;
-  padding: 8px 10px;
-  border:1px solid var(--stroke);
-  background: rgba(0,0,0,.22);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 8px 12px;
   border-radius: 999px;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.25);
+  font-size: 12px;
+  white-space:nowrap;
 }
-#mmd-admin .pill .k{ font-size:11px; color: var(--muted); }
-#mmd-admin .pill .v{ font-size:12px; font-weight:950; }
 
+#mmd-admin .pill .k{ color:var(--muted); }
+#mmd-admin .pill .v{ font-size: 12.5px; }
+
+#mmd-admin .dot{
+  width:8px; height:8px; border-radius:999px;
+  background: rgba(255,255,255,.35);
+}
+
+#mmd-admin .pill.good .dot{ background: var(--good); }
+#mmd-admin .pill.bad  .dot{ background: var(--bad); }
+
+#mmd-admin .actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* BUTTONS */
 #mmd-admin .btn{
   appearance:none;
-  border:1px solid var(--stroke);
-  background: rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.25);
   color: var(--text);
   padding: 10px 12px;
-  border-radius: 999px;
-  font-weight: 950;
-  font-size: 12px;
+  border-radius: 12px;
   cursor:pointer;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing:.15px;
 }
-#mmd-admin .btn:hover{ background: rgba(255,255,255,.10); }
+#mmd-admin .btn:hover{ border-color: rgba(255,255,255,.18); }
+#mmd-admin .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
 #mmd-admin .btn.gold{
-  border-color: rgba(212,175,55,.55);
-  background: linear-gradient(180deg, rgba(212,175,55,.22), rgba(184,137,27,.12));
+  border-color: rgba(246,211,101,.55);
+  background: linear-gradient(180deg, rgba(246,211,101,.20), rgba(253,160,133,.12));
 }
-#mmd-admin .btn.gold:hover{
-  background: linear-gradient(180deg, rgba(212,175,55,.28), rgba(184,137,27,.18));
-}
-#mmd-admin .btn.danger{
-  border-color: rgba(255,77,77,.55);
-  background: rgba(255,77,77,.12);
-}
-
-/* LAYOUT */
-#mmd-admin .grid{
-  display:grid;
-  grid-template-columns: 260px 1fr;
-  gap: 14px;
-  margin-top: 14px;
-}
-
-/* NAV */
-#mmd-admin .nav{
-  border:1px solid var(--stroke);
-  background: rgba(255,255,255,.04);
-  border-radius: var(--radius2);
-  padding: 10px;
-  box-shadow: var(--shadow);
-}
-#mmd-admin .nav .navbtn{
-  width:100%;
-  text-align:left;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  border-radius: 16px;
-  padding: 12px 12px;
-  cursor:pointer;
-  margin-bottom: 10px;
-}
-#mmd-admin .nav .navbtn.active{
-  border-color: rgba(212,175,55,.55);
-  background: rgba(212,175,55,.10);
-}
-#mmd-admin .nav .navbtn .en{
-  display:block;
-  font-weight: 950;
-  font-size: 12px;
-  letter-spacing:.3px;
-  color: rgba(212,175,55,.95);
-  text-transform: uppercase;
-}
-#mmd-admin .nav .navbtn .th{
-  display:block;
-  margin-top: 3px;
-  font-size: 12px;
-  color: var(--text);
-  letter-spacing:.2px;
-  font-weight: 950;
-}
-#mmd-admin .nav .hint{
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.5;
-  margin-top: 8px;
-}
-
-/* MAIN */
-#mmd-admin .main{
-  border:1px solid var(--stroke);
-  background: rgba(255,255,255,.04);
-  border-radius: var(--radius2);
-  padding: 14px;
-  box-shadow: var(--shadow);
-  min-height: 520px;
+#mmd-admin .btn.ghost{
+  background: rgba(255,255,255,.03);
 }
 
 /* HERO */
 #mmd-admin .hero{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius: var(--radius2);
-  overflow: hidden;
-  background: rgba(0,0,0,.18);
-  margin-bottom: 14px;
-}
-#mmd-admin .hero .hero-inner{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 14px;
-  min-height: 260px;
+  margin-top: 14px;
+  border:1px solid var(--line);
+  border-radius: var(--r2);
   background:
-    radial-gradient(1200px 520px at 20% 10%, rgba(212,175,55,.16), transparent 60%),
-    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.35));
+    radial-gradient(900px 360px at 10% 0%, rgba(246,211,101,.16), transparent 55%),
+    radial-gradient(900px 360px at 90% 30%, rgba(253,160,133,.10), transparent 55%),
+    rgba(255,255,255,.02);
+  overflow:hidden;
 }
 
-#mmd-admin .hero .hero-copy{
-  flex: 1 1 460px;
-  min-width: 260px;
-}
-#mmd-admin .hero .title{
-  font-size: 14px;
-  font-weight: 950;
-  letter-spacing:.3px;
-  margin:0;
-}
-#mmd-admin .hero .sub{
-  margin: 6px 0 0;
-  color: rgba(255,255,255,.80);
-  font-size: 12px;
-  line-height: 1.5;
-}
-#mmd-admin .hero .meta{
+#mmd-admin .hero-inner{
   display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap: wrap;
-  margin-top: 12px;
+  align-items:stretch;
+  justify-content:space-between;
+  gap:16px;
+  padding: 16px;
 }
-#mmd-admin .hero .badge{
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.30);
-  border-radius: 999px;
-  padding: 9px 10px;
-}
-#mmd-admin .hero .badge .k{ font-size: 11px; color: rgba(255,255,255,.72); }
-#mmd-admin .hero .badge .v{ font-size: 12px; font-weight: 950; }
 
-/* HIRO FULL IMAGE (NOT CROP) */
-#mmd-admin .hiro-figure{
-  margin: 0;
-  flex: 0 0 380px;
-  max-width: 520px;
-  width: 100%;
-  border-radius: var(--radius2);
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.30);
-  box-shadow: 0 18px 44px rgba(0,0,0,.45);
-  overflow: hidden;
+#mmd-admin .hero-copy{
+  flex: 1 1 520px;
+  min-width: 300px;
 }
-#mmd-admin .hiro-img{
-  display: block;
-  width: 100%;
-  height: 320px;           /* ปรับความสูงได้เพื่อ “เห็นเต็ม” */
-  object-fit: contain;     /* สำคัญ: รูปเต็ม ไม่ครอป */
-  object-position: center;
-  background: rgba(0,0,0,.55);
-}
-#mmd-admin .hiro-cap{
-  padding: 8px 10px;
-  font-size: 11px;
-  font-weight: 900;
+
+#mmd-admin .hero-title{
+  margin: 0 0 8px;
+  font-size: 40px;
+  font-weight: 950;
   letter-spacing: .2px;
-  color: rgba(255,255,255,.78);
-  border-top: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.28);
+  line-height: 1.06;
+}
+#mmd-admin .hero-title .en{
+  display:block;
+  background: linear-gradient(180deg, var(--gold1), var(--gold2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+}
+#mmd-admin .hero-title .th{
+  display:block;
+  margin-top: 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(255,255,255,.88);
 }
 
-/* CONTENT */
-#mmd-admin .cards{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 12px;
+#mmd-admin .hero-sub{
+  margin: 0 0 12px;
+  color: rgba(255,255,255,.82);
+  font-family: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.5;
+  font-size: 14px;
 }
-#mmd-admin .card{
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  border-radius: var(--radius);
-  padding: 12px;
-}
-#mmd-admin .card .k{ color: var(--muted); font-size: 11px; }
-#mmd-admin .card .v{ font-size: 20px; font-weight: 950; margin-top: 6px; }
+#mmd-admin .hero-sub .th{ display:block; margin-top: 4px; color: rgba(255,255,255,.72); }
 
-#mmd-admin .row{
+#mmd-admin .kpis{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
+  margin-top: 10px;
+}
+#mmd-admin .kpi{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.22);
+  border-radius: 14px;
+  padding: 10px 12px;
+  min-width: 170px;
+}
+#mmd-admin .kpi .label{
+  display:block;
+  font-size: 12px;
+  color: var(--muted);
+}
+#mmd-admin .kpi b{
+  display:block;
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+#mmd-admin .hero-note{
+  margin-top: 10px;
+  font-size: 12px;
+}
+#mmd-admin .hero-note code{
+  border:1px solid var(--line);
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.25);
+  color: rgba(255,255,255,.85);
+}
+
+/* HERO MEDIA */
+#mmd-admin .hero-media{
+  flex: 0 0 420px;
+  max-width: 460px;
+  width: 100%;
+  display:flex;
+  align-items:stretch;
+}
+#mmd-admin .hero-frame{
+  width:100%;
+  border-radius: var(--r2);
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.22);
+  overflow:hidden;
+  box-shadow: 0 18px 44px rgba(0,0,0,.45);
+}
+#mmd-admin .hero-img{
+  display:block;
+  width:100%;
+  height: 360px;
+  object-fit: cover;          /* “ดูดี” แบบฮีโร่ */
+  object-position: center;
+  background: rgba(0,0,0,.25);
+}
+
+/* GRID */
+#mmd-admin .grid{
+  display:grid;
+  grid-template-columns: 280px 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+/* SIDEBAR */
+#mmd-admin .sidebar{
+  border:1px solid var(--line);
+  border-radius: var(--r2);
+  background: rgba(255,255,255,.03);
+  overflow:hidden;
+}
+#mmd-admin .sidehead{
+  padding: 14px 14px;
+  border-bottom:1px solid var(--line);
+  background: rgba(0,0,0,.22);
+}
+#mmd-admin .sidehead b{
+  display:block;
+  font-size: 13px;
+  font-weight: 900;
+}
+#mmd-admin .nav{
+  display:flex;
+  flex-direction:column;
+  padding: 10px;
+  gap: 8px;
+}
+#mmd-admin .nav-btn{
+  width:100%;
+  text-align:left;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border:1px solid transparent;
+  background: rgba(0,0,0,.18);
+  cursor:pointer;
+  color:var(--text);
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+#mmd-admin .nav-btn small{ color:var(--muted); font-size: 12px; }
+#mmd-admin .nav-btn:hover{ border-color: rgba(255,255,255,.12); }
+#mmd-admin .nav-btn.active{
+  border-color: rgba(246,211,101,.55);
+  background: linear-gradient(180deg, rgba(246,211,101,.12), rgba(0,0,0,.18));
+}
+
+/* MAIN */
+#mmd-admin .main{
+  border:1px solid var(--line);
+  border-radius: var(--r2);
+  background: rgba(255,255,255,.03);
+  overflow:hidden;
+}
+
+#mmd-admin .view{
+  padding: 16px 16px 18px;
+  display:none;
+}
+#mmd-admin .view.active{ display:block; }
+
+#mmd-admin .card{
+  border:1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(0,0,0,.22);
+  padding: 14px;
+}
+
+#mmd-admin .card + .card{ margin-top: 12px; }
+
+#mmd-admin .card-head h2{
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 900;
+}
+#mmd-admin .card-head p{ margin:0; }
+
+/* PANELS */
+#mmd-admin .grid-2{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+#mmd-admin .panel{
+  border:1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(0,0,0,.22);
+  padding: 12px;
+}
+#mmd-admin .panel-title{
+  display:block;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+#mmd-admin .panel-body{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* FORM */
+#mmd-admin .input{
+  width:100%;
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.25);
+  color: var(--text);
+  padding: 11px 12px;
+  border-radius: 12px;
+  outline: none;
+  font-size: 13px;
+}
+#mmd-admin .input:focus{
+  border-color: rgba(246,211,101,.55);
+  box-shadow: 0 0 0 3px rgba(246,211,101,.10);
+}
+
+#mmd-admin .row{
+  display:grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
   align-items:center;
   margin-top: 12px;
 }
-#mmd-admin .input, #mmd-admin select, #mmd-admin textarea{
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.25);
-  color: var(--text);
-  border-radius: 14px;
+
+#mmd-admin .settings-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+#mmd-admin pre.codebox{
+  margin: 10px 0 0;
+  border:1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(0,0,0,.28);
   padding: 10px 12px;
+  color: rgba(255,255,255,.86);
   font-size: 12px;
-  outline:none;
-}
-#mmd-admin textarea{ min-height: 90px; width:100%; resize: vertical; }
-
-#mmd-admin .hint{
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.5;
-  margin-top: 8px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-#mmd-admin .status{
-  margin-top: 10px;
-  font-size: 12px;
-  color: var(--muted);
-}
-#mmd-admin .status.ok{ color: rgba(53,208,127,.92); }
-#mmd-admin .status.bad{ color: rgba(255,77,77,.92); }
-
-#mmd-admin .view{ display:none; }
-#mmd-admin .view.active{ display:block; }
-
+/* RESPONSIVE */
 @media (max-width: 980px){
+  #mmd-admin .topbar{ flex-direction:column; }
+  #mmd-admin .topbar-right{ justify-content:flex-start; }
+  #mmd-admin .hero-inner{ flex-direction:column; }
+  #mmd-admin .hero-media{ max-width: 100%; }
+  #mmd-admin .hero-img{ height: 320px; object-fit: cover; }
   #mmd-admin .grid{ grid-template-columns: 1fr; }
-  #mmd-admin .cards{ grid-template-columns: 1fr; }
-  #mmd-admin .hero .hero-inner{ flex-direction: column; align-items: stretch; }
-  #mmd-admin .hiro-figure{ flex: none; max-width: 100%; }
-  #mmd-admin .hiro-img{ height: 360px; }
+  #mmd-admin .grid-2{ grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px){
+  #mmd-admin .hero-title{ font-size: 32px; }
+  #mmd-admin .kpi{ min-width: 140px; }
 }
