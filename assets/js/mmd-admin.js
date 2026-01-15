@@ -1,9 +1,8 @@
 /* =========================================================
-   MMD Privé — Internal Admin JS (LOCK v2026-01-15b)
-   Updates:
-   - Hero background uses HIRO image (FULL, contain)
-   - Robust token retrieval (cookie + memberstackDom + localStorage scan)
-   - View routing + buttons + API calls (Bearer)
+   MMD Privé — Internal Admin JS (LOCK v2026-01-15c)
+   - View routing
+   - Auth token best-effort (cookie + memberstackDom + localStorage)
+   - API calls to Worker admin endpoints (Bearer)
 ========================================================= */
 
 (function () {
@@ -11,20 +10,12 @@
 
   const root = document.getElementById("mmd-admin");
   if (!root) return;
-  if (window.__MMD_INTERNAL_ADMIN_LOCK__) return;
-  window.__MMD_INTERNAL_ADMIN_LOCK__ = true;
+  if (window.__MMD_INTERNAL_ADMIN_LOCK_C__) return;
+  window.__MMD_INTERNAL_ADMIN_LOCK_C__ = true;
 
-  // ---------------------------
-  // Constants
-  // ---------------------------
   const DEFAULT_API_BASE = "https://telegram.malemodel-bkk.workers.dev";
   const LS_API_BASE = "mmd_admin_api_base";
 
-  // HIRO full background image (your URL)
-  const HIRO_BG =
-    "https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69689c883d85e7d17271524d_ChatGPT%20Image%2015%20%E0%B8%A1.%E0%B8%84.%202569%2014_50_45.png";
-
-  // Admin endpoints (server must implement + verify token)
   const EP = {
     config:  "/v1/admin/config",
     metrics: "/v1/admin/metrics",
@@ -32,9 +23,6 @@
     tgInvite:"/v1/admin/telegram/invite"
   };
 
-  // ---------------------------
-  // DOM
-  // ---------------------------
   const $ = (id) => document.getElementById(id);
 
   const elAuthState = $("mmd-auth-state");
@@ -60,7 +48,6 @@
   const btnTgInvite = $("btn-tg-invite");
   const tgStatus = $("tg-status");
 
-  // Views
   const navBtns = Array.from(root.querySelectorAll(".navbtn"));
   const views = {
     dashboard: root.querySelector("#view-dashboard"),
@@ -68,9 +55,6 @@
     telegram: root.querySelector("#view-telegram"),
   };
 
-  // ---------------------------
-  // Utils
-  // ---------------------------
   function setStatus(el, msg, kind) {
     if (!el) return;
     el.textContent = String(msg || "—");
@@ -101,13 +85,11 @@
 
   function tryLocalStorageToken() {
     try {
-      // common keys (best-effort)
       const keys = ["_ms-mid", "ms-mid", "memberstack:token", "memberstack_token", "accessToken"];
       for (const k of keys) {
         const v = localStorage.getItem(k);
         if (looksLikeJwt(v)) return v;
       }
-      // scan all keys for JWT-like
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
         const v = localStorage.getItem(k);
@@ -118,11 +100,9 @@
   }
 
   async function getMemberstackToken() {
-    // 1) cookie mode
     const c = readCookie("_ms-mid");
     if (looksLikeJwt(c)) return c;
 
-    // 2) memberstack dom helper
     try {
       const ms = window.$memberstackDom;
       if (ms && typeof ms.getMemberCookie === "function") {
@@ -138,7 +118,6 @@
       }
     } catch (_) {}
 
-    // 3) localStorage
     const ls = tryLocalStorageToken();
     if (looksLikeJwt(ls)) return ls;
 
@@ -167,10 +146,7 @@
 
     const url = base + path;
     const headers = Object.assign(
-      {
-        "content-type": "application/json",
-        "authorization": "Bearer " + token,
-      },
+      { "content-type": "application/json", "authorization": "Bearer " + token },
       (opts && opts.headers) || {}
     );
 
@@ -189,29 +165,13 @@
 
   function setView(name) {
     navBtns.forEach((b) => b.classList.toggle("active", b.getAttribute("data-view") === name));
-    Object.keys(views).forEach((k) => {
-      if (views[k]) views[k].classList.toggle("active", k === name);
-    });
+    Object.keys(views).forEach((k) => views[k] && views[k].classList.toggle("active", k === name));
   }
 
-  // ---------------------------
-  // HERO: Apply Hiro background (FULL image)
-  // ---------------------------
-  function applyHeroBackground() {
-    const hero = root.querySelector(".hero");
-    if (!hero) return;
-    hero.style.setProperty("--hiro-bg", `url("${HIRO_BG}")`);
-  }
-
-  // ---------------------------
-  // Loaders
-  // ---------------------------
   async function loadMetrics() {
     setStatus(dashStatus, "Loading…", "");
     const data = await apiFetch(EP.metrics, { method: "GET" });
 
-    // expected shape (server-side)
-    // { members_total, payments_total, points_ledger_total }
     kpiMembers.textContent = String(data?.members_total ?? "—");
     kpiPayments.textContent = String(data?.payments_total ?? "—");
     kpiLedger.textContent = String(data?.points_ledger_total ?? "—");
@@ -221,10 +181,8 @@
 
   async function lookupMember() {
     const email = String(memEmail?.value || "").trim();
-    if (!email) {
-      setStatus(memStatus, "Please enter email", "bad");
-      return;
-    }
+    if (!email) return setStatus(memStatus, "Please enter email", "bad");
+
     setStatus(memStatus, "Searching…", "");
     memResult.textContent = "";
 
@@ -241,8 +199,7 @@
     const note = String(tgNote?.value || "").trim();
 
     if (!telegram_user_id || !/^\d+$/.test(telegram_user_id)) {
-      setStatus(tgStatus, "telegram_user_id must be numeric", "bad");
-      return;
+      return setStatus(tgStatus, "telegram_user_id must be numeric", "bad");
     }
 
     setStatus(tgStatus, "Sending…", "");
@@ -252,16 +209,10 @@
     setStatus(tgStatus, data?.ok ? "OK" : "Sent (check server response)", data?.ok ? "ok" : "");
   }
 
-  // ---------------------------
-  // Boot
-  // ---------------------------
   async function boot() {
-    applyHeroBackground();
-
     const base = getApiBase();
     if (elApiBaseText) elApiBaseText.textContent = base;
 
-    // client-side hint for auth/perm (server still enforces)
     setStatus(elAuthState, "Checking…", "");
     setStatus(elPermState, "—", "");
 
@@ -276,28 +227,19 @@
 
     const member = await getCurrentMemberSafe();
     const perms = extractPermissions(member);
-
-    // show permission hint (you can change policy server-side)
     if (perms.length) {
-      // prefer owner/admin markers
       const top = perms.find(p => /owner|admin/i.test(p)) || perms[0];
       setStatus(elPermState, top, "ok");
     } else {
       setStatus(elPermState, "unknown", "");
     }
 
-    // default view load
     await loadMetrics().catch((e) => setStatus(dashStatus, e.message, "bad"));
   }
 
-  // ---------------------------
   // Events
-  // ---------------------------
   navBtns.forEach((b) => {
-    b.addEventListener("click", () => {
-      const v = b.getAttribute("data-view") || "dashboard";
-      setView(v);
-    });
+    b.addEventListener("click", () => setView(b.getAttribute("data-view") || "dashboard"));
   });
 
   if (btnRefresh) {
