@@ -1,11 +1,10 @@
 /* =========================================================
-   MMD • CONFIRM PAYMENT (FULL)
-   Black × Gold • Brightened Overlay
+   MMD • CONFIRM PAYMENT (FULL CSS)
+   Black × Gold • Tier BG Images • Brighter (not too dark)
    File: assets/css/mmd-confirm-payment.css
    LOCK v2026-LOCK-02
    ========================================================= */
 
-/* ---------- TOKENS ---------- */
 :root{
   --bg:#070707;
   --card:#0b0b0b;
@@ -15,8 +14,10 @@
   --muted:rgba(255,255,255,.72);
 }
 
-/* ---------- BASE ---------- */
+/* Base */
 html,body{background:var(--bg);}
+
+/* Root */
 #mmd-confirmation{
   position:relative;
   min-height:100vh;
@@ -29,20 +30,20 @@ html,body{background:var(--bg);}
   overflow:hidden;
 }
 
-/* ---------- HERO ---------- */
+/* Hero */
 #mmd-confirmation .mmd-confirm-hero{
   position:absolute; inset:0;
   background:#000 center/cover no-repeat;
   transform:scale(1.04);
-  filter:brightness(1.08) contrast(1.05);
+  filter:brightness(1.10) contrast(1.05);
 }
 #mmd-confirmation .mmd-confirm-veil{
   position:absolute; inset:0;
-  /* ลดความมืด */
-  background:linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.58));
+  /* IMPORTANT: don't make it too dark */
+  background:linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.55));
 }
 
-/* ---------- CARD ---------- */
+/* Card */
 #mmd-confirmation .mmd-confirm-card{
   position:relative;
   width:min(920px,100%);
@@ -53,106 +54,152 @@ html,body{background:var(--bg);}
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 40px 120px rgba(0,0,0,.65);
   backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
 }
 
-/* ---------- HEADER ---------- */
+/* Header */
 .mmd-header{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:16px; padding:28px 28px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:28px 28px 22px;
   border-bottom:1px solid rgba(255,255,255,.10);
 }
 .mmd-logo{
-  width:64px; height:64px; border-radius:18px; object-fit:cover;
+  width:64px; height:64px;
+  border-radius:18px;
+  object-fit:cover;
   box-shadow:0 10px 30px rgba(0,0,0,.55);
 }
 .mmd-header-right{display:flex; align-items:center; gap:12px;}
 .mmd-tier-badge{
-  padding:8px 14px; border-radius:999px;
-  font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
   color:var(--gold2);
   background:rgba(201,162,77,.20);
   border:1px solid rgba(201,162,77,.38);
 }
 .mmd-status{font-size:13px; color:var(--muted);}
 
-/* ---------- BODY ---------- */
+/* Body */
 .mmd-body{padding:28px 28px 32px;}
 .mmd-row{
-  display:flex; align-items:baseline; justify-content:space-between;
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
   padding:14px 0;
 }
 .mmd-k{
-  font-size:13px; letter-spacing:.06em; text-transform:uppercase;
+  font-size:13px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
   color:var(--muted);
 }
-.mmd-v{font-size:18px; font-weight:600;}
+.mmd-v{
+  font-size:18px;
+  font-weight:600;
+  color:var(--white);
+}
 .mmd-divider{
   height:1px;
   background:linear-gradient(90deg, transparent, rgba(201,162,77,.40), transparent);
   margin:22px 0;
 }
 
-/* ---------- NEXT ---------- */
+/* Next */
 .mmd-next-title{
-  font-size:14px; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--muted); margin-bottom:10px;
+  font-size:14px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:10px;
 }
 .mmd-next-actions{
-  display:grid; grid-template-columns:repeat(2,1fr); gap:14px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
 }
 .mmd-btn{
-  display:flex; flex-direction:column; gap:6px;
-  padding:16px 18px; border-radius:18px; text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:16px 18px;
+  border-radius:18px;
+  text-decoration:none;
   color:#000;
   background:linear-gradient(135deg,var(--gold),var(--gold2));
   box-shadow:0 12px 40px rgba(201,162,77,.35);
   transition:transform .15s ease, box-shadow .15s ease;
 }
-.mmd-btn:hover{transform:translateY(-2px); box-shadow:0 18px 60px rgba(201,162,77,.5);}
+.mmd-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 18px 60px rgba(201,162,77,.5);
+}
 .mmd-btn.secondary{
-  grid-column:1/-1; background:#000; color:var(--white);
-  border:1px solid rgba(255,255,255,.14); box-shadow:none;
+  grid-column:1/-1;
+  background:#000;
+  color:var(--white);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:none;
 }
 .mmd-btn-k{font-size:12px; letter-spacing:.08em; text-transform:uppercase;}
 .mmd-btn-v{font-size:14px; font-weight:600;}
 .mmd-mini{margin-top:14px; font-size:12px; color:var(--muted);}
 
-/* ---------- MOBILE ---------- */
+/* Mobile */
 @media(max-width:640px){
   .mmd-header{flex-direction:column; align-items:flex-start;}
   .mmd-next-actions{grid-template-columns:1fr;}
 }
 
 /* =========================================================
-   TIER BG IMAGE MAPPING
+   TIER BG IMAGE MAPPING (standard / premium / vip / svip / blackcard)
+   Uses: #mmd-confirmation[data-tier="..."]
    ========================================================= */
+
+:root{
+  --mmd-bg-standard: url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69551d32a8d235ce11b4f658_ChatGPT%20Image%20Dec%2031%2C%202025%2C%2004_27_50%20PM.png");
+  --mmd-bg-premium:  url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69551d33b6c129d6f740723a_ChatGPT%20Image%20Dec%2031%2C%202025%2C%2004_29_02%20PM.png");
+  --mmd-bg-vip:      url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69551d32b6e373f922a7c7c3_ChatGPT%20Image%20Dec%2031%2C%202025%2C%2007_28_37%20PM.png");
+  --mmd-bg-svip:     url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69551d328e1146d4fd97df62_ChatGPT%20Image%20Dec%2031%2C%202025%2C%2007_54_17%20PM.png");
+}
 
 /* STANDARD */
 #mmd-confirmation[data-tier="standard"] .mmd-confirm-hero{
   background-image:
-    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.55)),
-    url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69551d32a8d235ce11b4f658_ChatGPT%20Image%20Dec%2031%2C%202025%2C%2004_27_50%20PM.png");
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.48)),
+    var(--mmd-bg-standard);
 }
 
 /* PREMIUM */
 #mmd-confirmation[data-tier="premium"] .mmd-confirm-hero{
   background-image:
-    linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.55)),
-    url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69551d33b6c129d6f740723a_ChatGPT%20Image%20Dec%2031%2C%202025%2C%2004_29_02%20PM.png");
+    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.48)),
+    var(--mmd-bg-premium);
 }
 
 /* VIP */
 #mmd-confirmation[data-tier="vip"] .mmd-confirm-hero{
   background-image:
-    linear-gradient(180deg, rgba(0,0,0,.14), rgba(0,0,0,.55)),
-    url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69551d32b6e373f922a7c7c3_ChatGPT%20Image%20Dec%2031%2C%202025%2C%2007_28_37%20PM.png");
+    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.48)),
+    var(--mmd-bg-vip);
 }
 
-/* SVIP / BLACK CARD */
-#mmd-confirmation[data-tier="svip"] .mmd-confirm-hero,
+/* SVIP */
+#mmd-confirmation[data-tier="svip"] .mmd-confirm-hero{
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.50)),
+    var(--mmd-bg-svip);
+}
+
+/* BLACKCARD = use same BG as SVIP */
 #mmd-confirmation[data-tier="blackcard"] .mmd-confirm-hero,
 #mmd-confirmation[data-tier="black-card"] .mmd-confirm-hero{
   background-image:
-    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.52)),
-    url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69551d328e1146d4fd97df62_ChatGPT%20Image%20Dec%2031%2C%202025%2C%2007_54_17%20PM.png");
+    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.50)),
+    var(--mmd-bg-svip);
 }
