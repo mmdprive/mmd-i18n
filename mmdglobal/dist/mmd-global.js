@@ -1,20 +1,17 @@
-<!-- =========================
-     MMD • GLOBAL BOOTSTRAP (Head) — LOCK v2026-LOCK-01
-     วางใน: Webflow > Project Settings > Custom Code > Head
-========================= -->
-<script>
 /* =========================================================
-   MMD • GLOBAL BOOTSTRAP — LOCK v2026-LOCK-01
-   - Namespace + once/onReady/event bus
-   - Lang getter/setter (mmd_lang + lang)
-   - Optional particle killer (window.MMD_KILL_PARTICLES = true)
-   - Worker helper (POST) + Confirm key header
+   MMD • GLOBAL JS (Single File) — v2026-LOCK-02
+   File: mmdglobal/dist/mmd-global.js
+   RULES (LOCK):
+   1) JS Global = 1 file only
+   2) No inline duplicate bootstrap, no fork logic
+   3) All pages must call via MMD.* only
+   4) Behavior changes => change mmd-global.js only
    ========================================================= */
 (function () {
   "use strict";
 
   // ---- LOCK ----
-  window.MMD_LOCK = "v2026-LOCK-01";
+  window.MMD_LOCK = window.MMD_LOCK || "v2026-LOCK-02";
 
   // ---- Prevent double bootstrap ----
   if (window.__MMD_GLOBAL_BOOTSTRAPPED__) return;
@@ -24,7 +21,7 @@
   window.MMD = window.MMD || {};
 
   // ---- Env ----
-  (function initEnv(){
+  (function initEnv() {
     const qs = new URLSearchParams(window.location.search);
     const debug = qs.has("debug");
     MMD.env = Object.assign({ debug }, MMD.env || {});
@@ -43,7 +40,9 @@
     if (!key || typeof fn !== "function") return;
     if (__once.has(key)) return;
     __once.add(key);
-    try { fn(); } catch (e) {
+    try {
+      fn();
+    } catch (e) {
       if (MMD.env && MMD.env.debug) console.warn("[MMD] once error:", key, e);
     }
   };
@@ -52,16 +51,14 @@
   MMD.emit = function (name, detail) {
     try {
       window.dispatchEvent(new CustomEvent(name, { detail: detail || {} }));
-    } catch (e) {
-      // IE fallback not needed in modern Webflow contexts; keep silent
-    }
+    } catch (_) {}
   };
   MMD.on = function (name, handler, opts) {
     window.addEventListener(name, handler, opts || false);
   };
 
   // ---- Lang ----
-  function normalizeLang(l){
+  function normalizeLang(l) {
     const s = String(l || "").toLowerCase().trim();
     if (s.startsWith("th")) return "th";
     if (s.startsWith("zh")) return "zh";
@@ -69,7 +66,7 @@
     return "en";
   }
 
-  function getLang(){
+  function getLang() {
     let v = "en";
     try {
       v =
@@ -77,17 +74,19 @@
         localStorage.getItem("lang") ||
         document.documentElement.getAttribute("lang") ||
         (navigator.language || "en");
-    } catch (_){}
+    } catch (_) {}
     return normalizeLang(v);
   }
 
-  function setLang(lang){
+  function setLang(lang) {
     const L = normalizeLang(lang);
     try {
       localStorage.setItem("mmd_lang", L);
       localStorage.setItem("lang", L);
-    } catch (_){}
-    try { document.documentElement.setAttribute("lang", L); } catch (_){}
+    } catch (_) {}
+    try {
+      document.documentElement.setAttribute("lang", L);
+    } catch (_) {}
     MMD.emit("mmd:lang", { lang: L });
     return L;
   }
@@ -102,40 +101,63 @@
   MMD.ui.killParticles = function () {
     try {
       document.querySelectorAll(PARTICLE_SELECTOR).forEach((el) => el.remove());
-    } catch (_){}
+    } catch (_) {}
   };
 
-  // ---- Confirm key (global) ----
-  // ตั้งค่าใน Head ได้เลย เช่น: window.MMD_CONFIRM_KEY="xxx";
-  // หรือปล่อยไว้ แล้วไปตั้งในหน้า /confirm/* ก็ได้
-  window.MMD_CONFIRM_KEY = window.MMD_CONFIRM_KEY || "PUT_YOUR_CONFIRM_KEY_HERE";
-
-  // ---- Worker helper ----
-  // IMPORTANT: endpoint ใหม่สำหรับ /pay/* คือ /v1/payments/notify (ไม่ยิง root)
+  // ---- API base ----
   MMD.api = MMD.api || {};
   MMD.api.base = MMD.api.base || "https://telegram.malemodel-bkk.workers.dev";
 
+  // ---- Confirm Key (ONLY for /confirm/*; NO hardcode in Head) ----
+  function getConfirmKey() {
+    try {
+      return (
+        window.MMD_CONFIRM_KEY ||
+        localStorage.getItem("mmd_confirm_key") ||
+        ""
+      )
+        .toString()
+        .trim();
+    } catch (_) {
+      return (window.MMD_CONFIRM_KEY || "").toString().trim();
+    }
+  }
+
+  function isConfirmPage() {
+    try {
+      return location.pathname.startsWith("/confirm/");
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // ---- Worker helper ----
+  // NOTE: /pay/* should call "/v1/payments/notify" (not root)
   MMD.workerPost = async function (path, payload, extraHeaders) {
-    const url = String(MMD.api.base || "").replace(/\/$/, "") + String(path || "");
+    const url =
+      String(MMD.api.base || "").replace(/\/$/, "") + String(path || "");
     const headers = Object.assign(
       { "Content-Type": "application/json" },
       extraHeaders || {}
     );
 
-    // attach confirm key if present
-    if (window.MMD_CONFIRM_KEY && !headers["X-Confirm-Key"]) {
-      headers["X-Confirm-Key"] = window.MMD_CONFIRM_KEY;
+    // attach confirm key ONLY on /confirm/*
+    if (isConfirmPage()) {
+      const key = getConfirmKey();
+      if (key && !headers["X-Confirm-Key"]) headers["X-Confirm-Key"] = key;
     }
 
     const res = await fetch(url, {
       method: "POST",
       headers,
-      body: JSON.stringify(payload || {})
+      body: JSON.stringify(payload || {}),
     });
 
     const text = await res.text().catch(() => "");
     let json = null;
-    try { json = JSON.parse(text); } catch (_){}
+    try {
+      json = JSON.parse(text);
+    } catch (_) {}
 
     if (!res.ok) {
       const err = new Error("MMD_WORKER_POST_FAILED " + res.status);
@@ -150,21 +172,16 @@
   // ---- DOM ready boot ----
   MMD.onReady(function () {
     document.documentElement.classList.add("mmd-ready");
-
-    // emit current lang once on boot
     MMD.emit("mmd:lang", { lang: getLang() });
 
-    // optional: kill particles globally
     if (window.MMD_KILL_PARTICLES === true) {
       MMD.ui.killParticles();
       try {
-        new MutationObserver(MMD.ui.killParticles).observe(document.documentElement, {
-          childList: true,
-          subtree: true
-        });
-      } catch (_){}
+        new MutationObserver(MMD.ui.killParticles).observe(
+          document.documentElement,
+          { childList: true, subtree: true }
+        );
+      } catch (_) {}
     }
   });
-
 })();
-</script>
