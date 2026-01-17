@@ -1,0 +1,224 @@
+<style>
+/* =========================================
+   MMD • CONFIRM /payment-confirmation — LOCK v2026-LOCK-02f
+========================================= */
+
+#mmd-confirmation{
+  position: relative;
+  min-height: 100vh;
+  padding: 64px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+  font-family: 'Outfit', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* HERO layers */
+#mmd-confirmation .mmd-confirm-hero{
+  position:absolute; inset:0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.03);
+  filter: saturate(1.05) contrast(1.05);
+  opacity: .95;
+}
+#mmd-confirmation .mmd-confirm-veil{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(900px 520px at 50% 30%, rgba(0,0,0,.18), rgba(0,0,0,.82) 70%),
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.92));
+}
+
+/* Card */
+#mmd-confirmation .mmd-confirm-card{
+  position: relative;
+  width: min(920px, 100%);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(10,10,10,.55);
+  box-shadow: 0 30px 90px rgba(0,0,0,.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+
+#mmd-confirmation .mmd-header{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+#mmd-confirmation .mmd-logo{
+  width: 56px; height: 56px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+#mmd-confirmation .mmd-header-right{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content:flex-end;
+  text-align:right;
+}
+
+#mmd-confirmation .mmd-tier-badge{
+  display:inline-flex;
+  align-items:center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+}
+
+#mmd-confirmation .mmd-status{
+  display:inline-flex;
+  align-items:center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+}
+
+#mmd-confirmation .mmd-body{
+  padding: 22px 24px 26px;
+}
+
+#mmd-confirmation .mmd-row{
+  display:flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+#mmd-confirmation .mmd-k{
+  opacity: .85;
+  font-size: 13px;
+  letter-spacing: .02em;
+}
+#mmd-confirmation .mmd-v{
+  font-size: 16px;
+  letter-spacing: .01em;
+}
+
+#mmd-confirmation .mmd-divider{
+  height: 1px;
+  background: rgba(255,255,255,.08);
+  margin: 16px 0 14px;
+}
+
+/* Next steps */
+#mmd-confirmation .mmd-next{ margin-top: 6px; }
+#mmd-confirmation .mmd-next-title{
+  font-size: 14px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .9;
+  margin-bottom: 6px;
+}
+#mmd-confirmation .mmd-next-desc{
+  opacity: .82;
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+#mmd-confirmation .mmd-next-actions{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#mmd-confirmation .mmd-btn{
+  display:flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  text-decoration:none;
+  color:#fff;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+#mmd-confirmation .mmd-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.18);
+}
+#mmd-confirmation .mmd-btn.secondary{
+  grid-column: 1 / -1;
+  background: rgba(0,0,0,.18);
+}
+#mmd-confirmation .mmd-btn-k{
+  font-size: 12px;
+  letter-spacing: .04em;
+  opacity: .9;
+}
+#mmd-confirmation .mmd-btn-v{
+  font-size: 13.5px;
+  letter-spacing: .01em;
+  opacity: .95;
+}
+#mmd-confirmation .mmd-mini{
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: .78;
+}
+
+/* Tier badge styling */
+#mmd-confirmation.tier-standard .mmd-tier-badge{ border-color: rgba(255,255,255,.20); }
+#mmd-confirmation.tier-premium .mmd-tier-badge{
+  border-color: rgba(212,175,55,.40);
+  background: rgba(212,175,55,.10);
+}
+#mmd-confirmation.tier-vip .mmd-tier-badge{
+  border-color: rgba(255,215,0,.45);
+  background: rgba(255,215,0,.10);
+}
+#mmd-confirmation.tier-svip .mmd-tier-badge{
+  border-color: rgba(255,215,0,.55);
+  background: rgba(0,0,0,.18);
+}
+
+/* Mobile */
+@media (max-width: 520px){
+  #mmd-confirmation{ padding: 44px 12px; }
+  #mmd-confirmation .mmd-header{ padding: 18px 18px; }
+  #mmd-confirmation .mmd-body{ padding: 18px 18px 22px; }
+  #mmd-confirmation .mmd-row{ flex-direction: column; align-items:flex-start; }
+  #mmd-confirmation .mmd-header-right{ justify-content:flex-start; text-align:left; }
+  #mmd-confirmation .mmd-next-actions{ grid-template-columns: 1fr; }
+  #mmd-confirmation .mmd-btn.secondary{ grid-column: auto; }
+}
+
+/* =========================
+   RULES POPUP styles (scoped)
+========================= */
+.mmd-modal{position:fixed;inset:0;z-index:999999;display:none;font-family:Outfit,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+.mmd-modal[aria-hidden="false"]{display:block}
+.mmd-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.62)}
+.mmd-modal-card{position:relative;max-width:980px;height:82vh;margin:4vh auto;background:#0b0b0b;color:#fff;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.06)}
+.mmd-modal-header{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.mmd-title{margin:0;font-size:18px;line-height:1.2}
+.mmd-sub{margin-top:6px;font-size:12px;opacity:.8}
+.mmd-pill{padding:6px 10px;border-radius:999px;font-size:12px;background:rgba(201,162,77,.18);border:1px solid rgba(201,162,77,.35);color:#f5d27a}
+.mmd-modal-body{height:calc(100% - 132px);background:#070707}
+.mmd-modal-body iframe{width:100%;height:100%;display:block}
+.mmd-modal-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mmd-check{display:flex;gap:10px;align-items:center;font-size:13px;opacity:.95}
+.mmd-check input{width:16px;height:16px}
+.mmd-btn2{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#c9a24d,#f5d27a);color:#000;opacity:.55;transform:translateY(0);transition:opacity .15s ease, transform .15s ease}
+.mmd-btn2:enabled{opacity:1}
+.mmd-btn2:enabled:hover{transform:translateY(-1px)}
+</style>
