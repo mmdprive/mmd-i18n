@@ -179,5 +179,24 @@
     "blackcard.internal.note":
       "Black Card access is granted manually by owner only. Do not disclose criteria or promise eligibility."
   });
+slogan: "Discreet by design, Elegant by choice.",
+duets: "PACKAGE MMD DUETS VOL.3",
+dated: "ลงวันที่",
+credit1: "บทภาพยนตร์เรื่องสั้นโดย เปอร์",
+credit2: "กำกับภาพโดย เปอร์",
+pill1: "พิสูจน์มาแล้วกับตา · 2 ครั้ง",
+
+whyH: "คู่นี้ดียังไง ?",
+whyP1: "เปอร์มองว่ามันคือเคมีที่เข้า ต้องบอกอย่างนี้ก่อน คือเราดูไม่ออกเลยว่านิสัยจริงๆใครเป็นยังไง ใน Trust Me เปอร์ถึงบอกว่าอย่าเชื่อในสิ่งที่เห็นแค่เปลือก ให้เชื่อรีวิวที่เกิดขึ้นจริง หรือเชื่อที่เปอร์บอกดีที่สุด",
+whyP2: "บอกเลยว่างานนี้ เห็น Kenji จะดูเหมือนเจ้าชู้ คุมเกม แต่ไม่ใช่เลย TarT ต่างหากที่ร้ายที่สุด คุณเชื่อเปอร์ไหมล่ะ​?",
+
+tierKenji: "VIP — EMs11-Kenji",
+tierTart: "Standard — Tar T",
+quoteKenji: "“ผมรู้ตัวว่าชอบอะไรไม่ชอบอะไร กลัวจะเจ็บอีกไหมก็กลัว แต่ถ้าใช่ก็ไม่อายที่จะแสดงความรู้สึกออกไป ถ้ามีโอกาส เข้าหาแบบไม่ลังเลแน่นอนครับ”",
+quoteTart: "“ผมเคยสดใสกว่านี้… ผมเห็นกับตาตัวเองเลย สายตาของเขามุ่งมั่นแน่วแน่ เหงื่อทุกหยดทุ่มเท ไม่มีถอย”",
+
+keySmall: "สมัครสมาชิกไพรเวท MMD Privé",
+keySmall2: "ดูรูปเต็มๆ · ในกลุ่ม Telegram Premium",
+keySmall3: "Story-driven duo scenes — unseen."
 
 })();
