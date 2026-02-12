@@ -23,6 +23,67 @@
   D.zh = D.zh || {};
   D.jp = D.jp || {};
 
+   
+/* Black Card — TH (add to i18n.dict.js) */
+     Object.assign(D.th, {
+"blackcard.eyebrow": "MMD PRIVÉ • BLACK CARD",
+"blackcard.hero.h": "BLACK CARD",
+"blackcard.hero.p": "สิทธิ์ระดับสูงสุดของระบบ MMD Privé — ไม่เปิดรับทั่วไป และไม่ได้ออกแบบมาเพื่อทุกคน",
+
+"blackcard.badge.price.k": "ค่าถือครอง",
+"blackcard.badge.price.v": "25,000 THB",
+"blackcard.badge.term.k": "ระยะเวลา",
+"blackcard.badge.term.v": "5 Years",
+"blackcard.badge.tier.k": "สถานะ",
+"blackcard.badge.tier.v": "SVIP",
+
+"blackcard.cta.primary": "Proceed to Payment",
+"blackcard.cta.secondary": "Request Consideration",
+"blackcard.cta.back": "Back to Benefits",
+
+"blackcard.guesthint": "สำหรับผู้สนใจ: สิทธิ์นี้ใช้ระบบพิจารณา กรุณาเริ่มจาก Premium หรือแจ้งทีมเพื่อประเมินความเหมาะสม",
+
+"blackcard.roleline.guest": "ROLE: Guest — View only",
+"blackcard.roleline.member": "ROLE: Member — Eligible for screening",
+"blackcard.roleline.vip": "ROLE: VIP — Priority screening",
+"blackcard.roleline.blackcard": "ROLE: Black Card — Highest tier",
+"blackcard.roleline.admin": "ROLE: Admin — Review mode",
+
+"blackcard.flow.h": "From Premium to Black Card",
+"blackcard.flow.p": "Black Card ไม่ใช่ “อัปเกรด” แต่คือ “การยอมรับความสัมพันธ์” ที่เกิดจากความต่อเนื่อง ความชัดเจน และมาตรฐานการใช้บริการ",
+"blackcard.flow.s1.h": "Premium (Baseline)",
+"blackcard.flow.s1.p": "เข้าระบบเต็มรูปแบบ • ต่อเนื่อง • รู้จักกันจริง",
+"blackcard.flow.s2.h": "Signal & Screening",
+"blackcard.flow.s2.p": "ระบบดูความเหมาะสม • ความสม่ำเสมอ • มารยาทในการใช้งาน",
+"blackcard.flow.s3.h": "Invitation Only",
+"blackcard.flow.s3.p": "เมื่อถึงเวลาที่เหมาะสม ทีมจะติดต่อ / เปิดทางให้คุณเอง",
+"blackcard.flow.note": "หมายเหตุ: Black Card อาจมีการปรับเงื่อนไขตามช่วงเวลา และอยู่ภายใต้ดุลยพินิจของผู้ก่อตั้ง",
+
+"blackcard.benefits.h": "What You Receive",
+"blackcard.benefits.p": "สิทธิ์ที่ให้ “ความต่อเนื่อง” และ “ความเร็ว” แบบสูงสุด — แต่ยังคงมาตรฐานและความปลอดภัยของระบบ",
+
+"blackcard.b1.h": "All Telegram Access",
+"blackcard.b1.p": "เข้ากลุ่มทุกระดับที่เกี่ยวข้องกับสมาชิก SVIP (ตามระบบและความเหมาะสม)",
+"blackcard.b2.h": "Drive & Archive",
+"blackcard.b2.p": "เข้าถึงคลังข้อมูล/อัปเดตที่ระบบเปิดให้กับระดับสูงสุดของสมาชิก",
+"blackcard.b3.h": "Highest Priority",
+"blackcard.b3.p": "ความสำคัญสูงสุดในการประสานงาน — แต่ยังอยู่บนกติกาและมาตรฐานเดียวกัน",
+
+"blackcard.terms.k1": "Access status",
+"blackcard.terms.v1": "SVIP",
+"blackcard.terms.k2": "Period",
+"blackcard.terms.v2": "5 years",
+"blackcard.terms.k3": "Fee",
+"blackcard.terms.v3": "25,000 THB",
+
+"blackcard.approval.h": "Approval & Authority",
+"blackcard.approval.p": "Black Card คือพื้นที่ที่เราปกป้องมาตรฐานของสมาชิกระดับสูงสุด ดังนั้นการเข้าถึงจะเกิดขึ้นเมื่อ “เหมาะสม” เท่านั้น",
+"blackcard.approval.q": "ผมไม่ให้ Black Card เพราะใคร “จ่ายไหว” — ผมให้เพราะคุณ “เหมาะสม”",
+"blackcard.approval.by": "— Per (Owner)",
+"blackcard.approval.lock": "การชำระเงินอาจต้องผ่านการยืนยันตัวตน/เงื่อนไขของระบบ และอยู่ภายใต้ดุลยพินิจของทีม",
+
+"blackcard.footer.note": "Note: สิทธิ์สามารถปรับตามช่วงเวลา • ระบบ • และความเหมาะสมของสมาชิก"
+ });
   /* =====================================================
      GLOBAL UI
      ===================================================== */
