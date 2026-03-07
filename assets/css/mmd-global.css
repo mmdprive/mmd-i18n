@@ -3,10 +3,24 @@
   --muted: rgba(255,255,255,.68);
 
   --line: rgba(255,255,255,.08);
+  --line-soft: rgba(255,255,255,.06);
+  --line-strong: rgba(255,255,255,.10);
+
   --panel: rgba(10,10,10,.72);
+
+  --surface-1: rgba(0,0,0,.10);
+  --surface-2: rgba(0,0,0,.16);
+  --surface-3: rgba(0,0,0,.22);
+  --surface-4: rgba(0,0,0,.26);
 
   --g1: #c9a24a;
   --g2: #e0c16a;
+
+  --gold-line: rgba(201,162,74,.22);
+  --gold-line-strong: rgba(201,162,74,.46);
+  --gold-soft: rgba(201,162,74,.08);
+  --gold-soft-2: rgba(201,162,74,.10);
+  --gold-text: rgba(224,193,106,.96);
 
   --shadow:
     0 24px 64px rgba(0,0,0,.42),
@@ -21,9 +35,23 @@
     0 0 0 1px rgba(201,162,74,.10),
     0 0 28px rgba(201,162,74,.10);
 
+  --r14: 14px;
+  --r16: 16px;
   --r18: 18px;
   --r22: 22px;
   --r28: 28px;
+
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-18: 18px;
+  --space-30: 30px;
+  --space-60: 60px;
+
+  --container-sm: 720px;
 }
 
 /* heading lock */
@@ -250,6 +278,52 @@ select.rn-input:focus{
 .mmd-help,
 .rn-help{
   color: var(--muted) !important;
+}
+
+/* reusable selection cards for mode / tier / method */
+.mmd-select-card{
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: var(--r22);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
+    var(--surface-2);
+  padding: 14px;
+  cursor: pointer;
+  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease, background .14s ease;
+}
+
+.mmd-select-card:hover{
+  transform: translateY(-1px);
+  background: var(--surface-3);
+  box-shadow:
+    0 18px 36px rgba(0,0,0,.34),
+    0 0 0 1px var(--gold-soft) inset;
+}
+
+.mmd-select-card.is-active{
+  border-color: var(--gold-line-strong);
+  box-shadow:
+    var(--shadowG),
+    0 0 0 1px var(--gold-soft) inset;
+  background:
+    linear-gradient(180deg, rgba(201,162,74,.06), rgba(0,0,0,.04)),
+    var(--surface-4);
+}
+
+/* compact panel */
+.mmd-panel{
+  border: 1px solid var(--line);
+  border-radius: var(--r22);
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+}
+
+/* confirm layout helper */
+.mmd-container-sm{
+  max-width: var(--container-sm);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* section-specific h2 lock */
