@@ -34,3 +34,210 @@
 #mmd-confirm h2{
   color: #f4f4f7 !important;
 }
+/* =========================================================
+   MMD Privé — Global Text / Rich Text / Form Lock
+   add after current mmd-global.css
+========================================================= */
+
+/* descendants inside cards / blocks / text wrappers */
+.mmd-card h1,
+.mmd-card h2,
+.mmd-card h3,
+.mmd-card h4,
+.mmd-card h5,
+.mmd-card h6,
+.mmd-block h1,
+.mmd-block h2,
+.mmd-block h3,
+.mmd-block h4,
+.mmd-block h5,
+.mmd-block h6,
+.rn-card h1,
+.rn-card h2,
+.rn-card h3,
+.rn-card h4,
+.rn-card h5,
+.rn-card h6,
+.rn-block h1,
+.rn-block h2,
+.rn-block h3,
+.rn-block h4,
+.rn-block h5,
+.rn-block h6,
+.mmd-text h1,
+.mmd-text h2,
+.mmd-text h3,
+.mmd-text h4,
+.mmd-text h5,
+.mmd-text h6,
+.rn-text h1,
+.rn-text h2,
+.rn-text h3,
+.rn-text h4,
+.rn-text h5,
+.rn-text h6{
+  color:var(--txt) !important;
+}
+
+.mmd-card p,
+.mmd-card li,
+.mmd-card dt,
+.mmd-card dd,
+.mmd-block p,
+.mmd-block li,
+.mmd-block dt,
+.mmd-block dd,
+.rn-card p,
+.rn-card li,
+.rn-card dt,
+.rn-card dd,
+.rn-block p,
+.rn-block li,
+.rn-block dt,
+.rn-block dd,
+.mmd-text p,
+.mmd-text li,
+.mmd-text dt,
+.mmd-text dd,
+.rn-text p,
+.rn-text li,
+.rn-text dt,
+.rn-text dd{
+  color:var(--txt) !important;
+}
+
+.mmd-card small,
+.mmd-card .mmd-meta,
+.mmd-card .mmd-caption,
+.mmd-card .rn-meta,
+.mmd-card .rn-caption,
+.mmd-block small,
+.mmd-block .mmd-meta,
+.mmd-block .mmd-caption,
+.mmd-block .rn-meta,
+.mmd-block .rn-caption,
+.rn-card small,
+.rn-card .mmd-meta,
+.rn-card .mmd-caption,
+.rn-card .rn-meta,
+.rn-card .rn-caption,
+.rn-block small,
+.rn-block .mmd-meta,
+.rn-block .mmd-caption,
+.rn-block .rn-meta,
+.rn-block .rn-caption,
+.mmd-text small,
+.rn-text small{
+  color:var(--muted) !important;
+}
+
+/* links inherit text lock */
+.mmd-card a,
+.mmd-block a,
+.rn-card a,
+.rn-block a,
+.mmd-text a,
+.rn-text a{
+  color:inherit;
+  text-decoration:none;
+}
+
+.mmd-card a:hover,
+.mmd-block a:hover,
+.rn-card a:hover,
+.rn-block a:hover,
+.mmd-text a:hover,
+.rn-text a:hover{
+  color:var(--txt);
+  opacity:.96;
+}
+
+.mmd-card a:focus-visible,
+.mmd-block a:focus-visible,
+.rn-card a:focus-visible,
+.rn-block a:focus-visible,
+.mmd-text a:focus-visible,
+.rn-text a:focus-visible{
+  outline:2px solid rgba(201,162,74,.42);
+  outline-offset:2px;
+  border-radius:8px;
+}
+
+/* webflow rich text safety */
+.w-richtext h1,
+.w-richtext h2,
+.w-richtext h3,
+.w-richtext h4,
+.w-richtext h5,
+.w-richtext h6{
+  color:var(--txt);
+}
+
+.w-richtext p,
+.w-richtext li,
+.w-richtext blockquote,
+.w-richtext figcaption{
+  color:var(--txt);
+}
+
+.w-richtext small,
+.w-richtext em + figcaption,
+.w-richtext ul + p{
+  color:var(--muted);
+}
+
+/* form text lock */
+.mmd-label,
+.rn-label,
+label.mmd-label,
+label.rn-label{
+  color:var(--txt) !important;
+}
+
+.mmd-input,
+.rn-input,
+input.mmd-input,
+input.rn-input,
+textarea.mmd-input,
+textarea.rn-input,
+select.mmd-input,
+select.rn-input{
+  color:var(--txt) !important;
+  caret-color:var(--txt);
+}
+
+.mmd-input::placeholder,
+.rn-input::placeholder,
+input.mmd-input::placeholder,
+input.rn-input::placeholder,
+textarea.mmd-input::placeholder,
+textarea.rn-input::placeholder{
+  color:rgba(255,255,255,.42);
+}
+
+.mmd-input:focus,
+.rn-input:focus,
+input.mmd-input:focus,
+input.rn-input:focus,
+textarea.mmd-input:focus,
+textarea.rn-input:focus,
+select.mmd-input:focus,
+select.rn-input:focus{
+  outline:none;
+}
+
+/* utility text helpers */
+.mmd-meta,
+.rn-meta,
+.mmd-caption,
+.rn-caption,
+.mmd-help,
+.rn-help{
+  color:var(--muted) !important;
+}
+
+/* selection */
+::selection{
+  background:rgba(201,162,74,.22);
+  color:#fff;
+}
