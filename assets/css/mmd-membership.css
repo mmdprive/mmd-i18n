@@ -1,169 +1,167 @@
-/* MMD Membership Layer - requires mmd-system.css */
-
-.mmd-membership-price{
-  font-size:clamp(28px, 4vw, 40px);
-  font-weight:900;
-  line-height:1;
+.mmd-system .mmd-membership-price{
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 900;
+  line-height: 1;
 }
 
-.mmd-membership-tier{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
+.mmd-system .mmd-membership-tier{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.mmd-membership-tier__name{
-  font-weight:900;
+.mmd-system .mmd-membership-tier__name{
+  font-weight: 900;
 }
 
-.mmd-membership-tier__meta{
-  font-size:13px;
-  color:var(--mmd-muted);
+.mmd-system .mmd-membership-tier__meta{
+  font-size: 13px;
+  color: var(--mmd-muted);
 }
 
-.mmd-membership-grid{
-  display:grid;
-  grid-template-columns:repeat(3, minmax(0,1fr));
-  gap:10px;
+.mmd-system .mmd-membership-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 10px;
 }
 
 @media (max-width:980px){
-  .mmd-membership-grid{
-    grid-template-columns:1fr;
+  .mmd-system .mmd-membership-grid{
+    grid-template-columns: 1fr;
   }
 }
 
-.mmd-membership-card{
-  position:relative;
+.mmd-system .mmd-membership-card{
+  position: relative;
 }
 
-.mmd-membership-card__tag{
-  margin-left:auto;
+.mmd-system .mmd-membership-card__tag{
+  margin-left: auto;
 }
 
-.mmd-membership-card__features{
-  margin:12px 0 0;
-  padding-left:18px;
-  color:var(--mmd-muted);
-  font-size:13px;
-  line-height:1.8;
+.mmd-system .mmd-membership-card__features{
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: var(--mmd-muted);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
-.mmd-membership-card__features li + li{
-  margin-top:2px;
+.mmd-system .mmd-membership-card__features li + li{
+  margin-top: 2px;
 }
 
-.mmd-membership-card--featured{
-  border-color:var(--mmd-gold-line-strong);
+.mmd-system .mmd-membership-card--featured{
+  border-color: var(--mmd-gold-line-strong);
   box-shadow:
     var(--mmd-shadow-gold),
     0 0 0 1px var(--mmd-gold-soft) inset;
 }
 
-.mmd-membership-summary{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:12px;
-  align-items:end;
+.mmd-system .mmd-membership-summary{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
 }
 
 @media (max-width:767px){
-  .mmd-membership-summary{
-    grid-template-columns:1fr;
+  .mmd-system .mmd-membership-summary{
+    grid-template-columns: 1fr;
   }
 }
 
-.mmd-membership-summary__value{
-  font-size:clamp(28px, 4vw, 40px);
-  font-weight:900;
-  text-align:right;
+.mmd-system .mmd-membership-summary__value{
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 900;
+  text-align: right;
 }
 
 @media (max-width:767px){
-  .mmd-membership-summary__value{
-    text-align:left;
+  .mmd-system .mmd-membership-summary__value{
+    text-align: left;
   }
 }
 
-.mmd-membership-renewal-note{
-  margin-top:12px;
-  border:1px solid var(--mmd-line);
-  border-radius:var(--mmd-r18);
-  background:var(--mmd-surface-3);
-  padding:12px;
+.mmd-system .mmd-membership-renewal-note{
+  margin-top: 12px;
+  border: 1px solid var(--mmd-line);
+  border-radius: var(--mmd-r18);
+  background: var(--mmd-surface-3);
+  padding: 12px;
 }
 
-.mmd-membership-renewal-note__title{
-  font-weight:900;
-  margin-bottom:6px;
-  color:var(--mmd-gold-text);
+.mmd-system .mmd-membership-renewal-note__title{
+  font-weight: 900;
+  margin-bottom: 6px;
+  color: var(--mmd-gold-text);
 }
 
-.mmd-membership-renewal-note__text{
-  color:var(--mmd-muted);
-  font-size:13px;
-  line-height:1.7;
+.mmd-system .mmd-membership-renewal-note__text{
+  color: var(--mmd-muted);
+  font-size: 13px;
+  line-height: 1.7;
 }
 
-.mmd-membership-hero-copy{
-  max-width:760px;
+.mmd-system .mmd-membership-hero-copy{
+  max-width: 760px;
 }
 
-.mmd-membership-hero-eyebrow{
-  margin-top:22px;
-  font-size:18px;
-  line-height:1.1;
-  letter-spacing:.08em;
-  font-weight:500;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.80);
+.mmd-system .mmd-membership-hero-eyebrow{
+  margin-top: 22px;
+  font-size: 18px;
+  line-height: 1.1;
+  letter-spacing: .08em;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.80);
 }
 
-.mmd-membership-hero-title{
-  margin:16px 0 0;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  line-height:.92;
-  letter-spacing:-.05em;
-  text-transform:uppercase;
+.mmd-system .mmd-membership-hero-title{
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  line-height: .92;
+  letter-spacing: -.05em;
+  text-transform: uppercase;
 }
 
-.mmd-membership-hero-titleWhite{
-  display:block;
-  font-weight:900;
-  font-size:clamp(54px, 9vw, 108px);
-  color:#f5f2ed;
+.mmd-system .mmd-membership-hero-titleWhite{
+  display: block;
+  font-weight: 900;
+  font-size: clamp(54px, 9vw, 108px);
+  color: #f5f2ed;
 }
 
-.mmd-membership-hero-titleGold{
-  display:block;
-  font-weight:900;
-  font-size:clamp(54px, 9vw, 108px);
-  background:var(--mmd-gold-grad);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
+.mmd-system .mmd-membership-hero-titleGold{
+  display: block;
+  font-weight: 900;
+  font-size: clamp(54px, 9vw, 108px);
+  background: var(--mmd-gold-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   text-shadow:
     0 0 18px rgba(224,193,106,.08),
     0 0 32px rgba(201,162,74,.05);
 }
 
-.mmd-membership-poem{
-  margin-top:18px;
-  max-width:660px;
-  padding:16px;
-  border-radius:var(--mmd-r18);
-  background:rgba(0,0,0,.28);
-  border:1px solid var(--mmd-line-strong);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
+.mmd-system .mmd-membership-poem{
+  margin-top: 18px;
+  max-width: 660px;
+  padding: 16px;
+  border-radius: var(--mmd-r18);
+  background: rgba(0,0,0,.28);
+  border: 1px solid var(--mmd-line-strong);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.mmd-membership-poem__line{
-  margin:0;
-  font-size:15px;
-  line-height:1.82;
-  color:var(--mmd-muted);
+.mmd-system .mmd-membership-poem__line{
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.82;
+  color: var(--mmd-muted);
 }
