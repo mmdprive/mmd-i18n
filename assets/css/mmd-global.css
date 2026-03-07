@@ -3,6 +3,7 @@
   --muted: rgba(255,255,255,.68);
 }
 
+/* heading lock */
 .mmd-h1,
 .mmd-h2,
 .mmd-h3,
@@ -15,6 +16,7 @@
   letter-spacing: -.02em;
 }
 
+/* body / card text lock */
 .mmd-card,
 .mmd-block,
 .rn-card,
@@ -24,20 +26,11 @@
   color: var(--txt) !important;
 }
 
+/* muted text */
 .mmd-muted,
 .rn-muted{
   color: var(--muted) !important;
 }
-
-#mmd-pay-membership h2,
-#mmd-pay-renewal h2,
-#mmd-confirm h2{
-  color: #f4f4f7 !important;
-}
-/* =========================================================
-   MMD Privé — Global Text / Rich Text / Form Lock
-   add after current mmd-global.css
-========================================================= */
 
 /* descendants inside cards / blocks / text wrappers */
 .mmd-card h1,
@@ -76,7 +69,7 @@
 .rn-text h4,
 .rn-text h5,
 .rn-text h6{
-  color:var(--txt) !important;
+  color: var(--txt) !important;
 }
 
 .mmd-card p,
@@ -103,7 +96,7 @@
 .rn-text li,
 .rn-text dt,
 .rn-text dd{
-  color:var(--txt) !important;
+  color: var(--txt) !important;
 }
 
 .mmd-card small,
@@ -128,7 +121,7 @@
 .rn-block .rn-caption,
 .mmd-text small,
 .rn-text small{
-  color:var(--muted) !important;
+  color: var(--muted) !important;
 }
 
 /* links inherit text lock */
@@ -138,8 +131,8 @@
 .rn-block a,
 .mmd-text a,
 .rn-text a{
-  color:inherit;
-  text-decoration:none;
+  color: inherit;
+  text-decoration: none;
 }
 
 .mmd-card a:hover,
@@ -148,8 +141,8 @@
 .rn-block a:hover,
 .mmd-text a:hover,
 .rn-text a:hover{
-  color:var(--txt);
-  opacity:.96;
+  color: var(--txt);
+  opacity: .96;
 }
 
 .mmd-card a:focus-visible,
@@ -158,9 +151,9 @@
 .rn-block a:focus-visible,
 .mmd-text a:focus-visible,
 .rn-text a:focus-visible{
-  outline:2px solid rgba(201,162,74,.42);
-  outline-offset:2px;
-  border-radius:8px;
+  outline: 2px solid rgba(201,162,74,.42);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 /* webflow rich text safety */
@@ -170,20 +163,20 @@
 .w-richtext h4,
 .w-richtext h5,
 .w-richtext h6{
-  color:var(--txt);
+  color: var(--txt);
 }
 
 .w-richtext p,
 .w-richtext li,
 .w-richtext blockquote,
 .w-richtext figcaption{
-  color:var(--txt);
+  color: var(--txt);
 }
 
 .w-richtext small,
 .w-richtext em + figcaption,
 .w-richtext ul + p{
-  color:var(--muted);
+  color: var(--muted);
 }
 
 /* form text lock */
@@ -191,7 +184,7 @@
 .rn-label,
 label.mmd-label,
 label.rn-label{
-  color:var(--txt) !important;
+  color: var(--txt) !important;
 }
 
 .mmd-input,
@@ -202,8 +195,8 @@ textarea.mmd-input,
 textarea.rn-input,
 select.mmd-input,
 select.rn-input{
-  color:var(--txt) !important;
-  caret-color:var(--txt);
+  color: var(--txt) !important;
+  caret-color: var(--txt);
 }
 
 .mmd-input::placeholder,
@@ -212,7 +205,7 @@ input.mmd-input::placeholder,
 input.rn-input::placeholder,
 textarea.mmd-input::placeholder,
 textarea.rn-input::placeholder{
-  color:rgba(255,255,255,.42);
+  color: rgba(255,255,255,.42);
 }
 
 .mmd-input:focus,
@@ -223,7 +216,7 @@ textarea.mmd-input:focus,
 textarea.rn-input:focus,
 select.mmd-input:focus,
 select.rn-input:focus{
-  outline:none;
+  outline: none;
 }
 
 /* utility text helpers */
@@ -233,11 +226,18 @@ select.rn-input:focus{
 .rn-caption,
 .mmd-help,
 .rn-help{
-  color:var(--muted) !important;
+  color: var(--muted) !important;
+}
+
+/* section-specific h2 lock */
+#mmd-pay-membership h2,
+#mmd-pay-renewal h2,
+#mmd-confirm h2{
+  color: #f4f4f7 !important;
 }
 
 /* selection */
 ::selection{
-  background:rgba(201,162,74,.22);
-  color:#fff;
+  background: rgba(201,162,74,.22);
+  color: #fff;
 }
