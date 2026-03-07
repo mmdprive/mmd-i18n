@@ -1,7 +1,7 @@
 /* =========================================================
    MMD Privé — Pay Renewal CSS
    LOCK: v2026-RENEWAL-BLACK-GOLD-MATTE
-   Requires: mmd-master.css
+   Requires: mmd-global.css v2
 ========================================================= */
 
 /* page root */
@@ -14,12 +14,12 @@
 #mmd-pay-renewal .bc-hero{
   position:relative;
   min-height:min(88vh, 760px);
-  border-radius:22px;
+  border-radius:var(--r22);
   overflow:hidden;
   background:#07070a;
   color:var(--txt);
   isolation:isolate;
-  border:1px solid rgba(255,255,255,.06);
+  border:1px solid var(--line-soft);
   box-shadow:var(--shadow);
   width:min(1180px, calc(100% - 28px));
   margin:14px auto 0;
@@ -134,7 +134,7 @@
   height:6px;
   border-radius:99px;
   background:var(--g2);
-  box-shadow:0 0 0 3px rgba(201,162,74,.10);
+  box-shadow:0 0 0 3px var(--gold-soft-2);
 }
 
 /* hero title */
@@ -186,9 +186,9 @@
   margin-top:18px;
   max-width:660px;
   padding:16px;
-  border-radius:18px;
+  border-radius:var(--r18);
   background:rgba(0,0,0,.28);
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--line-strong);
   backdrop-filter:blur(10px);
 }
 
@@ -238,15 +238,15 @@
   font-size:11px;
   text-transform:uppercase;
   letter-spacing:.06em;
-  border:1px solid rgba(201,162,74,.24);
+  border:1px solid var(--gold-line);
   border-radius:999px;
   padding:8px 10px;
-  color:rgba(224,193,106,.96);
-  background:rgba(201,162,74,.08);
+  color:var(--gold-text);
+  background:var(--gold-soft);
 }
 
 #mmd-pay-renewal .bc-summary__rows{
-  border-top:1px solid rgba(255,255,255,.08);
+  border-top:1px solid var(--line);
   padding-top:8px;
   position:relative;
   z-index:1;
@@ -257,7 +257,7 @@
   justify-content:space-between;
   gap:12px;
   padding:12px 0;
-  border-top:1px solid rgba(255,255,255,.08);
+  border-top:1px solid var(--line);
 }
 
 #mmd-pay-renewal .bc-summary__row:first-child{
@@ -298,7 +298,7 @@
   position:relative;
   overflow:hidden;
   border-radius:var(--r28);
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid var(--line);
   background:
     linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
     rgba(8,8,8,.64);
@@ -318,11 +318,11 @@
 }
 
 #mmd-pay-renewal .mmd-block{
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid var(--line);
   border-radius:var(--r22);
   background:
     linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
-    rgba(0,0,0,.16);
+    var(--surface-2);
   padding:16px;
   margin-bottom:12px;
 }
@@ -362,32 +362,6 @@
 
 #mmd-pay-renewal .mmd-mode{
   text-align:left;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:var(--r22);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
-    rgba(0,0,0,.18);
-  padding:14px;
-  cursor:pointer;
-  transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease,background .14s ease;
-}
-
-#mmd-pay-renewal .mmd-mode:hover{
-  transform:translateY(-1px);
-  background:rgba(0,0,0,.24);
-  box-shadow:
-    0 18px 36px rgba(0,0,0,.34),
-    0 0 0 1px rgba(201,162,74,.08) inset;
-}
-
-#mmd-pay-renewal .mmd-mode.is-active{
-  border-color:rgba(201,162,74,.46);
-  box-shadow:
-    var(--shadowG),
-    0 0 0 1px rgba(201,162,74,.08) inset;
-  background:
-    linear-gradient(180deg, rgba(201,162,74,.06), rgba(0,0,0,.04)),
-    rgba(0,0,0,.26);
 }
 
 #mmd-pay-renewal .mmd-mode__title{
@@ -424,32 +398,6 @@
 
 #mmd-pay-renewal .mmd-tier{
   text-align:left;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:var(--r22);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
-    rgba(0,0,0,.18);
-  padding:14px;
-  cursor:pointer;
-  transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease,background .14s ease;
-}
-
-#mmd-pay-renewal .mmd-tier:hover{
-  transform:translateY(-1px);
-  background:rgba(0,0,0,.24);
-  box-shadow:
-    0 18px 36px rgba(0,0,0,.34),
-    0 0 0 1px rgba(201,162,74,.08) inset;
-}
-
-#mmd-pay-renewal .mmd-tier.is-active{
-  border-color:rgba(201,162,74,.46);
-  box-shadow:
-    var(--shadowG),
-    0 0 0 1px rgba(201,162,74,.08) inset;
-  background:
-    linear-gradient(180deg, rgba(201,162,74,.06), rgba(0,0,0,.04)),
-    rgba(0,0,0,.26);
 }
 
 #mmd-pay-renewal .mmd-tier__top{
@@ -465,12 +413,12 @@
 
 #mmd-pay-renewal .mmd-tier__tag{
   font-size:11px;
-  color:rgba(224,193,106,.96);
+  color:var(--gold-text);
   font-weight:900;
   padding:6px 10px;
   border-radius:999px;
-  border:1px solid rgba(201,162,74,.22);
-  background:rgba(201,162,74,.08);
+  border:1px solid var(--gold-line);
+  background:var(--gold-soft);
   text-transform:uppercase;
   letter-spacing:.04em;
 }
@@ -490,16 +438,16 @@
 
 #mmd-pay-renewal .mmd-remarks{
   margin-top:12px;
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid var(--line);
   border-radius:var(--r18);
   padding:12px;
-  background:rgba(0,0,0,.10);
+  background:var(--surface-1);
 }
 
 #mmd-pay-renewal .mmd-remarks__title{
   font-weight:900;
   margin-bottom:8px;
-  color:rgba(224,193,106,1);
+  color:var(--gold-text);
 }
 
 #mmd-pay-renewal .mmd-remarks__list{
@@ -525,29 +473,6 @@
 
 #mmd-pay-renewal .mmd-method{
   text-align:left;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:var(--r22);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
-    rgba(0,0,0,.16);
-  padding:14px;
-  cursor:pointer;
-  transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease,background .14s ease;
-}
-
-#mmd-pay-renewal .mmd-method:hover{
-  transform:translateY(-1px);
-  background:rgba(0,0,0,.22);
-  box-shadow:
-    0 18px 36px rgba(0,0,0,.34),
-    0 0 0 1px rgba(201,162,74,.08) inset;
-}
-
-#mmd-pay-renewal .mmd-method.is-active{
-  border-color:rgba(201,162,74,.46);
-  box-shadow:
-    var(--shadowG),
-    0 0 0 1px rgba(201,162,74,.08) inset;
 }
 
 #mmd-pay-renewal .mmd-method__title{
@@ -590,9 +515,9 @@
 
 #mmd-pay-renewal .mmd-input{
   width:100%;
-  border-radius:14px;
+  border-radius:var(--r14);
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
+  background:var(--surface-3);
   color:var(--txt);
   padding:12px;
   outline:none;
@@ -622,7 +547,7 @@
   display:none;
   margin-top:12px;
   border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--line-strong);
   background:rgba(0,0,0,.18);
   padding:10px 12px;
   font-size:13px;
