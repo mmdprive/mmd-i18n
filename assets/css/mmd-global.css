@@ -1,6 +1,29 @@
 :root{
   --txt: rgba(244,244,247,.92);
   --muted: rgba(255,255,255,.68);
+
+  --line: rgba(255,255,255,.08);
+  --panel: rgba(10,10,10,.72);
+
+  --g1: #c9a24a;
+  --g2: #e0c16a;
+
+  --shadow:
+    0 24px 64px rgba(0,0,0,.42),
+    0 8px 24px rgba(0,0,0,.22);
+
+  --shadow-soft:
+    0 18px 44px rgba(0,0,0,.30),
+    0 6px 18px rgba(0,0,0,.18);
+
+  --shadowG:
+    0 18px 44px rgba(0,0,0,.34),
+    0 0 0 1px rgba(201,162,74,.10),
+    0 0 28px rgba(201,162,74,.10);
+
+  --r18: 18px;
+  --r22: 22px;
+  --r28: 28px;
 }
 
 /* heading lock */
