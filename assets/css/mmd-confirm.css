@@ -1,52 +1,104 @@
+/* =========================================================
+   MMD Privé — Confirm CSS
+   Requires: mmd-global.css v2
+========================================================= */
+
 #mmd-confirm{
-
-max-width:720px;
-margin:60px auto;
-
+  max-width: var(--container-sm);
+  margin: var(--space-60) auto;
+  color: var(--txt);
 }
 
-.confirm-card{
-
-border-radius:28px;
-
-border:1px solid var(--line);
-
-background:var(--panel);
-
-box-shadow:var(--shadow-soft);
-
-padding:30px;
-
+#mmd-confirm .confirm-card{
+  border-radius: var(--r28);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+  padding: var(--space-30);
 }
 
-.confirm-title{
-
-font-size:32px;
-font-weight:900;
-
+#mmd-confirm .confirm-title{
+  margin: 0;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -.02em;
+  color: var(--txt);
 }
 
-.confirm-status{
-
-margin-top:14px;
-
-padding:12px;
-
-border-radius:14px;
-
-border:1px solid var(--line);
-
-background:rgba(0,0,0,.2);
-
+#mmd-confirm .confirm-status{
+  margin-top: var(--space-14);
+  padding: var(--space-12);
+  border-radius: var(--r14);
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.2);
+  color: var(--txt);
 }
 
-.confirm-actions{
+#mmd-confirm .confirm-status.is-good{
+  border-color: rgba(201,162,74,.35);
+  box-shadow: 0 0 0 1px var(--gold-soft) inset;
+}
 
-margin-top:18px;
+#mmd-confirm .confirm-status.is-warn{
+  border-color: rgba(255,210,140,.25);
+}
 
-display:flex;
-gap:12px;
+#mmd-confirm .confirm-status.is-bad{
+  border-color: rgba(255,120,120,.28);
+}
 
-flex-wrap:wrap;
+#mmd-confirm .confirm-status__title{
+  font-weight: 900;
+  color: var(--txt);
+}
 
+#mmd-confirm .confirm-status__text,
+#mmd-confirm .confirm-status p,
+#mmd-confirm .confirm-status small{
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+#mmd-confirm .confirm-actions{
+  margin-top: var(--space-18);
+  display: flex;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+}
+
+#mmd-confirm .confirm-actions > *{
+  flex: 0 0 auto;
+}
+
+#mmd-confirm .confirm-meta{
+  margin-top: var(--space-14);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+@media (max-width: 767px){
+  #mmd-confirm{
+    margin: var(--space-30) auto;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  #mmd-confirm .confirm-card{
+    padding: 18px;
+    border-radius: var(--r22);
+  }
+
+  #mmd-confirm .confirm-title{
+    font-size: 26px;
+  }
+
+  #mmd-confirm .confirm-actions{
+    gap: 10px;
+  }
+
+  #mmd-confirm .confirm-actions > *{
+    width: 100%;
+  }
 }
