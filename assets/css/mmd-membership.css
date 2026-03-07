@@ -1,524 +1,169 @@
-/* =====================================================
-   MMD PRIVÉ — MEMBERSHIP (LUX / PRODUCTION)
-   Scope: #mmd-membership only
-===================================================== */
+/* MMD Membership Layer - requires mmd-system.css */
 
-#mmd-membership{
-  /* Token bridge (fallback ถ้าใน mmd-master ยังไม่ประกาศ) */
-  --mmd-bg-main: var(--mmd-bg-main, #050509);
-  --mmd-bg-panel: var(--mmd-bg-panel, #0b0c13);
-  --mmd-gold: var(--mmd-gold, #cba65a);
-  --mmd-gold-soft: var(--mmd-gold-soft, rgba(203,166,90,.16));
-
-  --bg0:#050506;
-  --bg1:#0B0B0D;
-  --text:#F4F2EE;
-  --muted: rgba(244,242,238,.72);
-  --muted2: rgba(244,242,238,.52);
-
-  --gold: var(--mmd-gold);
-  --gold2:#E8D49A;
-
-  --line: rgba(255,255,255,.11);
-  --line2: rgba(255,255,255,.07);
-
-  --r14:14px;
-  --r18:18px;
-  --r22:22px;
-  --r28:28px;
-
-  --shadow: 0 26px 90px rgba(0,0,0,.62);
-  --shadow2: 0 18px 60px rgba(0,0,0,.45);
-
-  --glowGold: 0 0 0 1px rgba(203,166,90,.26), 0 18px 60px rgba(203,166,90,.10);
-  --glowSoft: 0 0 0 1px rgba(255,255,255,.10), 0 18px 60px rgba(0,0,0,.55);
-
-  font-family: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important;
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  position: relative;
-  isolation: isolate;
+.mmd-membership-price{
+  font-size:clamp(28px, 4vw, 40px);
+  font-weight:900;
+  line-height:1;
 }
 
-#mmd-membership, #mmd-membership *{ box-sizing:border-box; }
-#mmd-membership img{ max-width:100%; display:block; }
-#mmd-membership a{ color:inherit; text-decoration:none; }
-
-#mmd-membership .wrap{
-  max-width:1160px;
-  margin:0 auto;
-  padding: 28px 18px 78px;
+.mmd-membership-tier{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
-/* Topbar */
-#mmd-membership .topbar{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:14px; margin-bottom:16px;
-}
-#mmd-membership .brand{ display:flex; align-items:center; gap:12px; min-width:240px; }
-#mmd-membership .brandLogo{
-  width:46px; height:46px; border-radius:14px;
-  display:grid; place-items:center;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--line2);
-  overflow:hidden;
-  box-shadow: var(--glowSoft);
-}
-#mmd-membership .brandLogo img{ width:82%; height:auto; filter:contrast(1.03); }
-#mmd-membership .brandTxt{ display:flex; flex-direction:column; gap:3px; line-height:1.05; }
-#mmd-membership .brandTxt .logo{
-  font-family:"Antonio","Outfit",sans-serif !important;
-  letter-spacing:.18em; font-size:16px;
-}
-#mmd-membership .brandTxt .sub{ font-size:12px; color:var(--muted2); }
-
-/* Lang */
-#mmd-membership .lang{
-  display:flex; gap:8px;
-  border-radius:999px; padding:6px;
-  background:rgba(255,255,255,.035);
-  border:1px solid var(--line2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--glowSoft);
-}
-#mmd-membership .lang button{
-  border:0; cursor:pointer;
-  padding:9px 13px; border-radius:999px;
-  background:transparent;
-  color:var(--muted);
-  font-weight:900; font-size:12px; letter-spacing:.03em;
-}
-#mmd-membership .lang button.active{
-  background: rgba(203,166,90,.18);
-  color: var(--text);
-  border:1px solid rgba(203,166,90,.28);
-  box-shadow: var(--glowGold);
+.mmd-membership-tier__name{
+  font-weight:900;
 }
 
-/* Hero */
-#mmd-membership .hero{
+.mmd-membership-tier__meta{
+  font-size:13px;
+  color:var(--mmd-muted);
+}
+
+.mmd-membership-grid{
   display:grid;
-  grid-template-columns: 1.06fr .94fr;
-  gap:0;
-  border:1px solid var(--line2);
-  border-radius: var(--r28);
-  overflow:hidden;
-  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
-  box-shadow: var(--shadow);
-}
-@media (max-width: 920px){ #mmd-membership .hero{ grid-template-columns:1fr; } }
-
-#mmd-membership .heroL{ padding:30px 26px 26px; }
-#mmd-membership .eyebrow{
-  display:flex; gap:10px; align-items:center;
-  color:var(--muted2);
-  font-weight:900; font-size:12px; letter-spacing:.12em;
-  text-transform:uppercase;
-}
-#mmd-membership .eyebrow .dot{
-  width:6px; height:6px; border-radius:50%;
-  background:var(--gold);
-  box-shadow:0 0 0 3px rgba(203,166,90,.16);
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
 }
 
-/* FIX 1: ลดขนาด + เปลี่ยนเป็นทอง + ล็อกฟอนต์ */
-#mmd-membership .h1{
-  font-family:"Outfit",sans-serif !important;
-  margin:14px 0 12px;
-  font-size: clamp(30px, 3vw, 38px);   /* ลดลงจากเดิม */
-  line-height:1.06;
-  letter-spacing:-0.02em;
-  color: var(--gold2) !important;
-  text-shadow: 0 10px 40px rgba(0,0,0,.55);
+@media (max-width:980px){
+  .mmd-membership-grid{
+    grid-template-columns:1fr;
+  }
 }
 
-#mmd-membership .desc{
-  color:var(--muted);
-  font-size:15px;
-  line-height:1.72;
-  max-width:62ch;
-  margin:0 0 18px;
-}
-
-#mmd-membership .heroActions{
-  display:flex; justify-content:flex-start;
-  margin-top:18px;
-}
-@media (max-width:920px){ #mmd-membership .heroActions{ justify-content:center; } }
-
-#mmd-membership .heroR{ position:relative; background:#000; min-height:340px; }
-#mmd-membership .heroR img{ width:100%; height:100%; object-fit:cover; filter:contrast(1.03) saturate(1.02); }
-#mmd-membership .heroR::after{
-  content:""; position:absolute; inset:0;
-  background:
-    radial-gradient(1200px 380px at 80% 20%, rgba(0,0,0,.10), rgba(0,0,0,.72)),
-    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.76));
-  pointer-events:none;
-}
-
-/* Grid */
-#mmd-membership .grid{
-  display:grid;
-  grid-template-columns:1fr .98fr;
-  gap:18px;
-  margin-top:18px;
-}
-@media (max-width:920px){ #mmd-membership .grid{ grid-template-columns:1fr; } }
-
-/* Card */
-#mmd-membership .card{
-  border:1px solid var(--line2);
-  border-radius:var(--r28);
-  background: linear-gradient(180deg, rgba(255,255,255,.032), rgba(255,255,255,.014));
-  box-shadow:var(--shadow2);
-  overflow:hidden;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-#mmd-membership .cardHd{
-  padding:18px 18px 14px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-}
-#mmd-membership .ttl{
-  font-family:"Outfit",sans-serif !important;
-  font-size:16px;
-  font-weight:900;
-  letter-spacing:.02em;
-}
-#mmd-membership .mini{ font-size:12px; color:var(--muted2); padding-top:2px; text-align:right; }
-#mmd-membership .cardBd{ padding:16px 18px 18px; }
-
-/* Form */
-#mmd-membership .fieldset{ margin:0 0 14px; }
-#mmd-membership label.baseLabel{
-  display:block;
-  font-size:12px;
-  color:var(--muted2);
-  margin:0 0 8px;
-  letter-spacing:.03em;
-  font-weight:900;
-}
-#mmd-membership input.text{
-  width:100%;
-  border-radius:var(--r14);
-  border:1px solid rgba(255,255,255,.11);
-  background: rgba(0,0,0,.34);
-  color:var(--text);
-  padding:12px 12px;
-  outline:none;
-  font-size:14px;
-  transition: box-shadow .15s ease, border-color .15s ease;
-}
-#mmd-membership input.text:focus{
-  border-color: rgba(203,166,90,.42);
-  box-shadow: 0 0 0 4px rgba(203,166,90,.12);
-}
-#mmd-membership .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-@media (max-width:520px){ #mmd-membership .row2{ grid-template-columns:1fr; } }
-
-/* Packages */
-#mmd-membership .pkgRow{ display:grid; gap:10px; }
-#mmd-membership .pkg{
-  display:flex; gap:12px;
-  padding:14px 14px;
-  border-radius:var(--r22);
-  border:1px solid rgba(255,255,255,.11);
-  background: rgba(255,255,255,.02);
-  cursor:pointer;
-  transition: transform .14s ease, background .14s ease, border-color .14s ease, box-shadow .14s ease;
-}
-#mmd-membership .pkg:hover{
-  transform: translateY(-1px);
-  border-color: rgba(203,166,90,.22);
-  background: rgba(203,166,90,.05);
-  box-shadow: 0 18px 60px rgba(0,0,0,.30);
-}
-#mmd-membership .pkg input{ margin-top:2px; width:auto; accent-color: var(--gold); }
-#mmd-membership .pkgMain{ flex:1; }
-#mmd-membership .pkgName{
-  font-family:"Outfit",sans-serif !important;
-  font-weight:900;
-  letter-spacing:.02em;
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  font-size:14px;
-}
-#mmd-membership .pkgName .price{ color:var(--gold2); font-weight:900; font-size:14px; }
-#mmd-membership .pkgSub{ color:var(--muted); font-size:13px; margin-top:6px; line-height:1.58; }
-
-#mmd-membership .divider{ height:1px; background:rgba(255,255,255,.06); margin:16px 0; }
-
-/* Summary */
-#mmd-membership .summary{
-  display:grid; gap:10px;
-  padding:14px;
-  border-radius:var(--r22);
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.30);
-}
-#mmd-membership .sumRow{
-  display:flex; justify-content:space-between; align-items:center; gap:12px;
-  font-size:13px; color:var(--muted);
-}
-#mmd-membership .sumRow strong{ color:var(--text); }
-#mmd-membership .sumFinal{ padding-top:10px; border-top:1px solid rgba(255,255,255,.08); margin-top:6px; }
-#mmd-membership .sumFinal .amt{
-  font-family:"Outfit",sans-serif !important;
-  font-size:22px; letter-spacing:.02em;
-  color:var(--gold2);
-  font-weight:900;
-}
-
-/* Buttons */
-/* FIX 2: ปุ่มทองโดนทับ -> ใส่ !important เฉพาะ background/color/box-shadow */
-#mmd-membership .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-#mmd-membership .btn{
-  border:0; cursor:pointer;
-  padding:12px 14px;
-  border-radius:var(--r14);
-  font-weight:900;
-  letter-spacing:.04em;
-  font-size:12px;
-  text-transform:uppercase;
-  display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  user-select:none; white-space:nowrap;
-  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
-}
-#mmd-membership .btn:active{ transform: translateY(1px); }
-
-#mmd-membership .btn.primary{
-  color:#0A0A0A !important;
-  background: linear-gradient(180deg, rgba(232,212,154,1), rgba(203,166,90,1)) !important;
-  box-shadow: 0 14px 30px rgba(203,166,90,.16) !important;
-}
-#mmd-membership .btn.primary:hover{ filter:brightness(1.03); box-shadow: 0 18px 40px rgba(203,166,90,.18) !important; }
-
-#mmd-membership .btn.ghost{
-  color:var(--text);
-  background: rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.10);
-}
-#mmd-membership .btn.ghost:hover{
-  border-color: rgba(203,166,90,.22);
-  background: rgba(203,166,90,.05);
-  box-shadow: 0 18px 60px rgba(0,0,0,.30);
-}
-
-#mmd-membership .btn.gold{
-  min-width:240px;
-  color:#0A0A0A !important;
-  background: linear-gradient(180deg, rgba(232,212,154,1), rgba(203,166,90,1)) !important;
-  box-shadow: 0 14px 30px rgba(203,166,90,.16) !important;
-}
-
-/* Payment methods */
-#mmd-membership .payMethods{ display:grid; gap:12px; margin-bottom:14px; }
-
-#mmd-membership .method{
-  border-radius:var(--r22);
-  border:1px solid rgba(255,255,255,.10);
-  background: linear-gradient(180deg, rgba(255,255,255,.028), rgba(0,0,0,.26));
-  padding:14px 14px;
-  display:flex; gap:12px; align-items:flex-start;
-  cursor:pointer;
+.mmd-membership-card{
   position:relative;
-  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease, background .14s ease;
-}
-#mmd-membership .method:hover{
-  transform: translateY(-1px);
-  border-color: rgba(203,166,90,.18);
-  box-shadow: 0 18px 60px rgba(0,0,0,.34);
 }
 
-/* Custom radio */
-#mmd-membership .method input[type="radio"]{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
+.mmd-membership-card__tag{
+  margin-left:auto;
 }
-#mmd-membership .methodIndicator{
-  width:18px; height:18px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.25);
-  box-shadow: inset 0 0 0 3px rgba(0,0,0,.55);
+
+.mmd-membership-card__features{
+  margin:12px 0 0;
+  padding-left:18px;
+  color:var(--mmd-muted);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.mmd-membership-card__features li + li{
   margin-top:2px;
-  flex:0 0 auto;
-  position:relative;
-}
-#mmd-membership .method.is-selected .methodIndicator{
-  border-color: rgba(232,212,154,.55);
-  box-shadow: 0 0 0 4px rgba(203,166,90,.12), inset 0 0 0 3px rgba(0,0,0,.55);
-}
-#mmd-membership .method.is-selected .methodIndicator::after{
-  content:"";
-  position:absolute; inset:4px;
-  border-radius:999px;
-  background: linear-gradient(180deg, rgba(232,212,154,1), rgba(203,166,90,1));
 }
 
-#mmd-membership .methodBody{ flex:1; min-width:0; }
-#mmd-membership .methodTitle{
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  font-family:"Outfit",sans-serif !important;
-  font-weight:900; letter-spacing:.02em; font-size:14px;
-}
-#mmd-membership .methodSub{ color:var(--muted); font-size:13px; line-height:1.6; margin-top:6px; }
-#mmd-membership .method.is-selected{
-  border-color: rgba(203,166,90,.30);
-  box-shadow: var(--glowGold);
-  background: linear-gradient(180deg, rgba(203,166,90,.09), rgba(0,0,0,.26));
+.mmd-membership-card--featured{
+  border-color:var(--mmd-gold-line-strong);
+  box-shadow:
+    var(--mmd-shadow-gold),
+    0 0 0 1px var(--mmd-gold-soft) inset;
 }
 
-/* Pill — ทำให้พอดีขึ้น */
-#mmd-membership .pill{
-  font-size:10px;                 /* เล็กลงนิดให้พอดี */
-  font-weight:900;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  padding:7px 10px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.03);
-  color: rgba(244,242,238,.88);
-  white-space:nowrap;
-  flex:0 0 auto;
-}
-#mmd-membership .pill.gold{
-  border-color: rgba(203,166,90,.28);
-  background: rgba(203,166,90,.12);
-  color: rgba(244,242,238,.92);
-}
-
-/* Copy button */
-#mmd-membership .copyBtn{
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-  color: var(--text);
-  border-radius:12px;
-  padding:9px 10px;
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.08em;
-  font-size:11px;
-  text-transform:uppercase;
-  transition: background .12s ease, border-color .12s ease, transform .12s ease;
-  flex:0 0 auto;
-  margin-top:-2px;
-}
-#mmd-membership .copyBtn:hover{ border-color: rgba(203,166,90,.26); background: rgba(203,166,90,.06); }
-#mmd-membership .copyBtn:active{ transform: translateY(1px); }
-
-/* PromptPay box */
-#mmd-membership .qrBox{
-  display:grid; place-items:center;
-  padding:14px;
-  border-radius:var(--r22);
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.30);
-  min-height:280px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
-}
-#mmd-membership #qr{
-  width:220px; height:220px;
-  border-radius:18px;
-  overflow:hidden;
-  background:#fff;
-  padding:10px;
-  box-shadow: 0 18px 60px rgba(0,0,0,.25);
-}
-#mmd-membership .payMeta{ display:grid; gap:10px; margin-top:12px; }
-#mmd-membership .kv{
-  display:flex; justify-content:space-between; align-items:center;
+.mmd-membership-summary{
+  display:grid;
+  grid-template-columns:1fr auto;
   gap:12px;
-  font-size:13px; color:var(--muted);
-  padding:12px 12px;
-  border-radius:var(--r18);
-  border:1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.02);
-  min-width:0;
+  align-items:end;
 }
-#mmd-membership .kv b{ color:var(--text); font-weight:900; }
-#mmd-membership .kv .truncate{
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  max-width:62%;
+
+@media (max-width:767px){
+  .mmd-membership-summary{
+    grid-template-columns:1fr;
+  }
+}
+
+.mmd-membership-summary__value{
+  font-size:clamp(28px, 4vw, 40px);
+  font-weight:900;
   text-align:right;
 }
 
-/* Status */
-#mmd-membership .status{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:var(--r18);
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.02);
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
+@media (max-width:767px){
+  .mmd-membership-summary__value{
+    text-align:left;
+  }
 }
-#mmd-membership .status.ok{ border-color: rgba(110,231,183,.28); background: rgba(110,231,183,.06); }
-#mmd-membership .status.bad{ border-color: rgba(255,90,95,.28); background: rgba(255,90,95,.06); }
 
-/* Modal */
-#mmd-membership .modal{
-  position:fixed; inset:0;
-  background: rgba(0,0,0,.76);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  z-index:9999;
+.mmd-membership-renewal-note{
+  margin-top:12px;
+  border:1px solid var(--mmd-line);
+  border-radius:var(--mmd-r18);
+  background:var(--mmd-surface-3);
+  padding:12px;
 }
-#mmd-membership .modal.show{ display:flex; }
-#mmd-membership .modalCard{
-  width:min(980px, 100%);
-  height:min(80vh, 680px);
-  border-radius:var(--r28);
-  border:1px solid rgba(255,255,255,.12);
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  box-shadow: var(--shadow);
-  overflow:hidden;
+
+.mmd-membership-renewal-note__title{
+  font-weight:900;
+  margin-bottom:6px;
+  color:var(--mmd-gold-text);
+}
+
+.mmd-membership-renewal-note__text{
+  color:var(--mmd-muted);
+  font-size:13px;
+  line-height:1.7;
+}
+
+.mmd-membership-hero-copy{
+  max-width:760px;
+}
+
+.mmd-membership-hero-eyebrow{
+  margin-top:22px;
+  font-size:18px;
+  line-height:1.1;
+  letter-spacing:.08em;
+  font-weight:500;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.80);
+}
+
+.mmd-membership-hero-title{
+  margin:16px 0 0;
   display:flex;
   flex-direction:column;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-#mmd-membership .modalHd{
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding:12px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-#mmd-membership .modalHd .mt{
-  font-family:"Outfit",sans-serif !important;
-  font-weight:900;
-  letter-spacing:.02em;
-  font-size:14px;
-}
-#mmd-membership .xBtn{
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-  color: var(--text);
-  border-radius:12px;
-  padding:10px 12px;
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.10em;
-  font-size:11px;
+  gap:4px;
+  line-height:.92;
+  letter-spacing:-.05em;
   text-transform:uppercase;
 }
-#mmd-membership .xBtn:hover{ border-color: rgba(203,166,90,.26); background: rgba(203,166,90,.06); }
-#mmd-membership .modalBody{ flex:1; background:#000; }
-#mmd-membership .modalBody iframe{ width:100%; height:100%; border:0; background:#000; }
 
-#mmd-membership .footer{
-  margin-top:18px;
-  color: rgba(244,242,238,.38);
-  font-size:11px;
-  text-align:center;
+.mmd-membership-hero-titleWhite{
+  display:block;
+  font-weight:900;
+  font-size:clamp(54px, 9vw, 108px);
+  color:#f5f2ed;
 }
 
-/* Kill particles (กัน global inject) */
-#gold-particles, canvas#gold-particles,
-canvas[id*="particle" i], canvas[class*="particle" i]{ display:none !important; opacity:0 !important; visibility:hidden !important; pointer-events:none !important; }
+.mmd-membership-hero-titleGold{
+  display:block;
+  font-weight:900;
+  font-size:clamp(54px, 9vw, 108px);
+  background:var(--mmd-gold-grad);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:
+    0 0 18px rgba(224,193,106,.08),
+    0 0 32px rgba(201,162,74,.05);
+}
+
+.mmd-membership-poem{
+  margin-top:18px;
+  max-width:660px;
+  padding:16px;
+  border-radius:var(--mmd-r18);
+  background:rgba(0,0,0,.28);
+  border:1px solid var(--mmd-line-strong);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.mmd-membership-poem__line{
+  margin:0;
+  font-size:15px;
+  line-height:1.82;
+  color:var(--mmd-muted);
+}
