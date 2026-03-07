@@ -1,0 +1,129 @@
+/* MMD Payment Layer - requires mmd-system.css */
+
+.mmd-payment-ref{
+  font-size:13px;
+  color:var(--mmd-muted);
+  word-break:break-word;
+}
+
+.mmd-qr-box{
+  border:1px solid var(--mmd-line);
+  border-radius:var(--mmd-r18);
+  background:rgba(255,255,255,.02);
+  padding:16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.mmd-qr-box img{
+  display:block;
+  max-width:100%;
+  height:auto;
+}
+
+.mmd-payment-method-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+}
+
+@media (max-width:980px){
+  .mmd-payment-method-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+.mmd-payment-method__title{
+  font-weight:900;
+}
+
+.mmd-payment-method__desc{
+  margin-top:10px;
+  font-size:13px;
+  color:var(--mmd-muted);
+  line-height:1.6;
+}
+
+.mmd-payment-instructions{
+  margin-top:12px;
+  border:1px solid var(--mmd-line);
+  border-radius:var(--mmd-r18);
+  background:var(--mmd-surface-3);
+  padding:12px;
+}
+
+.mmd-payment-instructions__title{
+  font-weight:900;
+  margin-bottom:8px;
+  color:var(--mmd-gold-text);
+}
+
+.mmd-payment-instructions__list{
+  margin:0;
+  padding-left:18px;
+  color:var(--mmd-muted);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.mmd-payment-amount{
+  font-size:clamp(28px, 4vw, 42px);
+  font-weight:900;
+  line-height:1;
+}
+
+.mmd-payment-totalRow{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:end;
+  padding-top:12px;
+  border-top:1px solid var(--mmd-line);
+}
+
+.mmd-payment-totalRow__label{
+  color:var(--mmd-muted);
+  font-size:13px;
+}
+
+.mmd-payment-totalRow__value{
+  font-size:22px;
+  font-weight:900;
+  text-align:right;
+}
+
+.mmd-payment-uploadWrap{
+  margin-top:12px;
+}
+
+.mmd-payment-confirmCard{
+  max-width:var(--mmd-container-sm);
+  margin:var(--mmd-space-60) auto;
+}
+
+.mmd-payment-confirmTitle{
+  margin:0;
+  font-size:32px;
+  font-weight:900;
+  line-height:1.08;
+  letter-spacing:-.02em;
+  color:var(--mmd-txt);
+}
+
+.mmd-payment-confirmMeta{
+  margin-top:var(--mmd-space-14);
+  color:var(--mmd-muted);
+  font-size:13px;
+  line-height:1.65;
+}
+
+@media (max-width:767px){
+  .mmd-payment-confirmCard{
+    margin:var(--mmd-space-30) auto;
+  }
+
+  .mmd-payment-confirmTitle{
+    font-size:26px;
+  }
+}
