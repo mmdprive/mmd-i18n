@@ -205,7 +205,7 @@
   }
 }
 
-/* pills / badges */
+/* pill / badge */
 .mmd-system .mmd-pill{
   display: inline-flex;
   align-items: center;
@@ -456,7 +456,7 @@
   }
 }
 
-/* notes */
+/* note */
 .mmd-system .mmd-note{
   margin-top: 12px;
   border: 1px solid var(--mmd-line);
@@ -603,7 +603,7 @@
   line-height: 1.6;
 }
 
-/* status / toast */
+/* toast / status */
 .mmd-system .mmd-toast{
   display: none;
   margin-top: 12px;
@@ -699,7 +699,7 @@
   outline-offset: 2px;
 }
 
-/* rich text safety - still scoped */
+/* scoped rich text safety only */
 .mmd-system h1,
 .mmd-system h2,
 .mmd-system h3,
