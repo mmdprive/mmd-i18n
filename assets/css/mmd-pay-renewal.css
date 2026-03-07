@@ -1,0 +1,73 @@
+#mmd-pay-renewal{
+
+--hero-img:url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69a5ad93ddb001e3a6f20bdf_Hito%20Membership.png");
+
+}
+
+/* HERO */
+
+#mmd-pay-renewal .hero{
+
+position:relative;
+
+border-radius:22px;
+overflow:hidden;
+
+min-height:660px;
+
+background:#070707;
+
+border:1px solid var(--line);
+
+box-shadow:var(--shadow);
+
+}
+
+#mmd-pay-renewal .hero-bg{
+
+position:absolute;
+inset:0;
+
+background:var(--hero-img) center/cover no-repeat;
+
+}
+
+#mmd-pay-renewal .hero-overlay{
+
+position:absolute;
+inset:0;
+
+background:
+radial-gradient(900px 640px at 18% 20%, rgba(201,162,74,.14), transparent 60%),
+linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.25), rgba(0,0,0,.48));
+
+}
+
+#mmd-pay-renewal .hero-inner{
+
+position:relative;
+
+z-index:1;
+
+padding:120px 50px;
+
+}
+
+.hero-title-big{
+
+font-size:72px;
+font-weight:900;
+
+}
+
+.hero-title-gold{
+
+font-size:64px;
+font-weight:900;
+
+background:linear-gradient(180deg,var(--g1),var(--g2));
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent;
+
+}
