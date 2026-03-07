@@ -1,0 +1,36 @@
+:root{
+  --txt: rgba(244,244,247,.92);
+  --muted: rgba(255,255,255,.68);
+}
+
+.mmd-h1,
+.mmd-h2,
+.mmd-h3,
+.rn-h1,
+.rn-h2,
+.rn-h3{
+  color: var(--txt) !important;
+  font-weight: 900 !important;
+  line-height: 1.08;
+  letter-spacing: -.02em;
+}
+
+.mmd-card,
+.mmd-block,
+.rn-card,
+.rn-block,
+.mmd-text,
+.rn-text{
+  color: var(--txt) !important;
+}
+
+.mmd-muted,
+.rn-muted{
+  color: var(--muted) !important;
+}
+
+#mmd-pay-membership h2,
+#mmd-pay-renewal h2,
+#mmd-confirm h2{
+  color: #f4f4f7 !important;
+}
