@@ -39,37 +39,37 @@
   function buildPromptPayUrl(amount){
     return "https://promptpay.io/" + encodeURIComponent(CONFIG.PROMPTPAY_ID) + "/" + encodeURIComponent(String(Math.trunc(amount)));
   }
-async function ensureQRCodeLib(){
-  if (window.QRCode) return true;
-  return new Promise((resolve)=>{
-    const s = document.createElement("script");
-    s.src = "https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js";
-    s.async = true;
-    s.onload = ()=> resolve(true);
-    s.onerror = ()=> resolve(false);
-    document.head.appendChild(s);
-  });
-}
+  function ensureQRCodeLib(){
+    if(window.QRCode) return Promise.resolve(true);
+    return new Promise((resolve)=>{
+      const existing = document.querySelector("script[data-mmd-qr='1']");
+      if(existing){
+        existing.addEventListener("load", ()=> resolve(true), { once:true });
+        existing.addEventListener("error", ()=> resolve(false), { once:true });
+        return;
+      }
 
-async function renderQR(text){
-  const ok = await ensureQRCodeLib();
-  const el = root.querySelector("#qr");
-  if(!el) return;
-  el.innerHTML = "";
-
-  if(!ok || !window.QRCode){
-    el.innerHTML = "<div style='color:#111;font-weight:900;padding:14px;text-align:center'>QR โหลดไม่สำเร็จ</div>";
-    return;
+      const s = document.createElement("script");
+      s.src = "https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js";
+      s.async = true;
+      s.dataset.mmdQr = "1";
+      s.onload = ()=> resolve(true);
+      s.onerror = ()=> resolve(false);
+      document.head.appendChild(s);
+    });
   }
-  new QRCode(el, { text, width: 220, height: 220 });
-}  
-  function renderQR(url){
-    const el = $("#qr"); if(!el) return;
+
+  async function renderQR(url){
+    const el = $("#qr");
+    if(!el) return;
     el.innerHTML = "";
-    if(!window.QRCode){
+
+    const ok = await ensureQRCodeLib();
+    if(!ok || !window.QRCode){
       el.innerHTML = "<div style='color:#111;font-weight:900;font-family:DM Sans;padding:14px;text-align:center;'>QR library not loaded</div>";
       return;
     }
+
     new QRCode(el, { text: url, width: 220, height: 220 });
   }
 
@@ -111,12 +111,14 @@ async function renderQR(text){
 
     const mini = $("#tierBadgeMini");
     if(mini){
-      mini.textContent = out.vipGold ? "VIP Eligible" : "";
+      mini.textContent = out.vipGold
+        ? (lang === "th" ? "สิทธิ์ VIP" : "VIP Eligible")
+        : (lang === "th" ? "สถานะปกติ" : "Standard Status");
       mini.style.color = out.vipGold ? "rgba(232,212,154,.92)" : "rgba(244,242,238,.52)";
     }
 
     const qrPay = out.pay > 0 ? out.pay : 1; // ถ้า free: สร้าง QR 1 บาทกัน QR ว่าง
-    renderQR(buildPromptPayUrl(qrPay));
+    void renderQR(buildPromptPayUrl(qrPay));
 
     return { pkg, usage, activity, payAmount: out.pay, vip: out.vip, lang };
   }
@@ -128,7 +130,11 @@ async function renderQR(text){
       $$("[data-lang]").forEach(el=>{
         el.style.display = (el.getAttribute("data-lang")===lang) ? "" : "none";
       });
-      btns.forEach(b=>b.classList.toggle("active", b.dataset.setLang===lang));
+      btns.forEach(b=>{
+        const isActive = b.dataset.setLang === lang;
+        b.classList.toggle("active", isActive);
+        b.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
       root.dataset.lang = lang;
       recalc();
     };
@@ -143,12 +149,15 @@ async function renderQR(text){
     if(pp) pp.style.display = (method==="promptpay") ? "" : "none";
     if(paypal) paypal.style.display = (method==="paypal") ? "" : "none";
     $$(".method").forEach(m=> m.classList.toggle("is-selected", m.getAttribute("data-method")===method));
+    $$('input[name="pay_method"]').forEach(r=>{
+      r.checked = r.value === method;
+    });
     if(method==="promptpay") recalc();
   }
-  document.querySelectorAll('input[name="pay_method"]').forEach(r=>{
+  $$('input[name="pay_method"]').forEach(r=>{
     r.addEventListener("change", ()=> setPaymentMethod(r.value));
   });
-  setPaymentMethod("promptpay");
+  setPaymentMethod(($('input[name="pay_method"]:checked') || {}).value || "promptpay");
 
   /* Recalc events */
   $("#btnRecalc")?.addEventListener("click", recalc);
@@ -221,7 +230,7 @@ async function renderQR(text){
 
   async function postNotify(mountSel, btnSel){
     const calc = recalc();
-    const btn = document.querySelector(btnSel);
+    const btn = root.querySelector(btnSel);
     if(btn){ btn.disabled = true; btn.style.opacity = ".75"; }
 
     try{
