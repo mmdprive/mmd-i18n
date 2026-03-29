@@ -8,6 +8,34 @@
 #mmd-pay-renewal{
   --hero-img:url("https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69a5ad93ddb001e3a6f20bdf_Hito%20Membership.png");
   color:var(--txt);
+  position:relative;
+  isolation:isolate;
+}
+
+#mmd-pay-renewal::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:
+    radial-gradient(1200px 720px at 10% 0%, rgba(224,193,106,.09), transparent 58%),
+    radial-gradient(920px 680px at 100% 12%, rgba(255,255,255,.035), transparent 52%),
+    linear-gradient(180deg, rgba(7,7,9,.96), rgba(4,4,6,.98));
+}
+
+#mmd-pay-renewal::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.16;
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:88px 88px;
+  mask-image:linear-gradient(180deg, rgba(0,0,0,.85), rgba(0,0,0,.18));
 }
 
 /* HERO */
@@ -22,7 +50,7 @@
   border:1px solid var(--line-soft);
   box-shadow:var(--shadow);
   width:min(1180px, calc(100% - 28px));
-  margin:14px auto 0;
+  margin:18px auto 0;
 }
 
 #mmd-pay-renewal .bc-bg{
@@ -97,6 +125,16 @@
   min-height:min(88vh, 760px);
 }
 
+#mmd-pay-renewal .bc-inner::before{
+  content:"";
+  position:absolute;
+  inset:22px 28px auto auto;
+  width:180px;
+  height:1px;
+  background:linear-gradient(90deg, rgba(224,193,106,.55), transparent);
+  opacity:.7;
+}
+
 @media (max-width:991px){
   #mmd-pay-renewal .bc-inner{
     grid-template-columns:1fr;
@@ -140,6 +178,16 @@
 /* hero title */
 #mmd-pay-renewal .bc-copy{
   max-width:760px;
+  position:relative;
+}
+
+#mmd-pay-renewal .bc-copy::before{
+  content:"";
+  display:block;
+  width:72px;
+  height:1px;
+  margin-bottom:18px;
+  background:linear-gradient(90deg, rgba(224,193,106,.8), rgba(224,193,106,.06));
 }
 
 #mmd-pay-renewal .bc-eyebrow{
@@ -185,11 +233,23 @@
 #mmd-pay-renewal .bc-poem{
   margin-top:18px;
   max-width:660px;
-  padding:16px;
+  padding:18px 18px 18px 22px;
   border-radius:var(--r18);
   background:rgba(0,0,0,.28);
   border:1px solid var(--line-strong);
   backdrop-filter:blur(10px);
+  position:relative;
+}
+
+#mmd-pay-renewal .bc-poem::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:16px;
+  bottom:16px;
+  width:2px;
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(224,193,106,.9), rgba(224,193,106,.1));
 }
 
 #mmd-pay-renewal .bc-line{
@@ -208,6 +268,7 @@
   backdrop-filter:blur(8px);
   box-shadow:var(--shadow-soft);
   padding:18px;
+  align-self:start;
 }
 
 #mmd-pay-renewal .bc-summary::before{
@@ -228,10 +289,16 @@
   margin-bottom:12px;
   position:relative;
   z-index:1;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
 
 #mmd-pay-renewal .bc-summary__title{
   font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-size:11px;
+  color:rgba(244,242,238,.68);
 }
 
 #mmd-pay-renewal .bc-summary__badge{
@@ -246,7 +313,6 @@
 }
 
 #mmd-pay-renewal .bc-summary__rows{
-  border-top:1px solid var(--line);
   padding-top:8px;
   position:relative;
   z-index:1;
@@ -277,6 +343,7 @@
 
 #mmd-pay-renewal .bc-summary__row--strong .bc-summary__v{
   font-size:22px;
+  color:var(--gold-text);
 }
 
 #mmd-pay-renewal .bc-summary__fine{
@@ -288,10 +355,43 @@
   z-index:1;
 }
 
+#mmd-pay-renewal .lang{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:18px;
+  padding:6px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(8,8,8,.42);
+  box-shadow:0 14px 34px rgba(0,0,0,.18);
+}
+
+#mmd-pay-renewal .lang button{
+  border:0;
+  cursor:pointer;
+  padding:9px 14px;
+  border-radius:999px;
+  background:transparent;
+  color:var(--muted);
+  font:inherit;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  transition:background .18s ease, color .18s ease, box-shadow .18s ease;
+}
+
+#mmd-pay-renewal .lang button.active{
+  background:rgba(224,193,106,.16);
+  color:var(--txt);
+  box-shadow:inset 0 0 0 1px rgba(224,193,106,.26), 0 8px 18px rgba(0,0,0,.16);
+}
+
 /* wrap */
 #mmd-pay-renewal .mmd-wrap{
   width:min(1040px, calc(100% - 28px));
-  margin:14px auto 0;
+  margin:18px auto 0;
 }
 
 #mmd-pay-renewal .mmd-card{
@@ -304,7 +404,7 @@
     rgba(8,8,8,.64);
   box-shadow:var(--shadow-soft);
   backdrop-filter:blur(18px);
-  padding:16px;
+  padding:18px;
 }
 
 #mmd-pay-renewal .mmd-card::before{
@@ -317,14 +417,46 @@
     radial-gradient(700px 240px at 50% 0%, rgba(224,193,106,.035), transparent 60%);
 }
 
+#mmd-pay-renewal .mmd-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+
 #mmd-pay-renewal .mmd-block{
+  position:relative;
   border:1px solid var(--line);
   border-radius:var(--r22);
   background:
     linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
     var(--surface-2);
-  padding:16px;
-  margin-bottom:12px;
+  padding:18px;
+  margin-bottom:14px;
+  overflow:hidden;
+}
+
+#mmd-pay-renewal .mmd-block::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.02), transparent 22%),
+    radial-gradient(420px 120px at 0% 0%, rgba(224,193,106,.045), transparent 60%);
+}
+
+#mmd-pay-renewal .mmd-block::after{
+  content:"";
+  position:absolute;
+  left:18px;
+  right:18px;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg, rgba(224,193,106,.55), rgba(224,193,106,0));
+  opacity:.55;
 }
 
 #mmd-pay-renewal .mmd-block__head{
@@ -333,7 +465,9 @@
   align-items:flex-end;
   gap:12px;
   flex-wrap:wrap;
-  margin-bottom:12px;
+  margin-bottom:14px;
+  position:relative;
+  z-index:1;
 }
 
 #mmd-pay-renewal .mmd-h2{
@@ -345,6 +479,7 @@
 #mmd-pay-renewal .mmd-muted{
   font-size:13px;
   color:var(--muted);
+  line-height:1.65;
 }
 
 /* mode */
@@ -362,6 +497,7 @@
 
 #mmd-pay-renewal .mmd-mode{
   text-align:left;
+  min-height:100%;
 }
 
 #mmd-pay-renewal .mmd-mode__title{
@@ -398,6 +534,7 @@
 
 #mmd-pay-renewal .mmd-tier{
   text-align:left;
+  min-height:100%;
 }
 
 #mmd-pay-renewal .mmd-tier__top{
@@ -405,6 +542,7 @@
   justify-content:space-between;
   align-items:center;
   gap:10px;
+  margin-bottom:10px;
 }
 
 #mmd-pay-renewal .mmd-tier__name{
@@ -425,8 +563,9 @@
 
 #mmd-pay-renewal .mmd-tier__price{
   margin-top:12px;
-  font-size:22px;
+  font-size:24px;
   font-weight:900;
+  letter-spacing:-.02em;
 }
 
 #mmd-pay-renewal .mmd-tier__desc{
@@ -436,12 +575,65 @@
   line-height:1.6;
 }
 
+#mmd-pay-renewal .mmd-tier,
+#mmd-pay-renewal .mmd-mode,
+#mmd-pay-renewal .mmd-method{
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.09);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)),
+    rgba(0,0,0,.24);
+  padding:16px;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+#mmd-pay-renewal .mmd-method input[type="radio"]{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+#mmd-pay-renewal .mmd-tier::before,
+#mmd-pay-renewal .mmd-mode::before,
+#mmd-pay-renewal .mmd-method::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.025), transparent 24%),
+    radial-gradient(240px 120px at 100% 0%, rgba(224,193,106,.055), transparent 60%);
+}
+
+#mmd-pay-renewal .mmd-tier:hover,
+#mmd-pay-renewal .mmd-mode:hover,
+#mmd-pay-renewal .mmd-method:hover{
+  transform:translateY(-2px);
+  border-color:rgba(224,193,106,.22);
+  box-shadow:0 18px 42px rgba(0,0,0,.28);
+}
+
+#mmd-pay-renewal .mmd-method.is-selected{
+  border-color:rgba(224,193,106,.34);
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.28),
+    0 0 0 1px rgba(224,193,106,.16);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)),
+    rgba(18,14,8,.42);
+}
+
 #mmd-pay-renewal .mmd-remarks{
-  margin-top:12px;
+  margin-top:14px;
   border:1px solid var(--line);
   border-radius:var(--r18);
-  padding:12px;
-  background:var(--surface-1);
+  padding:14px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
+    var(--surface-1);
 }
 
 #mmd-pay-renewal .mmd-remarks__title{
@@ -487,16 +679,19 @@
 }
 
 #mmd-pay-renewal .mmd-alert{
-  margin-top:10px;
+  margin-top:12px;
   font-size:13px;
   color:var(--muted);
+  line-height:1.7;
+  border-left:2px solid rgba(224,193,106,.42);
+  padding-left:12px;
 }
 
 /* form */
 #mmd-pay-renewal .mmd-form-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
+  gap:12px;
 }
 
 @media (max-width:820px){
@@ -519,7 +714,8 @@
   border:1px solid rgba(255,255,255,.12);
   background:var(--surface-3);
   color:var(--txt);
-  padding:12px;
+  min-height:48px;
+  padding:12px 13px;
   outline:none;
   font:inherit;
   transition:border-color .14s ease, box-shadow .14s ease, background .14s ease;
@@ -575,11 +771,13 @@
 
 /* cta */
 #mmd-pay-renewal .mmd-cta{
-  margin-top:14px;
+  margin-top:16px;
   display:flex;
   align-items:center;
   gap:12px;
   flex-wrap:wrap;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.06);
 }
 
 #mmd-pay-renewal .mmd-cta__sub{
@@ -604,8 +802,12 @@
 }
 
 @media (prefers-reduced-motion: reduce){
+  #mmd-pay-renewal .mmd-tier,
+  #mmd-pay-renewal .mmd-mode,
+  #mmd-pay-renewal .mmd-method,
   #mmd-pay-renewal .bc-hero::before,
   #mmd-pay-renewal .bc-hero::after{
     animation:none !important;
+    transition:none !important;
   }
 }
