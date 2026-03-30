@@ -1,0 +1,360 @@
+<!-- Head -->
+<link rel="stylesheet" href="/assets/css/mmd-system.css">
+<link rel="stylesheet" href="/assets/css/mmd-membership.css">
+<link rel="stylesheet" href="/assets/css/mmd-payment.css">
+<link rel="stylesheet" href="/assets/css/mmd-pay-renewal.css">
+
+<!-- Body -->
+<div class="mmd-system">
+  <section id="mmd-pay-renewal" class="mmd-pay" data-renewal-ui="v2" data-lang="th">
+    <div class="bc-hero">
+      <div class="bc-bg" aria-hidden="true"></div>
+      <div class="bc-ov" aria-hidden="true"></div>
+
+      <div class="bc-inner">
+        <div class="bc-copy">
+          <div class="bc-pill">
+            <span data-lang="th">Private Renewal Suite</span>
+            <span data-lang="en" style="display:none">Private Renewal Suite</span>
+          </div>
+
+          <div class="lang" aria-label="Language switcher">
+            <button type="button" class="active" data-set-lang="th" aria-pressed="true">TH</button>
+            <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+          </div>
+
+          <div class="bc-eyebrow">
+            <span data-lang="th">Per Voice Renewal</span>
+            <span data-lang="en" style="display:none">Per Voice Renewal</span>
+          </div>
+
+          <h1 class="bc-h1">
+            <span class="bc-white" data-lang="th">ต่ออายุอย่าง</span>
+            <span class="bc-white" data-lang="en" style="display:none">Renew with</span>
+            <span class="bc-titleGold" data-lang="th">สงบและชัดเจน</span>
+            <span class="bc-titleGold" data-lang="en" style="display:none">Clarity and Calm</span>
+          </h1>
+
+          <div class="bc-poem">
+            <p class="bc-line" data-lang="th">
+              หน้านี้ออกแบบให้คุณเห็นสถานะการต่ออายุอย่างเป็นระบบ
+              เลือกวิธีชำระที่เหมาะกับตัวเอง และส่งข้อมูลให้ทีมดูแลต่อได้อย่างเรียบร้อย
+            </p>
+            <p class="bc-line" data-lang="en" style="display:none">
+              This page is designed to make renewal feel composed and legible:
+              review your status, choose your payment route, and hand the details to the team with confidence.
+            </p>
+          </div>
+        </div>
+
+        <aside class="bc-summary">
+          <div class="bc-summary__head">
+            <div class="bc-summary__title">
+              <span data-lang="th">Renewal Overview</span>
+              <span data-lang="en" style="display:none">Renewal Overview</span>
+            </div>
+            <div class="bc-summary__badge" data-renew-output="vipBadge">Standard</div>
+          </div>
+
+          <div class="bc-summary__rows">
+            <div class="bc-summary__row">
+              <div class="bc-summary__k">
+                <span data-lang="th">เรทที่ระบบเลือกให้</span>
+                <span data-lang="en" style="display:none">Selected rate</span>
+              </div>
+              <div class="bc-summary__v" data-renew-output="rateLabel">Premium renewal ฿2,500</div>
+            </div>
+
+            <div class="bc-summary__row">
+              <div class="bc-summary__k">
+                <span data-lang="th">สถานะสิทธิ์</span>
+                <span data-lang="en" style="display:none">Eligibility status</span>
+              </div>
+              <div class="bc-summary__v" data-renew-output="tierHint">สถานะปกติ</div>
+            </div>
+
+            <div class="bc-summary__row bc-summary__row--strong">
+              <div class="bc-summary__k">
+                <span data-lang="th">ยอดชำระรวม</span>
+                <span data-lang="en" style="display:none">Total due</span>
+              </div>
+              <div class="bc-summary__v" data-renew-output="payAmount">฿2,500</div>
+            </div>
+          </div>
+
+          <div class="bc-summary__fine" data-renew-output="summaryNote">
+            <span data-lang="th">ยอดนี้ประเมินจากระดับสมาชิก ยอดใช้งานย้อนหลัง 12 เดือน และสถานะการใช้งานปัจจุบัน</span>
+            <span data-lang="en" style="display:none">This amount is estimated from your membership tier, trailing 12-month spend, and current activity status.</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="mmd-wrap">
+      <div class="mmd-card">
+        <div class="mmd-block">
+          <div class="mmd-block__head">
+            <div>
+              <h2 class="mmd-h2">
+                <span data-lang="th">Renewal Details</span>
+                <span data-lang="en" style="display:none">Renewal Details</span>
+              </h2>
+              <div class="mmd-muted">
+                <span data-lang="th">กรอกข้อมูลเท่าที่จำเป็น เพื่อให้ระบบประเมินเรทและเตรียมการชำระได้ถูกต้อง</span>
+                <span data-lang="en" style="display:none">Enter only the key details so the page can estimate your rate and prepare the right payment flow.</span>
+              </div>
+            </div>
+
+            <button type="button" class="mmd-btn mmd-btn--ghost" data-renew-action="recalc">
+              <span data-lang="th">อัปเดตข้อมูล</span>
+              <span data-lang="en" style="display:none">Refresh</span>
+            </button>
+          </div>
+
+          <div class="mmd-form-grid">
+            <div>
+              <label class="mmd-label" for="renew-package-v2">
+                <span data-lang="th">Membership Tier</span>
+                <span data-lang="en" style="display:none">Membership Tier</span>
+              </label>
+              <select class="mmd-input" id="renew-package-v2" data-renew-field="package">
+                <option value="premium">Premium</option>
+                <option value="standard">Standard</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="mmd-label" for="renew-activity-v2">
+                <span data-lang="th">Account Activity</span>
+                <span data-lang="en" style="display:none">Account Activity</span>
+              </label>
+              <select class="mmd-input" id="renew-activity-v2" data-renew-field="activity">
+                <option value="active365">Active within 365 days</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="mmd-label" for="renew-usage-v2">
+                <span data-lang="th">Usage in the Last 12 Months</span>
+                <span data-lang="en" style="display:none">Usage in the Last 12 Months</span>
+              </label>
+              <input class="mmd-input" id="renew-usage-v2" data-renew-field="usage" type="text" inputmode="numeric" placeholder="40000">
+              <div class="mmd-help">
+                <span data-lang="th">กรอกเป็นตัวเลขรวม เช่น 40000 หรือ 120000</span>
+                <span data-lang="en" style="display:none">Enter the total as a number, for example 40000 or 120000.</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="mmd-label" for="renew-name-v2">
+                <span data-lang="th">Your Name</span>
+                <span data-lang="en" style="display:none">Your Name</span>
+              </label>
+              <input class="mmd-input" id="renew-name-v2" data-renew-field="name" type="text" placeholder="Your full name">
+            </div>
+
+            <div>
+              <label class="mmd-label" for="renew-email-v2">
+                <span data-lang="th">Email for Follow-up</span>
+                <span data-lang="en" style="display:none">Email for Follow-up</span>
+              </label>
+              <input class="mmd-input" id="renew-email-v2" data-renew-field="email" type="email" placeholder="you@example.com">
+            </div>
+          </div>
+        </div>
+
+        <div class="mmd-block">
+          <div class="mmd-block__head">
+            <div>
+              <h2 class="mmd-h2">
+                <span data-lang="th">How the Rate Is Read</span>
+                <span data-lang="en" style="display:none">How the Rate Is Read</span>
+              </h2>
+              <div class="mmd-muted">
+                <span data-lang="th">อ่านง่าย ตรงไปตรงมา และใช้เพื่อทำความเข้าใจก่อนยืนยันการชำระ</span>
+                <span data-lang="en" style="display:none">A clear reference for understanding the renewal logic before you proceed to payment.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mmd-tier-grid renewal-grid">
+            <div class="mmd-tier">
+              <div class="mmd-tier__top">
+                <div class="mmd-tier__name">Premium</div>
+                <div class="mmd-tier__tag">120k+</div>
+              </div>
+              <div class="mmd-tier__price">Free</div>
+              <div class="mmd-tier__desc" data-lang="th">Premium ที่ยัง active และมียอดใช้งานตั้งแต่ 120,000 บาทขึ้นไป จะได้รับสิทธิ์ต่ออายุฟรี</div>
+              <div class="mmd-tier__desc" data-lang="en" style="display:none">Premium members who remain active and reach 120,000 THB in trailing spend renew free of charge.</div>
+            </div>
+
+            <div class="mmd-tier">
+              <div class="mmd-tier__top">
+                <div class="mmd-tier__name">Premium</div>
+                <div class="mmd-tier__tag">40k+</div>
+              </div>
+              <div class="mmd-tier__price">฿1,900</div>
+              <div class="mmd-tier__desc" data-lang="th">Premium ที่ยัง active และมียอดใช้งานตั้งแต่ 40,000 บาทขึ้นไป จะอยู่ในเรทต่ออายุพิเศษ</div>
+              <div class="mmd-tier__desc" data-lang="en" style="display:none">Premium members who remain active and spend from 40,000 THB enter the preferred renewal band.</div>
+            </div>
+
+            <div class="mmd-tier">
+              <div class="mmd-tier__top">
+                <div class="mmd-tier__name">Standard</div>
+                <div class="mmd-tier__tag">15k+</div>
+              </div>
+              <div class="mmd-tier__price">฿900</div>
+              <div class="mmd-tier__desc" data-lang="th">Standard ที่ยัง active และมียอดใช้งานตั้งแต่ 15,000 บาทขึ้นไป จะได้รับเรทต่ออายุที่เบาลง</div>
+              <div class="mmd-tier__desc" data-lang="en" style="display:none">Standard members who remain active and spend from 15,000 THB qualify for the lighter renewal rate.</div>
+            </div>
+          </div>
+
+          <div class="mmd-remarks">
+            <div class="mmd-remarks__title">
+              <span data-lang="th">Before You Continue</span>
+              <span data-lang="en" style="display:none">Before You Continue</span>
+            </div>
+            <ul class="mmd-remarks__list">
+              <li>
+                <span data-lang="th">ถ้าบัญชีไม่ active ระบบจะอ่านกลับไปที่เรทมาตรฐานโดยอัตโนมัติ</span>
+                <span data-lang="en" style="display:none">If the account is not active, the estimate automatically falls back to the standard renewal rate.</span>
+              </li>
+              <li>
+                <span data-lang="th">สถานะ VIP และ BLACK CARD ใช้เพื่อบอกสิทธิ์และแนวทางดูแล ไม่ได้เพิ่มขั้นตอนที่ซับซ้อนให้หน้า</span>
+                <span data-lang="en" style="display:none">VIP and BLACK CARD status are used as eligibility signals, without adding unnecessary complexity to the page.</span>
+              </li>
+              <li>
+                <span data-lang="th">เมื่อมีการปรับข้อมูล ระบบจะอัปเดตยอดด้านขวาทันทีเพื่อให้คุณเห็นภาพรวมก่อนชำระ</span>
+                <span data-lang="en" style="display:none">As inputs change, the summary on the right updates immediately so the total remains easy to read before payment.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mmd-block">
+          <div class="mmd-block__head">
+            <div>
+              <h2 class="mmd-h2">
+                <span data-lang="th">Choose a Payment Route</span>
+                <span data-lang="en" style="display:none">Choose a Payment Route</span>
+              </h2>
+              <div class="mmd-muted">
+                <span data-lang="th">เลือกเส้นทางชำระที่สะดวกที่สุด แล้วให้หน้าจัดแสดงขั้นตอนที่เกี่ยวข้องเท่านั้น</span>
+                <span data-lang="en" style="display:none">Choose the route that suits you, and the page will reveal only the payment steps that matter.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mmd-method-grid">
+            <label class="mmd-method" data-renew-method="promptpay">
+              <input type="radio" name="renew_payment_method" value="promptpay" checked>
+              <div class="mmd-method__title">PromptPay QR</div>
+              <div class="mmd-method__desc">
+                <span data-lang="th">เหมาะสำหรับการชำระในประเทศด้วย QR ที่คำนวณจากยอดล่าสุดของคุณ</span>
+                <span data-lang="en" style="display:none">Best for local payment with a QR code generated from your live renewal amount.</span>
+              </div>
+            </label>
+
+            <label class="mmd-method" data-renew-method="paypal">
+              <input type="radio" name="renew_payment_method" value="paypal">
+              <div class="mmd-method__title">PayPal</div>
+              <div class="mmd-method__desc">
+                <span data-lang="th">เหมาะสำหรับสมาชิกที่ต้องการชำระผ่าน PayPal หรือบัตรใน flow ระหว่างประเทศ</span>
+                <span data-lang="en" style="display:none">Best for members who prefer PayPal or card checkout in an international flow.</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="mmd-alert">
+            <span data-lang="th">ระบบจะเปิดเฉพาะ panel ของวิธีชำระที่คุณเลือก เพื่อให้หน้าสงบและอ่านง่าย</span>
+            <span data-lang="en" style="display:none">The page reveals only the panel for your chosen payment route, keeping the experience calm and focused.</span>
+          </div>
+        </div>
+
+        <div class="mmd-block" data-renew-panel="promptpay">
+          <div class="mmd-block__head">
+            <div>
+              <h2 class="mmd-h2">PromptPay</h2>
+              <div class="mmd-muted">
+                <span data-lang="th">สแกน ชำระ แล้วแจ้งทีมเพื่อให้ระบบรับเรื่องต่ออายุของคุณอย่างถูกต้อง</span>
+                <span data-lang="en" style="display:none">Scan, pay, and notify the team so your renewal request enters the process cleanly.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mmd-mode-grid">
+            <div class="mmd-mode">
+              <div class="mmd-mode__title">
+                <span data-lang="th">Live QR</span>
+                <span data-lang="en" style="display:none">Live QR</span>
+              </div>
+              <div class="mmd-mode__desc">
+                <span data-lang="th">QR จะอ้างอิงยอดล่าสุดที่แสดงอยู่ใน summary ด้านขวา</span>
+                <span data-lang="en" style="display:none">The QR always reflects the latest amount shown in the summary panel.</span>
+              </div>
+            </div>
+
+            <div class="mmd-mode">
+              <div class="mmd-mode__title">
+                <span data-lang="th">Private Follow-up</span>
+                <span data-lang="en" style="display:none">Private Follow-up</span>
+              </div>
+              <div class="mmd-mode__desc">
+                <span data-lang="th">หลังชำระแล้วกดแจ้งทีม เพื่อส่งข้อมูลชื่อ อีเมล และเรทต่ออายุไปยังปลายทางที่กำหนด</span>
+                <span data-lang="en" style="display:none">After payment, notify the team so your name, email, and selected renewal rate are sent to the configured endpoint.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mmd-cta">
+            <div id="renew-qr" aria-label="PromptPay QR code"></div>
+            <button type="button" class="mmd-btn mmd-btn--gold" data-renew-action="notify-promptpay">
+              <span data-lang="th">ชำระแล้ว แจ้งทีม</span>
+              <span data-lang="en" style="display:none">I've paid, notify the team</span>
+            </button>
+            <div class="mmd-cta__sub" data-renew-output="promptpayNote">
+              <span data-lang="th">หน้านี้จะส่งข้อมูลการต่ออายุในรูปแบบที่เรียบร้อยและสอดคล้องกับวิธีชำระที่คุณเลือก</span>
+              <span data-lang="en" style="display:none">This page sends your renewal details in a clean format aligned with the payment route you selected.</span>
+            </div>
+          </div>
+
+          <div data-renew-turnstile="promptpay"></div>
+        </div>
+
+        <div class="mmd-block" data-renew-panel="paypal" style="display:none">
+          <div class="mmd-block__head">
+            <div>
+              <h2 class="mmd-h2">PayPal</h2>
+              <div class="mmd-muted">
+                <span data-lang="th">ใช้ flow ภายนอกสำหรับการชำระ แล้วกลับมาแจ้งทีมเพื่อยืนยันการต่ออายุ</span>
+                <span data-lang="en" style="display:none">Use the external checkout flow, then return to notify the team and confirm your renewal.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mmd-cta">
+            <a class="mmd-btn mmd-btn--gold" data-renew-link="paypal" href="https://www.paypal.com/ncp/payment/M697T7AW2QZZJ" target="_blank" rel="noreferrer">
+              <span data-lang="th">เปิด PayPal</span>
+              <span data-lang="en" style="display:none">Open PayPal</span>
+            </a>
+            <button type="button" class="mmd-btn mmd-btn--ghost" data-renew-action="notify-paypal">
+              <span data-lang="th">ชำระแล้ว แจ้งทีม</span>
+              <span data-lang="en" style="display:none">I've paid, notify the team</span>
+            </button>
+            <div class="mmd-cta__sub">
+              <span data-lang="th">เมื่อชำระเสร็จ ให้กดปุ่มนี้เพื่อส่งข้อมูลเข้าสู่ขั้นตอนติดตามโดยไม่ต้องกลับไปใช้หน้าเก่า</span>
+              <span data-lang="en" style="display:none">Once payment is complete, use this button to send the details into follow-up without returning to the legacy page.</span>
+            </div>
+          </div>
+
+          <div data-renew-turnstile="paypal"></div>
+        </div>
+
+        <div class="mmd-toast" data-renew-output="toast"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script defer src="/mmdglobal/dist/mmd-pay-renewal.js"></script>
