@@ -1,0 +1,92 @@
+<div
+  id="mmd-immigration-dashboard"
+  data-dashboard-role="customer"
+  data-resolve-endpoint="https://www.mmdbkk.com/member/api/invite/resolve"
+  data-title="แดชบอร์ดลูกค้า"
+  data-subtitle="สรุปบริบท renewal, สถานะการ immigrate, โมเดลที่ผูกไว้ และเส้นทาง dashboard ที่ลิงก์นี้เปิดให้ใช้งาน"
+></div>
+
+<style>
+#mmd-immigration-dashboard{
+  --igd-bg:#070708;
+  --igd-panel:rgba(18,18,20,.78);
+  --igd-panel-2:rgba(22,22,26,.66);
+  --igd-line:rgba(214,182,109,.12);
+  --igd-line-soft:rgba(255,255,255,.05);
+  --igd-text:#f7f3ec;
+  --igd-text-soft:rgba(247,243,236,.76);
+  --igd-gold:#d7b56d;
+  --igd-gold-2:#f0d79a;
+  color:var(--igd-text);
+  font-family:"Outfit","DM Sans","Noto Sans Thai",system-ui,sans-serif;
+}
+#mmd-immigration-dashboard *{ box-sizing:border-box; }
+#mmd-immigration-dashboard .igd-wrap{ width:min(1180px, calc(100% - 20px)); margin:0 auto; }
+#mmd-immigration-dashboard .igd-shell{ display:grid; gap:16px; }
+#mmd-immigration-dashboard .igd-hero,
+#mmd-immigration-dashboard .igd-card{
+  border:1px solid var(--igd-line);
+  border-radius:28px;
+  background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.008)), var(--igd-panel);
+  box-shadow:0 26px 70px rgba(0,0,0,.34);
+}
+#mmd-immigration-dashboard .igd-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  gap:20px;
+  padding:28px;
+  background:
+    radial-gradient(circle at top left, rgba(215,181,109,.14), transparent 34%),
+    linear-gradient(135deg, rgba(7,8,10,.88), rgba(12,12,14,.72)),
+    var(--igd-panel);
+}
+#mmd-immigration-dashboard .igd-eyebrow{
+  font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--igd-text-soft);
+}
+#mmd-immigration-dashboard .igd-title{
+  margin:12px 0 0; font-size:clamp(34px, 5vw, 58px); line-height:.96; letter-spacing:-.04em;
+}
+#mmd-immigration-dashboard .igd-sub{
+  margin:14px 0 0; max-width:760px; font-size:15px; line-height:1.8; color:var(--igd-text-soft);
+}
+#mmd-immigration-dashboard .igd-status{
+  margin-top:14px; display:inline-flex; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.06); color:var(--igd-text-soft); font-size:13px;
+}
+#mmd-immigration-dashboard .igd-status.ok{ color:var(--igd-gold-2); border:1px solid rgba(214,182,109,.22); }
+#mmd-immigration-dashboard .igd-status.bad{ color:#ffb5b5; border:1px solid rgba(255,120,120,.24); }
+#mmd-immigration-dashboard .igd-hero__side{
+  border:1px solid var(--igd-line-soft); border-radius:22px; padding:18px; background:var(--igd-panel-2);
+}
+#mmd-immigration-dashboard .igd-pill{
+  display:inline-flex; padding:8px 12px; border-radius:999px; background:rgba(214,182,109,.12); color:var(--igd-gold-2); font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+}
+#mmd-immigration-dashboard .igd-side__title{ margin-top:14px; font-size:26px; font-weight:900; line-height:1.02; }
+#mmd-immigration-dashboard .igd-side__copy{ margin-top:12px; font-size:14px; line-height:1.75; color:var(--igd-text-soft); }
+#mmd-immigration-dashboard .igd-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+#mmd-immigration-dashboard .igd-card{ padding:18px; }
+#mmd-immigration-dashboard .igd-card__title{ margin:0; font-size:22px; font-weight:900; }
+#mmd-immigration-dashboard .igd-card__meta{ margin-top:6px; font-size:13px; line-height:1.65; color:var(--igd-text-soft); }
+#mmd-immigration-dashboard .igd-card__body{ margin-top:14px; display:grid; gap:10px; }
+#mmd-immigration-dashboard .igd-kv,
+#mmd-immigration-dashboard .igd-route{
+  display:grid; gap:6px; padding:12px 14px; border-radius:18px; border:1px solid var(--igd-line-soft); background:rgba(255,255,255,.02);
+}
+#mmd-immigration-dashboard .igd-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
+#mmd-immigration-dashboard .igd-btn{
+  display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 14px;
+  border-radius:999px; text-decoration:none; font-weight:800; color:#120f08;
+  background:linear-gradient(180deg, var(--igd-gold-2), var(--igd-gold)); box-shadow:0 12px 30px rgba(215,181,109,.18);
+}
+#mmd-immigration-dashboard .igd-kv__k,
+#mmd-immigration-dashboard .igd-route__label{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--igd-text-soft); }
+#mmd-immigration-dashboard .igd-kv__v,
+#mmd-immigration-dashboard .igd-route__value{ font-size:15px; font-weight:800; line-height:1.55; word-break:break-word; }
+@media (max-width:960px){
+  #mmd-immigration-dashboard .igd-hero,
+  #mmd-immigration-dashboard .igd-grid{ grid-template-columns:1fr; }
+  #mmd-immigration-dashboard .igd-hero{ padding:20px; }
+}
+</style>
+
+<!-- วางหรือ host JS ไฟล์นี้ใน footer ของหน้า: -->
+<!-- /Users/Hiright_1/Desktop/MMDMaleModel/MMDPrive/mmd-i18n/mmdglobal/dist/mmd-immigration-dashboard.js -->
