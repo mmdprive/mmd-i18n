@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MMD Model Sessions Webflow Paste Example</title>
+    <link rel="stylesheet" href="/assets/css/mmd-system.css" />
+    <link rel="stylesheet" href="/assets/css/mmd-membership.css" />
+    <link rel="stylesheet" href="/assets/css/mmd-payment.css" />
+    <link rel="stylesheet" href="/assets/css/mmd-model-sessions.css" />
+  </head>
+  <body>
+    <div class="mmd-system">
+      <div
+        id="mmdSessionStageApp"
+        class="mmd-session-stage-page"
+        data-api-base="https://admin-worker.mmdbkk.com"
+        data-session-url="https://mmdbkk.com/model/session"
+        data-contact-admin-url="https://t.me/Per_MMD"
+        data-telegram-url="https://t.me/MMDModelBot"
+        data-logo-url="https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/697e2bce5784259387b69c41_MMD%20Prive%27%202026.png"
+        data-hero-image="https://cdn.prod.website-files.com/68f879d546d2f4e2ab186e90/69c75e7d23fb081e28bc416c_Tart%20Model%20Condole.webp"
+        data-default-lang="th"
+        data-start-travel-path-template="/model/sessions/{sessionId}/start-travel"
+        data-share-location-path-template="/model/sessions/{sessionId}/share-location"
+        data-arrived-path-template="/model/sessions/{sessionId}/arrived"
+        data-met-client-path-template="/model/sessions/{sessionId}/met-client"
+      >
+        <div class="mmd-bg-orb mmd-bg-orb-a"></div>
+        <div class="mmd-bg-orb mmd-bg-orb-b"></div>
+        <div class="mmd-grid-noise"></div>
+
+        <div class="mmd-shell">
+          <header class="mmd-topbar">
+            <div class="mmd-brand">
+              <img id="brandLogo" class="mmd-brand-logo" src="" alt="MMD Privé logo" />
+              <div class="mmd-brand-copy">
+                <div class="mmd-eyebrow">MMD PRIVÉ</div>
+                <div class="mmd-brand-title">Model Console</div>
+              </div>
+            </div>
+
+            <div class="mmd-top-actions">
+              <div class="mmd-lang-switch" role="group" aria-label="Language switch">
+                <button id="langThBtn" class="mmd-lang-btn is-active" type="button">TH</button>
+                <button id="langEnBtn" class="mmd-lang-btn" type="button">EN</button>
+              </div>
+
+              <div class="mmd-top-links">
+                <a id="topTelegramLink" class="mmd-top-link" href="#" target="_blank" rel="noopener">Open Telegram</a>
+                <a id="topEmergencyLink" class="mmd-top-link" href="#" target="_blank" rel="noopener">Emergency Contact</a>
+              </div>
+            </div>
+          </header>
+
+          <main class="mmd-main">
+            <section class="mmd-hero-card">
+              <div class="mmd-hero-copy">
+                <div id="heroEyebrow" class="mmd-eyebrow">Current Session</div>
+                <h1 id="heroTitle" class="mmd-hero-title">พร้อมออกเดินทางแล้วใช่ไหม</h1>
+                <p id="heroSubtitle" class="mmd-hero-subtitle">งานนี้ assign ให้คุณแล้วนะ ถ้าพร้อมเมื่อไหร่กดเริ่มเดินทางได้เลย เดี๋ยวต้าดู flow ต่อให้แบบเงียบและลื่นที่สุด</p>
+
+                <div class="mmd-hero-meta">
+                  <div class="mmd-hero-pill">
+                    <span id="pillStatusLabel" class="mmd-hero-pill-label">Status</span>
+                    <strong id="heroStatusText">Assigned</strong>
+                  </div>
+                  <div class="mmd-hero-pill">
+                    <span id="pillTimeLabel" class="mmd-hero-pill-label">Start Time</span>
+                    <strong id="heroTimeText">21:00</strong>
+                  </div>
+                  <div class="mmd-hero-pill">
+                    <span id="pillEtaLabel" class="mmd-hero-pill-label">ETA</span>
+                    <strong id="heroEtaText">12 min</strong>
+                  </div>
+                  <div class="mmd-hero-pill">
+                    <span id="pillTravelModeLabel" class="mmd-hero-pill-label">Travel Mode</span>
+                    <strong id="heroTravelModeText">Taxi</strong>
+                  </div>
+                </div>
+
+                <div class="mmd-stage-row">
+                  <div id="stageAssigned" class="mmd-stage is-active"><span class="mmd-stage-dot"></span><span id="stageAssignedText" class="mmd-stage-label">Assigned</span></div>
+                  <div id="stageTraveling" class="mmd-stage"><span class="mmd-stage-dot"></span><span id="stageTravelingText" class="mmd-stage-label">Traveling</span></div>
+                  <div id="stageArrived" class="mmd-stage"><span class="mmd-stage-dot"></span><span id="stageArrivedText" class="mmd-stage-label">Arrived</span></div>
+                  <div id="stageMet" class="mmd-stage"><span class="mmd-stage-dot"></span><span id="stageMetText" class="mmd-stage-label">Met Client</span></div>
+                </div>
+
+                <div class="mmd-hero-mini-brand">
+                  <img id="heroLogo" class="mmd-hero-logo" src="" alt="MMD logo" />
+                  <span id="heroMiniBrandText">Tar T กำลังดู flow ให้คุณอยู่ · MMD Privé</span>
+                </div>
+              </div>
+
+              <div class="mmd-hero-art">
+                <div class="mmd-hero-glow"></div>
+                <div class="mmd-hero-art-card">
+                  <img id="heroImage" class="mmd-hero-image" src="" alt="MMD hero visual" loading="eager" />
+                </div>
+                <div class="mmd-art-chip mmd-art-chip-top">
+                  <span id="priorityLabelText" class="mmd-art-chip-label">Priority</span>
+                  <strong id="priorityText">High Priority</strong>
+                </div>
+                <div class="mmd-art-chip mmd-art-chip-bottom">
+                  <span id="districtLabelText" class="mmd-art-chip-label">District</span>
+                  <strong id="districtText">Watthana</strong>
+                </div>
+              </div>
+            </section>
+
+            <section class="mmd-content-grid">
+              <div class="mmd-left-col">
+                <article class="mmd-card">
+                  <div class="mmd-card-head">
+                    <div>
+                      <div id="detailsEyebrow" class="mmd-section-eyebrow">Session Details</div>
+                      <h2 id="detailsTitle" class="mmd-card-title">รายละเอียดงานของคุณ</h2>
+                    </div>
+                    <div id="statusBadge" class="mmd-status-badge is-assigned">Assigned</div>
+                  </div>
+
+                  <div class="mmd-detail-grid">
+                    <div class="mmd-detail-row"><span id="labelClient" class="mmd-detail-label">Client</span><span id="detailClient" class="mmd-detail-value">Alex</span></div>
+                    <div class="mmd-detail-row"><span id="labelDate" class="mmd-detail-label">Date</span><span id="detailDate" class="mmd-detail-value">Tonight</span></div>
+                    <div class="mmd-detail-row"><span id="labelTime" class="mmd-detail-label">Time</span><span id="detailTime" class="mmd-detail-value">21:00</span></div>
+                    <div class="mmd-detail-row"><span id="labelLocation" class="mmd-detail-label">Location</span><span id="detailLocation" class="mmd-detail-value">Sukhumvit 24</span></div>
+                    <div class="mmd-detail-row"><span id="labelMeetingPoint" class="mmd-detail-label">Meeting Point</span><span id="detailMeetingPoint" class="mmd-detail-value">Hotel lobby</span></div>
+                    <div class="mmd-detail-row"><span id="labelDuration" class="mmd-detail-label">Duration</span><span id="detailDuration" class="mmd-detail-value">2 hours</span></div>
+                    <div class="mmd-detail-row"><span id="labelType" class="mmd-detail-label">Type</span><span id="detailType" class="mmd-detail-value">Outcall</span></div>
+                    <div class="mmd-detail-row"><span id="labelDress" class="mmd-detail-label">Dress</span><span id="detailDress" class="mmd-detail-value">Black tailored look</span></div>
+                    <div class="mmd-detail-row"><span id="labelNotes" class="mmd-detail-label">Notes</span><span id="detailNotes" class="mmd-detail-value">Please arrive 10 minutes early and stay reachable.</span></div>
+                  </div>
+
+                  <div class="mmd-subgrid">
+                    <div class="mmd-mini-stat"><span id="miniSessionIdLabel" class="mmd-mini-stat-label">Session ID</span><strong id="detailSessionId" class="mmd-mini-stat-value">sess_demo_001</strong></div>
+                    <div class="mmd-mini-stat"><span id="miniEtaLabel" class="mmd-mini-stat-label">ETA</span><strong id="detailEta" class="mmd-mini-stat-value">12 min</strong></div>
+                    <div class="mmd-mini-stat"><span id="miniTravelModeLabel" class="mmd-mini-stat-label">Travel Mode</span><strong id="detailTravelMode" class="mmd-mini-stat-value">Taxi</strong></div>
+                    <div class="mmd-mini-stat"><span id="miniCompensationLabel" class="mmd-mini-stat-label">Compensation</span><strong id="detailCompensation" class="mmd-mini-stat-value">THB 8,000</strong></div>
+                  </div>
+                </article>
+
+                <article class="mmd-card">
+                  <div class="mmd-card-head">
+                    <div>
+                      <div id="travelEyebrow" class="mmd-section-eyebrow">Travel Panel</div>
+                      <h2 id="travelTitle" class="mmd-card-title">ต้าอัปเดต route ให้คุณตรงนี้</h2>
+                    </div>
+                  </div>
+
+                  <div class="mmd-route-card">
+                    <div class="mmd-route-line"></div>
+                    <div class="mmd-route-step">
+                      <span class="mmd-route-dot is-start"></span>
+                      <div>
+                        <div id="routeStartTitle" class="mmd-route-title">Start Travel</div>
+                        <div id="routeStartCopy" class="mmd-route-copy">ถ้าพร้อมแล้วกดเริ่มเดินทางได้เลย เดี๋ยวต้าดู flow ต่อให้</div>
+                      </div>
+                    </div>
+                    <div class="mmd-route-step">
+                      <span id="shareLocationDot" class="mmd-route-dot"></span>
+                      <div>
+                        <div id="routeShareTitle" class="mmd-route-title">Share Location</div>
+                        <div id="shareLocationStatusText" class="mmd-route-copy">ตอนนี้ยังไม่ได้เปิดการแชร์ตำแหน่งนะ</div>
+                      </div>
+                    </div>
+                    <div class="mmd-route-step">
+                      <span id="arrivedDot" class="mmd-route-dot"></span>
+                      <div>
+                        <div id="routeArrivedTitle" class="mmd-route-title">Arrived</div>
+                        <div id="arrivedStatusText" class="mmd-route-copy">พอถึงจุดนัดพบแล้วค่อยกด Arrived</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mmd-map-box">
+                    <div class="mmd-map-top">
+                      <div>
+                        <div id="mapTitle" class="mmd-map-title">สรุปการเดินทาง</div>
+                        <div id="mapSubtext" class="mmd-map-copy">ตอนนี้ยังรอคุณเริ่มเดินทางอยู่</div>
+                      </div>
+                      <div id="mapEtaBadge" class="mmd-map-badge">ETA 12 min</div>
+                    </div>
+                    <div class="mmd-map-grid">
+                      <div class="mmd-map-item"><span id="fromLabel" class="mmd-map-item-label">From</span><strong id="fromText">Current location</strong></div>
+                      <div class="mmd-map-item"><span id="toLabel" class="mmd-map-item-label">To</span><strong id="toText">Sukhumvit 24</strong></div>
+                      <div class="mmd-map-item"><span id="locationStatusLabel" class="mmd-map-item-label">Live Location</span><strong id="locationStatusText">Inactive</strong></div>
+                      <div class="mmd-map-item"><span id="progressLabel" class="mmd-map-item-label">Progress</span><strong id="progressText">Not started</strong></div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <aside class="mmd-right-col">
+                <article class="mmd-card mmd-sticky-card">
+                  <div class="mmd-card-head">
+                    <div>
+                      <div id="actionEyebrow" class="mmd-section-eyebrow">Your Next Action</div>
+                      <h2 id="actionTitle" class="mmd-card-title">เริ่มเดินทางเมื่อพร้อม</h2>
+                    </div>
+                  </div>
+                  <p id="actionCopy" class="mmd-action-copy">ถ้าคุณพร้อมแล้วกด Start Travel ได้เลย จากนั้นหน้านี้จะขยับไปช่วง Traveling ให้ทันที</p>
+                  <div id="assignedActions" class="mmd-action-group">
+                    <button id="startTravelBtn" class="mmd-primary-btn" type="button">Start Travel</button>
+                    <a id="openSessionBtnA" class="mmd-secondary-btn" href="#">Open Session</a>
+                  </div>
+                  <div id="travelingActions" class="mmd-action-group is-hidden">
+                    <button id="shareLocationBtn" class="mmd-primary-btn" type="button">Share Location</button>
+                    <button id="sendUpdateBtn" class="mmd-secondary-btn" type="button">Send Update</button>
+                    <button id="arrivedBtn" class="mmd-secondary-btn" type="button">Arrived</button>
+                  </div>
+                  <div id="arrivedActions" class="mmd-action-group is-hidden">
+                    <button id="metClientBtn" class="mmd-primary-btn" type="button">Met Client</button>
+                    <a id="openSessionBtnB" class="mmd-secondary-btn" href="#">Open Session</a>
+                  </div>
+                  <div class="mmd-inline-actions">
+                    <a id="sidebarTelegramLink" class="mmd-ghost-link" href="#" target="_blank" rel="noopener">Open Telegram</a>
+                    <a id="sidebarEmergencyLink" class="mmd-ghost-link" href="#" target="_blank" rel="noopener">Emergency Contact</a>
+                  </div>
+                  <div id="successBox" class="mmd-success-box is-hidden">
+                    <div id="successTitle" class="mmd-success-title">ต้าเปิดช่วงเดินทางให้แล้ว</div>
+                    <div id="successCopy" class="mmd-success-copy">เข้า session view ต่อได้เลย แล้วค่อยอัปเดต route ตามจริงระหว่างทาง</div>
+                  </div>
+                </article>
+
+                <article class="mmd-card">
+                  <div class="mmd-card-head">
+                    <div>
+                      <div id="rulesEyebrow" class="mmd-section-eyebrow">System Rules</div>
+                      <h2 id="rulesTitle" class="mmd-card-title">ต้าย้ำไว้ก่อนนะ</h2>
+                    </div>
+                  </div>
+                  <ul class="mmd-rules">
+                    <li id="rule1">หน้านี้ครอบคลุม Assigned → Traveling → Arrived</li>
+                    <li id="rule2">ช่วง Traveling action หลักคือ Share Location กับ Arrived</li>
+                    <li id="rule3">Telegram ควรเปิดไว้ตลอด เผื่อต้าหรือแอดมินต้องส่ง reminder ด่วน</li>
+                    <li id="rule4">ใช้ session token ล่าสุดใน query param <code>t</code></li>
+                  </ul>
+                </article>
+              </aside>
+            </section>
+          </main>
+        </div>
+
+        <div id="mmdToast" class="mmd-toast" aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </div>
+
+    <script src="/assets/js/mmd-model-sessions.js"></script>
+  </body>
+  </html>

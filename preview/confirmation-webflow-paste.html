@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MMD Confirmation Webflow Paste Pack</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #070709;
+        --panel: rgba(18, 20, 28, 0.96);
+        --line: rgba(255, 255, 255, 0.08);
+        --txt: #f6f2ea;
+        --muted: rgba(246, 242, 234, 0.72);
+        --gold: #d1ae58;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(209, 174, 88, 0.16), transparent 26%),
+          linear-gradient(180deg, #050506 0%, var(--bg) 100%);
+        color: var(--txt);
+        font-family: Inter, system-ui, sans-serif;
+      }
+
+      .wrap {
+        width: min(100% - 28px, 1180px);
+        margin: 0 auto;
+        padding: 32px 0 56px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(34px, 5vw, 58px);
+        line-height: 0.94;
+      }
+
+      .lead {
+        margin: 0 0 24px;
+        font-size: 18px;
+        color: var(--muted);
+      }
+
+      .block {
+        margin-top: 20px;
+        padding: 22px;
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+      }
+
+      .eyebrow {
+        margin-bottom: 10px;
+        color: var(--gold);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 0 0 6px;
+        font-size: 28px;
+      }
+
+      p {
+        margin: 0 0 16px;
+        color: var(--muted);
+      }
+
+      h3 {
+        margin: 20px 0 8px;
+        font-size: 15px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      pre {
+        overflow: auto;
+        margin: 0;
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: #0d1017;
+        color: #f8f8f2;
+        font-size: 13px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>Webflow Paste<br />Confirmation Pack</h1>
+      <p class="lead">เอาชุดนี้ไปวางใน Webflow ได้เลย โดยทุกหน้าจะใช้ confirmation core เดิมของระบบ และแยกให้ชัดตามบทบาท `member` กับ `model`</p>
+
+      <section class="block">
+        <div class="eyebrow">Shared Head</div>
+        <h2>ใส่ใน Page Settings &gt; Inside &lt;head&gt;</h2>
+        <pre><code>&lt;link rel="stylesheet" href="/assets/css/mmd-confirmation.css"&gt;</code></pre>
+
+        <h3>Before &lt;/body&gt;</h3>
+        <pre><code>&lt;script src="/assets/js/mmd-confirmation.modules.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/js/mmd-confirmation.core.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/js/mmd-confirmation.boot.js"&gt;&lt;/script&gt;</code></pre>
+      </section>
+
+      <section class="block">
+        <div class="eyebrow">Member</div>
+        <h2>Payment Confirmation</h2>
+        <p>วางก้อนนี้ลงใน Embed element ของหน้า `/confirm/payment-confirmation`</p>
+        <pre><code>&lt;div class="mmd-system"&gt;
+  &lt;section
+    id="mmd-confirmation"
+    data-confirmation-page="payment"
+    data-user-tier="premium"
+    data-status="success"
+    data-locale="th"
+    data-order-id="pay_240401_001"
+    data-ref-code="PAY-MEMBER-240401"
+    data-service="Premium Membership Renewal"
+    data-model-code="Member Desk"
+    data-date="1 Apr 2026"
+    data-time="20:15"
+    data-location-name="MMD Privé Payment Desk"
+    data-location-url="https://maps.google.com/?q=Bangkok"
+    data-amount="45000"
+    data-deposit="15000"
+    data-balance="30000"
+    data-currency="THB"
+    data-payment-method="promptpay"
+    data-hash="PMT-240401"
+    data-barcode="MEMBER-45000-240401"
+    data-points-earned="45"
+    data-points-total="132"
+    data-points-threshold="120"
+    data-points-total-before="87"
+    data-member-id="mem_001"
+    data-telegram-user-id="tg_001"
+    data-next-url="/member/lounge"
+    data-support-url="https://t.me/Per_MMD"
+    data-terms-title="Payment Terms"
+    data-terms-items="กรุณาเก็บ reference นี้ไว้จนกว่ายอดจะเสร็จสมบูรณ์|หากต้องการแก้ไขยอดหรือแพ็กเกจ กรุณาติดต่อทีมงานโดยตรง|คะแนนสมาชิกจะอัปเดตหลังระบบยืนยันสำเร็จ"
+  &gt;&lt;/section&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section class="block">
+        <div class="eyebrow">Member</div>
+        <h2>Job Confirmation</h2>
+        <p>วางก้อนนี้ลงใน Embed element ของหน้า `/confirm/job-confirmation` ฝั่ง member</p>
+        <pre><code>&lt;div class="mmd-system"&gt;
+  &lt;section
+    id="mmd-confirmation"
+    data-confirmation-page="job"
+    data-user-tier="premium"
+    data-status="success"
+    data-locale="th"
+    data-order-id="job_240401_001"
+    data-ref-code="JOB-MEMBER-240401"
+    data-service="Private Dinner Booking"
+    data-model-code="Tar T"
+    data-date="3 Apr 2026"
+    data-time="21:00"
+    data-location-name="สุขุมวิท 24"
+    data-location-url="https://maps.google.com/?q=Sukhumvit+24"
+    data-amount="32000"
+    data-currency="THB"
+    data-points-earned="32"
+    data-points-total="164"
+    data-points-threshold="120"
+    data-member-id="mem_001"
+    data-telegram-user-id="tg_001"
+    data-next-url="/member/dashboard"
+    data-support-url="https://t.me/Per_MMD"
+    data-terms-title="Job Confirmation Terms"
+    data-terms-items="ทีมงานจะยืนยันรายละเอียดสุดท้ายผ่าน LINE หรือ Telegram อีกครั้ง|หากต้องการเปลี่ยนเวลา กรุณาแจ้งก่อนงานเริ่มอย่างน้อย 2 ชั่วโมง|reference นี้ใช้สำหรับติดตามงานกับทีมงานได้"
+  &gt;&lt;/section&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section class="block">
+        <div class="eyebrow">Model</div>
+        <h2>Job Confirmation</h2>
+        <p>วางก้อนนี้ลงใน Embed element ของหน้า `/confirm/job-confirmation` ฝั่ง model โดยเปลี่ยน page เป็น `model`</p>
+        <pre><code>&lt;div class="mmd-system"&gt;
+  &lt;section
+    id="mmd-confirmation"
+    data-confirmation-page="model"
+    data-user-tier="premium"
+    data-status="success"
+    data-locale="th"
+    data-order-id="mdl_240401_001"
+    data-ref-code="JOB-MODEL-240401"
+    data-service="Private Dinner Assignment"
+    data-model-code="Tar T"
+    data-date="3 Apr 2026"
+    data-time="21:00"
+    data-location-name="สุขุมวิท 24"
+    data-location-url="https://maps.google.com/?q=Sukhumvit+24"
+    data-amount="16000"
+    data-currency="THB"
+    data-next-url="/model/session?t=demo-model-token"
+    data-support-url="https://t.me/Per_MMD"
+    data-terms-title="Model Assignment Terms"
+    data-terms-items="assignment นี้ถูกล็อกตามลิงก์ยืนยันนี้|หากมีเหตุฉุกเฉินหรือไปไม่ทัน กรุณาแจ้งแอดมินทันที|กรุณาเปิด session view ต่อเพื่อเช็ก live instructions"
+  &gt;&lt;/section&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+    </main>
+  </body>
+  </html>
