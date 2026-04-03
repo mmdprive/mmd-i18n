@@ -1,8 +1,9 @@
+<!-- Turnstile (ถ้าทั้งเว็บยังไม่มี ให้ใส่ / ถ้ามี global แล้ว ไม่ต้องใส่ซ้ำ) -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
+
 <script>
 (function(){
   "use strict";
-
-  // Turnstile (ถ้าทั้งเว็บยังไม่มี ให้ใส่ / ถ้ามี global แล้ว ไม่ต้องใส่ซ้ำ)
 
   // LOCK: only this page
   if (location.pathname !== "/confirm/payment-confirmation") return;
@@ -22,8 +23,8 @@
   const WORKER_NOTIFY = "/v1/payments/notify"; // via MMD.workerPost
   const RULES_ACK     = "/v1/rules/ack";       // via MMD.workerPost
 
-  const RULES_URL = (root.dataset.rulesUrl || "/rules/customer").trim();
-  const RULES_VERSION = (root.dataset.rulesVersion || "customer-v2026-04-03").trim();
+  const RULES_URL = "https://mmdprive.com/rules/model-work.html";
+  const RULES_VERSION = "v2026-01-16";
   const RULES_KEY = "mmd_rules_accepted_" + RULES_VERSION;
 
   const TURNSTILE_SITEKEY = "0x4AAAAAACIE9VleQdOBRfBG";
@@ -230,35 +231,28 @@
       <div id="mmd-rules-modal" class="mmd-modal" aria-hidden="true">
         <div class="mmd-modal-backdrop"></div>
         <div class="mmd-modal-card" role="dialog" aria-modal="true" aria-label="MMD Rules">
-          <header class="mmd-modal-head">
+          <header class="mmd-modal-header">
             <div>
-              <div class="mmd-modal-kicker">MMD PRIVÉ • CUSTOMER RULES</div>
-              <h3 class="mmd-title">รบกวนอ่านสักนิด</h3>
-              <div class="mmd-modal-sub">ก่อนยืนยันการชำระเงิน รบกวนอ่านกฎ/ข้อปฏิบัติสำหรับลูกค้าให้ครบอีกนิดนะครับ เพื่อให้ flow หลังจากนี้ลื่นและชัดที่สุด</div>
+              <h3 class="mmd-title">MMD • กฎข้อปฏิบัติในการไปทำงาน</h3>
+              <div class="mmd-sub">กรุณาอ่านให้ครบ และยืนยันการรับทราบ</div>
             </div>
-            <div style="display:flex;align-items:flex-start;gap:10px;">
-              <div class="mmd-pill" id="mmd-rules-status">Required</div>
-              <button type="button" class="mmd-x" id="mmd-rules-close" aria-label="Close rules popup">✕</button>
-            </div>
+            <div class="mmd-pill" id="mmd-rules-status">Required</div>
           </header>
 
           <div class="mmd-modal-body">
-            <iframe id="mmd-rules-iframe" src="${RULES_URL}" title="MMD Customer Rules" frameborder="0" loading="eager"></iframe>
+            <iframe id="mmd-rules-iframe" src="${RULES_URL}" title="MMD Model Work Rules" frameborder="0" loading="eager"></iframe>
           </div>
 
-          <footer class="mmd-modal-foot">
+          <footer class="mmd-modal-footer">
             <label class="mmd-check">
               <input type="checkbox" id="mmd-rules-ack" />
-              <span>ฉันได้อ่านและเข้าใจกฎ/ข้อปฏิบัติสำหรับลูกค้าแล้ว</span>
+              <span>ฉันได้อ่านและเข้าใจกฎข้อปฏิบัติทั้งหมดแล้ว</span>
             </label>
-            <div class="mmd-modal-actions">
-              <a id="mmd-rules-open-link" class="mmd-btn" href="${RULES_URL}" target="_blank" rel="noopener">เปิดกฎในแท็บใหม่</a>
-              <button id="mmd-rules-accept" class="mmd-btn gold" disabled>รับทราบและไปต่อ</button>
-            </div>
+            <button id="mmd-rules-accept" class="mmd-btn2" disabled>ยืนยัน</button>
           </footer>
         </div>
       </div>
-      <div id="mmd-rules-turnstile" style="display:none;"></div>
+      <div id="mmd-rules-turnstile" style="display:none"></div>
     `;
     document.body.appendChild(wrap.firstElementChild);
     document.body.appendChild(wrap.lastElementChild);
@@ -266,33 +260,15 @@
 
   function openModal(){
     const modal = document.getElementById("mmd-rules-modal");
-    if(!modal) return;
     modal.setAttribute("aria-hidden","false");
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
   }
   function closeModal(){
     const modal = document.getElementById("mmd-rules-modal");
-    if(!modal) return;
     modal.setAttribute("aria-hidden","true");
     document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
-  }
-
-  function bindRulesTriggers(){
-    const triggers = Array.from(document.querySelectorAll("button, a")).filter((el)=>{
-      const txt = (el.textContent || "").trim().toLowerCase();
-      return txt === "acknowledge rules" || txt === "open rules" || txt === "customer rules";
-    });
-
-    triggers.forEach((el)=>{
-      if(el.__mmdRulesBound) return;
-      el.__mmdRulesBound = true;
-      el.addEventListener("click", (event)=>{
-        event.preventDefault();
-        openModal();
-      });
-    });
   }
 
   // Turnstile invisible (best-effort)
@@ -335,38 +311,17 @@
   // Boot popup after DOM
   setTimeout(()=>{
     ensureModal();
-    bindRulesTriggers();
     if(isAccepted()) return;
 
     const ack = document.getElementById("mmd-rules-ack");
     const btn = document.getElementById("mmd-rules-accept");
     const status = document.getElementById("mmd-rules-status");
-    const openLink = document.getElementById("mmd-rules-open-link");
-    const modal = document.getElementById("mmd-rules-modal");
-    const backdrop = modal ? modal.querySelector(".mmd-modal-backdrop") : null;
-    const closeBtn = document.getElementById("mmd-rules-close");
 
     if(!ack || !btn) return;
 
-    if(openLink) openLink.href = RULES_URL;
-    if(backdrop && !backdrop.__mmdRulesCloseBound){
-      backdrop.__mmdRulesCloseBound = true;
-      backdrop.addEventListener("click", closeModal);
-    }
-    if(closeBtn && !closeBtn.__mmdRulesCloseBound){
-      closeBtn.__mmdRulesCloseBound = true;
-      closeBtn.addEventListener("click", closeModal);
-    }
-    if(!document.__mmdRulesEscBound){
-      document.__mmdRulesEscBound = true;
-      document.addEventListener("keydown", (event)=>{
-        if(event.key === "Escape") closeModal();
-      });
-    }
-
     const setBusy = (busy)=>{
       btn.disabled = busy || !ack.checked;
-      btn.textContent = busy ? "กำลังบันทึก..." : "รับทราบและไปต่อ";
+      btn.textContent = busy ? "กำลังบันทึก..." : "ยืนยัน";
       if(status) status.textContent = busy ? "Saving" : (ack.checked ? "Ready" : "Required");
     };
 
