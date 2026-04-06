@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MMD Pay Renewal Local Preview</title>
+  <link rel="stylesheet" href="/assets/css/mmd-system.css">
+  <link rel="stylesheet" href="/assets/css/mmd-membership.css">
+  <link rel="stylesheet" href="/assets/css/mmd-payment.css">
+  <link rel="stylesheet" href="/assets/css/mmd-pay-renewal.css">
+</head>
+<body>
+  <div class="mmd-system">
+    <section id="mmd-pay-renewal" class="mmd-pay" data-renewal-ui="v2" data-lang="th">
+      <div class="bc-hero">
+        <div class="bc-bg" aria-hidden="true"></div>
+        <div class="bc-ov" aria-hidden="true"></div>
+
+        <div class="bc-inner">
+          <div class="bc-copy">
+            <div class="bc-pill">
+              <span data-lang="th">Local Preview</span>
+              <span data-lang="en" style="display:none">Local Preview</span>
+            </div>
+
+            <div class="lang" aria-label="Language switcher">
+              <button type="button" class="active" data-set-lang="th" aria-pressed="true">TH</button>
+              <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+            </div>
+
+            <div class="bc-eyebrow">
+              <span data-lang="th">Renewal Test Flow</span>
+              <span data-lang="en" style="display:none">Renewal Test Flow</span>
+            </div>
+
+            <h1 class="bc-h1">
+              <span class="bc-white" data-lang="th">ทดลองหน้า</span>
+              <span class="bc-white" data-lang="en" style="display:none">Preview the</span>
+              <span class="bc-titleGold" data-lang="th">/pay/renewal แบบ local</span>
+              <span class="bc-titleGold" data-lang="en" style="display:none">local /pay/renewal flow</span>
+            </h1>
+
+            <div class="bc-poem">
+              <p class="bc-line" data-lang="th">
+                หน้านี้ mock การตอบกลับของ renewal intake เพื่อให้ลองกรอกข้อมูล
+                เปลี่ยนวิธีชำระ และกดส่งได้โดยไม่กระทบ production
+              </p>
+              <p class="bc-line" data-lang="en" style="display:none">
+                This page mocks the renewal intake response so you can test the form,
+                payment route switching, and submit behavior locally without touching production.
+              </p>
+            </div>
+          </div>
+
+          <aside class="bc-summary">
+            <div class="bc-summary__head">
+              <div class="bc-summary__title">Preview Mode</div>
+              <div class="bc-summary__badge gold">SAFE</div>
+            </div>
+            <div class="bc-summary__rows">
+              <div class="bc-summary__row">
+                <div class="bc-summary__k">API</div>
+                <div class="bc-summary__v">Mocked</div>
+              </div>
+              <div class="bc-summary__row">
+                <div class="bc-summary__k">Target</div>
+                <div class="bc-summary__v">/member/api/renewal/intake</div>
+              </div>
+              <div class="bc-summary__row bc-summary__row--strong">
+                <div class="bc-summary__k">Purpose</div>
+                <div class="bc-summary__v">UI + Validation Test</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <div class="mmd-wrap">
+        <div class="mmd-card">
+          <div class="mmd-alert" style="margin-bottom:18px">
+            <span data-lang="th">หน้า preview นี้จะตอบกลับสำเร็จปลอมเมื่อกด submit เพื่อให้ทดสอบ flow ได้ครบ</span>
+            <span data-lang="en" style="display:none">This preview returns a mocked success response on submit so you can test the full flow.</span>
+          </div>
+
+          <div class="mmd-block">
+            <div class="mmd-block__head">
+              <div>
+                <h2 class="mmd-h2">
+                  <span data-lang="th">Renewal Details</span>
+                  <span data-lang="en" style="display:none">Renewal Details</span>
+                </h2>
+              </div>
+              <button type="button" class="mmd-btn mmd-btn--ghost" data-renew-action="recalc">
+                <span data-lang="th">อัปเดตข้อมูล</span>
+                <span data-lang="en" style="display:none">Refresh</span>
+              </button>
+            </div>
+
+            <div class="mmd-form-grid">
+              <div>
+                <label class="mmd-label" for="renew-package-local">Membership Tier</label>
+                <select class="mmd-input" id="renew-package-local" data-renew-field="package">
+                  <option value="premium">Premium</option>
+                  <option value="standard">Standard</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="mmd-label" for="renew-activity-local">Account Activity</label>
+                <select class="mmd-input" id="renew-activity-local" data-renew-field="activity">
+                  <option value="active365">Active within 365 days</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="mmd-label" for="renew-usage-local">Usage in the Last 12 Months</label>
+                <input class="mmd-input" id="renew-usage-local" data-renew-field="usage" type="text" inputmode="numeric" placeholder="40000">
+              </div>
+
+              <div>
+                <label class="mmd-label" for="renew-name-local">Your Name</label>
+                <input class="mmd-input" id="renew-name-local" data-renew-field="name" type="text" placeholder="Your full name">
+              </div>
+
+              <div>
+                <label class="mmd-label" for="renew-email-local">Email for Follow-up</label>
+                <input class="mmd-input" id="renew-email-local" data-renew-field="email" type="email" placeholder="you@example.com">
+              </div>
+            </div>
+          </div>
+
+          <div class="mmd-block">
+            <div class="mmd-block__head">
+              <div>
+                <h2 class="mmd-h2">Payment Route</h2>
+              </div>
+            </div>
+
+            <div class="mmd-method-grid">
+              <label class="mmd-method" data-renew-method="promptpay">
+                <input type="radio" name="renew_payment_method" value="promptpay" checked>
+                <div class="mmd-method__title">PromptPay QR</div>
+                <div class="mmd-method__desc">Mock submit is enabled in preview mode.</div>
+              </label>
+
+              <label class="mmd-method" data-renew-method="paypal">
+                <input type="radio" name="renew_payment_method" value="paypal">
+                <div class="mmd-method__title">PayPal</div>
+                <div class="mmd-method__desc">Mock submit is enabled in preview mode.</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="mmd-block" data-renew-panel="promptpay">
+            <div class="mmd-cta">
+              <div id="renew-qr" aria-label="PromptPay QR code"></div>
+              <button type="button" class="mmd-btn mmd-btn--gold" data-renew-action="notify-promptpay">Mock PromptPay Submit</button>
+            </div>
+            <div data-renew-turnstile="promptpay"></div>
+          </div>
+
+          <div class="mmd-block" data-renew-panel="paypal" style="display:none">
+            <div class="mmd-cta">
+              <a class="mmd-btn mmd-btn--gold" href="https://www.paypal.com/ncp/payment/M697T7AW2QZZJ" target="_blank" rel="noreferrer">Open PayPal</a>
+              <button type="button" class="mmd-btn mmd-btn--ghost" data-renew-action="notify-paypal">Mock PayPal Submit</button>
+            </div>
+            <div data-renew-turnstile="paypal"></div>
+          </div>
+
+          <div class="mmd-toast" data-renew-output="toast"></div>
+
+          <aside class="bc-summary" style="margin-top:18px">
+            <div class="bc-summary__head">
+              <div class="bc-summary__title">Renewal Overview</div>
+              <div class="bc-summary__badge" data-renew-output="vipBadge">Standard</div>
+            </div>
+            <div class="bc-summary__rows">
+              <div class="bc-summary__row">
+                <div class="bc-summary__k">Selected rate</div>
+                <div class="bc-summary__v" data-renew-output="rateLabel">Premium renewal ฿2,500</div>
+              </div>
+              <div class="bc-summary__row">
+                <div class="bc-summary__k">Eligibility status</div>
+                <div class="bc-summary__v" data-renew-output="tierHint">Standard Status</div>
+              </div>
+              <div class="bc-summary__row bc-summary__row--strong">
+                <div class="bc-summary__k">Total due</div>
+                <div class="bc-summary__v" data-renew-output="payAmount">฿2,500</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    window.turnstile = {
+      render: function(_el, opts){
+        this._callback = opts && opts.callback ? opts.callback : function(){};
+        return "mock-turnstile-id";
+      },
+      execute: function(){
+        var callback = this._callback || function(){};
+        setTimeout(function(){ callback("mock-turnstile-token"); }, 150);
+      },
+      reset: function(){},
+      remove: function(){}
+    };
+
+    window.fetch = function(input, init){
+      var url = typeof input === "string" ? input : (input && input.url) || "";
+      if(url.indexOf("/member/api/renewal/intake") !== -1){
+        return Promise.resolve(new Response(JSON.stringify({
+          ok: true,
+          data: {
+            immigration_id: "preview_intake_001",
+            service_history_summary: "Mock local preview",
+            promotion_status: "archived_raw",
+            member_id_preview: "mem_preview_001",
+            created_new_member_preview: true,
+            sync: {
+              mode: "mock",
+              result: {
+                migration_id: "preview_intake_001",
+                airtable_record_id: "rec_preview_001",
+                client_id: "cli_preview_001",
+                migration_status: "synced_to_airtable"
+              }
+            }
+          },
+          meta: {
+            preview: true,
+            request_body: init && init.body ? JSON.parse(init.body) : null
+          }
+        }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }));
+      }
+      return Promise.reject(new Error("Unexpected fetch in local preview: " + url));
+    };
+  </script>
+  <script defer src="/mmdglobal/dist/mmd-pay-renewal.js"></script>
+</body>
+</html>

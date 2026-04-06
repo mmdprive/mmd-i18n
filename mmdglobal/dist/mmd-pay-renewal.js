@@ -5,8 +5,7 @@
   if(!root) return;
 
   const CONFIG = {
-    ENDPOINT: "https://telegram.malemodel-bkk.workers.dev",
-    ALLOWED_ORIGIN: "https://mmdprive.webflow.io",
+    ENDPOINT: "https://admin-worker.malemodel-bkk.workers.dev/member/api/renewal/intake",
     TURNSTILE_SITEKEY: "0x4AAAAAACIE9VleQdOBRfBG",
     PROMPTPAY_ID: "0829528889",
     PAGE: "/pay/renewal",
@@ -35,6 +34,10 @@
 
   function currentLang(){
     return root.dataset.lang || "th";
+  }
+
+  function packageLabel(pkg){
+    return pkg === "standard" ? "Standard" : "Premium";
   }
 
   function field(name){
@@ -156,6 +159,10 @@
     el.textContent = "";
   }
 
+  function isEmail(value){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+  }
+
   function readForm(){
     return {
       package: field("package")?.value || "premium",
@@ -164,6 +171,119 @@
       name: String(field("name")?.value || "").trim(),
       email: String(field("email")?.value || "").trim()
     };
+  }
+
+  function buildServiceHistoryNote(snapshot, kind){
+    return [
+      "renewal_page_submission",
+      "page:" + CONFIG.PAGE,
+      "package:" + packageLabel(snapshot.form.package),
+      "activity:" + snapshot.form.activity,
+      "usage_12m:" + String(snapshot.form.usage),
+      "selected_rate:" + String(snapshot.result.pay),
+      "payment_method:" + kind
+    ].join(" | ");
+  }
+
+  function validateForm(snapshot){
+    if(!snapshot.form.name){
+      return snapshot.lang === "th"
+        ? "กรุณากรอกชื่อของคุณก่อนส่งข้อมูล"
+        : "Please enter your name before submitting.";
+    }
+
+    if(!snapshot.form.email){
+      return snapshot.lang === "th"
+        ? "กรุณากรอกอีเมลสำหรับการติดตามผล"
+        : "Please enter an email for follow-up.";
+    }
+
+    if(!isEmail(snapshot.form.email)){
+      return snapshot.lang === "th"
+        ? "รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง"
+        : "The email format looks invalid. Please check it again.";
+    }
+
+    if(snapshot.form.usage <= 0){
+      return snapshot.lang === "th"
+        ? "กรุณากรอกยอดใช้งานย้อนหลัง 12 เดือนเป็นตัวเลขมากกว่า 0"
+        : "Please enter your last 12 months of usage as a number greater than 0.";
+    }
+
+    return "";
+  }
+
+  function setFieldValidity(name, valid){
+    const el = field(name);
+    if(!el) return;
+    el.setAttribute("aria-invalid", valid ? "false" : "true");
+    el.style.borderColor = valid ? "" : "rgba(214, 106, 106, 0.95)";
+  }
+
+  function updateActionState(){
+    const snapshot = updateSummary();
+    const error = validateForm(snapshot);
+    const disabled = Boolean(error);
+
+    ["name", "email"].forEach((name)=>{
+      const value = snapshot.form[name];
+      const valid = name === "email" ? (!value || isEmail(value)) : Boolean(value);
+      setFieldValidity(name, valid);
+    });
+    setFieldValidity("usage", snapshot.form.usage > 0);
+
+    ["promptpay", "paypal"].forEach((kind)=>{
+      const button = $(`[data-renew-action='notify-${kind}']`);
+      if(!button) return;
+      button.disabled = disabled;
+      button.setAttribute("aria-disabled", disabled ? "true" : "false");
+      button.style.opacity = disabled ? ".55" : "1";
+      button.style.cursor = disabled ? "not-allowed" : "";
+    });
+
+    return { snapshot, error };
+  }
+
+  function buildRenewalPayload(snapshot, kind, token){
+    return {
+      display_name: snapshot.form.name,
+      name: snapshot.form.name,
+      email: snapshot.form.email,
+      current_tier_hint: packageLabel(snapshot.form.package),
+      target_tier: packageLabel(snapshot.form.package),
+      package: snapshot.form.package,
+      package_code: snapshot.form.package,
+      package_label: packageLabel(snapshot.form.package),
+      total: snapshot.result.pay,
+      payment_method: kind,
+      flow: "renewal",
+      page: CONFIG.PAGE,
+      source_page: window.location.pathname || CONFIG.PAGE,
+      service_history_note: buildServiceHistoryNote(snapshot, kind),
+      raw_json: JSON.stringify({
+        lang: snapshot.lang,
+        renewal_activity: snapshot.form.activity,
+        renewal_usage_12m: snapshot.form.usage,
+        vip_eligibility: snapshot.result.vipLabel,
+        turnstile_token: token
+      })
+    };
+  }
+
+  async function postRenewal(snapshot, kind, token){
+    const response = await fetch(CONFIG.ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify(buildRenewalPayload(snapshot, kind, token))
+    });
+
+    const payload = await response.json().catch(()=> null);
+    if(!response.ok || !payload || payload.ok === false){
+      const message = payload && payload.error && payload.error.message ? payload.error.message : "renewal intake failed";
+      throw new Error(message);
+    }
+
+    return payload;
   }
 
   function updateSummary(){
@@ -280,7 +400,14 @@
   }
 
   async function notify(kind){
-    const snapshot = updateSummary();
+    const state = updateActionState();
+    const snapshot = state.snapshot;
+    const validationError = state.error;
+    if(validationError){
+      toast(validationError, "bad");
+      return;
+    }
+
     const button = $(`[data-renew-action='notify-${kind}']`);
     if(button){
       button.disabled = true;
@@ -289,36 +416,7 @@
 
     try{
       const token = await getTurnstileToken(kind);
-      const payload = {
-        package: snapshot.form.package,
-        amount_thb: snapshot.result.pay,
-        currency: CONFIG.CURRENCY,
-        promo_code: "",
-        promptpay_id: CONFIG.PROMPTPAY_ID,
-        promptpay_url: buildPromptPayUrl(snapshot.result.pay || 1),
-        page: CONFIG.PAGE,
-        lang: snapshot.lang,
-        is_authenticated: false,
-        customer_email: snapshot.form.email,
-        customer_name: snapshot.form.name,
-        member_id: "",
-        anomaly_flags: [],
-        turnstile_token: token,
-        renewal_usage_12m: snapshot.form.usage,
-        renewal_activity: snapshot.form.activity,
-        vip_eligibility: snapshot.result.vipLabel,
-        payment_method: kind
-      };
-
-      const response = await fetch(CONFIG.ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type":"application/json", "Origin": CONFIG.ALLOWED_ORIGIN },
-        body: JSON.stringify(payload)
-      });
-
-      if(!response.ok){
-        throw new Error("notify failed");
-      }
+      await postRenewal(snapshot, kind, token);
 
       toast(
         snapshot.lang === "th"
@@ -330,8 +428,8 @@
       console.warn("[MMD] renewal notify error", error);
       toast(
         currentLang() === "th"
-          ? "ยังส่งข้อมูลไม่สำเร็จ กรุณาลองอีกครั้งในอีกสักครู่"
-          : "The page could not send your renewal details yet. Please try again shortly.",
+          ? "ยังส่งข้อมูลไม่สำเร็จ กรุณาตรวจข้อมูลแล้วลองอีกครั้ง"
+          : "The page could not send your renewal details yet. Please review the form and try again.",
         "bad"
       );
     }finally{
@@ -350,17 +448,21 @@
     ["package", "activity", "usage"].forEach((name)=>{
       const el = field(name);
       if(!el) return;
-      el.addEventListener("input", ()=> updateSummary());
-      el.addEventListener("change", ()=> updateSummary());
+      el.addEventListener("input", ()=> updateActionState());
+      el.addEventListener("change", ()=> updateActionState());
     });
 
     ["name", "email"].forEach((name)=>{
       const el = field(name);
       if(!el) return;
-      el.addEventListener("input", clearToast);
+      el.addEventListener("input", ()=>{
+        clearToast();
+        updateActionState();
+      });
+      el.addEventListener("blur", ()=> updateActionState());
     });
 
-    $("[data-renew-action='recalc']")?.addEventListener("click", ()=> updateSummary());
+    $("[data-renew-action='recalc']")?.addEventListener("click", ()=> updateActionState());
 
     $$("input[name='renew_payment_method']").forEach((input)=>{
       input.addEventListener("change", ()=> setMethod(input.value));
@@ -373,5 +475,5 @@
   bind();
   setLang(root.dataset.lang || "th");
   setMethod(($("input[name='renew_payment_method']:checked") || {}).value || "promptpay");
-  updateSummary();
+  updateActionState();
 })();
