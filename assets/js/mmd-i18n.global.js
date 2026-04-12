@@ -1,4 +1,3 @@
-<script>
 /**
  * MMD GLOBAL I18N — v2026
  * Scope: Whole site
@@ -146,7 +145,7 @@
       const key = el.getAttribute('data-i18n');
       let val = '';
       if(window.MMD_I18N && typeof window.MMD_I18N.t === 'function'){
-        val = window.MMD_I18N.t(key, L);
+        val = window.MMD_I18N.t(key, { lang: L });
       }else{
         val = DICT[L][key];
       }
@@ -181,4 +180,3 @@
     dict(){ return DICT; }
   };
 })();
-</script>
