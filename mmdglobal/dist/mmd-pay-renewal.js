@@ -9,6 +9,7 @@
     TURNSTILE_SITEKEY: "0x4AAAAAACIE9VleQdOBRfBG",
     PROMPTPAY_ID: "0829528889",
     PAGE: "/pay/renewal",
+    FALLBACK_ONBOARDING_URL: "/sigil/onboarding",
     CURRENCY: "THB",
     PAYPAL_URL: "https://www.paypal.com/ncp/payment/M697T7AW2QZZJ"
   };
@@ -416,7 +417,7 @@
 
     try{
       const token = await getTurnstileToken(kind);
-      await postRenewal(snapshot, kind, token);
+      const payload = await postRenewal(snapshot, kind, token);
 
       toast(
         snapshot.lang === "th"
@@ -424,6 +425,16 @@
           : "Your renewal details have been sent to the team for follow-up.",
         "good"
       );
+
+      const onboardingUrl =
+        payload && payload.data && payload.data.links && payload.data.links.customer_url
+          ? String(payload.data.links.customer_url)
+          : CONFIG.FALLBACK_ONBOARDING_URL;
+
+      if(onboardingUrl){
+        window.location.href = onboardingUrl;
+        return;
+      }
     }catch(error){
       console.warn("[MMD] renewal notify error", error);
       toast(

@@ -1,0 +1,57 @@
+<!-- Head -->
+<link rel="stylesheet" href="/assets/css/mmd-system.css">
+<link rel="stylesheet" href="/assets/css/mmd-membership.css">
+<link rel="stylesheet" href="/assets/css/mmd-payment.css">
+<link rel="stylesheet" href="/assets/css/mmd-pay-renewal.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+<!-- Body -->
+<div class="mmd-system">
+  <section id="mmd-pay-renewal" class="mmd-pay" data-renewal-ui="v2" data-lang="th">
+    <div class="bc-hero">
+      <div class="bc-bg" aria-hidden="true"></div>
+      <div class="bc-ov" aria-hidden="true"></div>
+      <div class="bc-inner">
+        <div class="bc-copy">
+          <div class="bc-pill"><span>PACKAGE V3</span></div>
+          <div class="bc-eyebrow">Membership Renewal</div>
+          <h1 class="bc-h1"><span class="bc-white">Renew Your</span><span class="bc-titleGold">MMD SĪGIL</span></h1>
+          <div class="bc-poem"><p class="bc-line">Package v3 now contains the working renewal flow instead of the blank placeholder.</p></div>
+          <div class="lang"><button type="button" class="active" data-set-lang="th" aria-pressed="true">TH</button><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
+        </div>
+        <aside class="bc-summary">
+          <div class="bc-summary__head"><div class="bc-summary__title">Renewal Summary</div><div class="bc-summary__badge" data-renew-output="vipBadge">Standard</div></div>
+          <div class="bc-summary__rows">
+            <div class="bc-summary__row"><div class="bc-summary__k">Rate</div><div class="bc-summary__v" data-renew-output="rateLabel">—</div></div>
+            <div class="bc-summary__row"><div class="bc-summary__k">Eligibility</div><div class="bc-summary__v" data-renew-output="tierHint">—</div></div>
+            <div class="bc-summary__row bc-summary__row--strong"><div class="bc-summary__k">Amount</div><div class="bc-summary__v" data-renew-output="payAmount">฿0</div></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <div class="mmd-wrap">
+      <div class="mmd-card">
+        <div class="mmd-block">
+          <div class="mmd-block__head"><div><h2 class="mmd-h2">Renewal Form</h2><div class="mmd-muted">Publish-ready v3 package.</div></div><button type="button" class="mmd-btn mmd-btn--soft" data-renew-action="recalc">Recalculate</button></div>
+          <div class="mmd-form-grid">
+            <div><label class="mmd-label" for="renew-package-v3">Package</label><select id="renew-package-v3" class="mmd-input" data-renew-field="package"><option value="premium">Premium</option><option value="standard">Standard</option></select></div>
+            <div><label class="mmd-label" for="renew-activity-v3">Activity</label><select id="renew-activity-v3" class="mmd-input" data-renew-field="activity"><option value="active365">Active within 365 days</option><option value="inactive">Gap / inactive</option></select></div>
+            <div><label class="mmd-label" for="renew-usage-v3">Usage THB</label><input id="renew-usage-v3" class="mmd-input" type="number" min="0" step="100" data-renew-field="usage"></div>
+            <div><label class="mmd-label" for="renew-name-v3">Name</label><input id="renew-name-v3" class="mmd-input" type="text" data-renew-field="name"></div>
+            <div style="grid-column:1 / -1"><label class="mmd-label" for="renew-email-v3">Email</label><input id="renew-email-v3" class="mmd-input" type="email" data-renew-field="email"></div>
+          </div>
+          <div class="mmd-toast" data-renew-output="toast" aria-live="polite"></div>
+        </div>
+        <div class="mmd-block">
+          <div class="mmd-method-grid">
+            <label class="mmd-method is-selected" data-renew-method="promptpay"><input type="radio" name="renew_payment_method" value="promptpay" checked><div class="mmd-method__title">PromptPay</div><div class="mmd-method__desc">Working PromptPay submit flow.</div></label>
+            <label class="mmd-method" data-renew-method="paypal"><input type="radio" name="renew_payment_method" value="paypal"><div class="mmd-method__title">PayPal / Card</div><div class="mmd-method__desc">Working PayPal submit flow.</div></label>
+          </div>
+          <div data-renew-panel="promptpay"><div class="mmd-cta"><div id="renew-qr"></div><div class="mmd-cta__sub">PromptPay<div data-renew-turnstile="promptpay"></div></div><button type="button" class="mmd-btn mmd-btn--gold" data-renew-action="notify-promptpay">Confirm & Send</button></div></div>
+          <div data-renew-panel="paypal" style="display:none"><div class="mmd-cta"><div class="mmd-cta__sub">PayPal<div data-renew-turnstile="paypal"></div></div><a class="mmd-btn mmd-btn--ghost" href="https://www.paypal.com/ncp/payment/M697T7AW2QZZJ" target="_blank" rel="noopener">Open PayPal</a><button type="button" class="mmd-btn mmd-btn--gold" data-renew-action="notify-paypal">Send Details</button></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="/mmdglobal/dist/mmd-pay-renewal.js"></script>
